@@ -1,0 +1,25 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/dist
+/build
+
+# misc
+.sass-cache
+/tmp
+/hs_err_pid*
+.DS_Store
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Angular specific
+.angular/cache/
