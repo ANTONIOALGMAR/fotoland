@@ -1,0 +1,82 @@
+.landing-container {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: white; /* Text color */
+  text-align: center;
+}
+
+.futuristic-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cover the entire container */
+  filter: brightness(0.6); /* Darken the image slightly */
+  z-index: -1; /* Send image to background */
+  animation: background-pan 20s infinite alternate ease-in-out; /* Apply animation */
+}
+
+@keyframes background-pan {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+  50% {
+    transform: scale(1.05) translateX(5%);
+  }
+  100% {
+    transform: scale(1) translateX(0);
+  }
+}
+
+.overlay-content {
+  z-index: 1; /* Bring content to foreground */
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for text */
+  border-radius: 10px;
+  max-width: 800px;
+}
+
+.overlay-content h1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+}
+
+.overlay-content p {
+  font-size: 1.2em;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.actions .btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #007bff; /* Blue */
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d; /* Gray */
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+}

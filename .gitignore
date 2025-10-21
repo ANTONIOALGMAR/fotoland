@@ -1,0 +1,39 @@
+# Node
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/build
+/dist
+
+# Misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Maven
+/target/
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Spring Boot specific
+*.log
+
+# Angular specific
+.angular/cache/
+fotoland-frontend/.angular/cache/
+fotoland-frontend/.angular/cache/17.3.17/vite/deps/
