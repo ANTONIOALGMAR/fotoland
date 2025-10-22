@@ -1,5 +1,7 @@
 package com.fotoland.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -14,12 +16,15 @@ public class Post {
     private String mediaUrl;
     private String caption;
 
+    @Enumerated(EnumType.STRING)
+    private PostType type = PostType.PHOTO; // Default to PHOTO
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER) // Change to EAGER for feed display
     @JoinColumn(name = "album_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference // Handle bidirectional relationship
     private Album album;
 
     @PrePersist
@@ -51,6 +56,14 @@ public class Post {
 
     public void setCaption(String caption) {
         this.caption = caption;
+    }
+
+    public PostType getType() {
+        return type;
+    }
+
+    public void setType(PostType type) {
+        this.type = type;
     }
 
     public LocalDateTime getCreatedAt() {

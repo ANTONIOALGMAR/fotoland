@@ -1,5 +1,7 @@
 package com.fotoland.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class Album {
     private User author;
 
     @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // Handle bidirectional relationship
     private List<Post> posts;
 
     // Getters and Setters

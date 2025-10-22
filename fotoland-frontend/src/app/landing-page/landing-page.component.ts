@@ -10,5 +10,5 @@ import { RouterLink } from '@angular/router'; // Import RouterLink for navigatio
 })
 export class LandingPageComponent {
   projectDescription = "Conecte-se com amigos e reviva memórias através de álbuns de fotos e vídeos. Cada post é uma viagem ao passado, conectando você aos momentos mais especiais.";
-  futuristicImageUrl = "https://via.placeholder.com/1200x600?text=Futuristic+Photo+Placeholder"; // Placeholder image
+  futuristicImageUrl = "assets/futuristic-background.jpg"; // Use a local image
 }

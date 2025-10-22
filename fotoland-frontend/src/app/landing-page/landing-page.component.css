@@ -10,28 +10,44 @@
   text-align: center;
 }
 
-.futuristic-image {
+.background-slideshow {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Cover the entire container */
-  filter: brightness(0.6); /* Darken the image slightly */
-  z-index: -1; /* Send image to background */
-  animation: background-pan 20s infinite alternate ease-in-out; /* Apply animation */
+  z-index: -1; /* Send to background */
 }
 
-@keyframes background-pan {
-  0% {
-    transform: scale(1) translateX(0);
-  }
-  50% {
-    transform: scale(1.05) translateX(5%);
-  }
-  100% {
-    transform: scale(1) translateX(0);
-  }
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0; /* Start hidden */
+  animation: imageAnimation 30s infinite; /* 3 images * 10s per image = 30s total */
+  filter: brightness(0.6); /* Darken the image slightly */
+}
+
+.slide:nth-child(1) {
+  animation-delay: 0s;
+}
+.slide:nth-child(2) {
+  animation-delay: 10s; /* Start 10s after first image */
+}
+.slide:nth-child(3) {
+  animation-delay: 20s; /* Start 20s after first image */
+}
+
+@keyframes imageAnimation {
+  0% { opacity: 0; animation-timing-function: ease-in; }
+  10% { opacity: 1; animation-timing-function: ease-out; } /* Fade in */
+  20% { opacity: 1; } /* Stay visible */
+  30% { opacity: 0; } /* Fade out */
+  100% { opacity: 0; }
 }
 
 .overlay-content {

@@ -1,9 +1,26 @@
 <div *ngIf="user">
   <h1>Welcome, {{ user.fullName }}!</h1>
   <p>Username: {{ user.username }}</p>
+
+  <hr>
+
+  <h2>My Albums</h2>
+  <button routerLink="/create-album">Create New Album</button>
+
+  <div *ngIf="albums.length > 0; else noAlbums">
+    <div *ngFor="let album of albums" class="album-card">
+      <h3>{{ album.title }} ({{ album.type }})</h3>
+      <p>{{ album.description }}</p>
+      <p *ngIf="album.location">Location: {{ album.location }}</p>
+      <p *ngIf="album.eventName">Event: {{ album.eventName }}</p>
+      <!-- Add more album details or a link to view album details -->
+    </div>
+  </div>
+  <ng-template #noAlbums>
+    <p>You haven't created any albums yet. <a routerLink="/create-album">Create one now!</a></p>
+  </ng-template>
 </div>
 
 <div *ngIf="!user">
   <p>Loading user profile...</p>
 </div>
-

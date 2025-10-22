@@ -1,0 +1,43 @@
+<div class="feed-container">
+  <h1>Global Feed</h1>
+
+  <div *ngIf="loading">
+    <p>Loading feed...</p>
+  </div>
+
+  <div *ngIf="error">
+    <p class="error-message">{{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && albums.length > 0" class="album-list">
+    <div *ngFor="let album of albums" class="album-card">
+      <h3>{{ album.title }} ({{ album.type }})</h3>
+      <p>{{ album.description }}</p>
+      <p *ngIf="album.author">By: {{ album.author.fullName }} - {{ album.author.username }}</p>
+      <p *ngIf="album.location">Location: {{ album.location }}</p>
+      <p *ngIf="album.eventName">Event: {{ album.eventName }}</p>
+
+      <div *ngIf="album.posts && album.posts.length > 0" class="post-list">
+        <h4>Posts:</h4>
+        <div *ngFor="let post of album.posts" class="post-item">
+          <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" [src]="post.mediaUrl" alt="Photo" class="post-media">
+          <ng-container *ngIf="post.type === 'VIDEO' && post.mediaUrl">
+            <div *ngIf="isYouTubeVideo(post.mediaUrl); else genericVideo" class="video-responsive">
+              <iframe [src]="getYouTubeEmbedUrl(post.mediaUrl)" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <ng-template #genericVideo>
+              <video [src]="post.mediaUrl" controls class="post-media"></video>
+            </ng-template>
+          </ng-container>
+          <p *ngIf="post.caption">{{ post.caption }}</p>
+          <small>Posted on: {{ post.createdAt | date:'short' }}</small>
+        </div>
+      </div>
+      <hr>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && albums.length === 0 && !error">
+    <p>No albums found in the feed.</p>
+  </div>
+</div>

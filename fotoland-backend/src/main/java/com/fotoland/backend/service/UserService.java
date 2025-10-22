@@ -21,6 +21,7 @@ public class UserService {
             throw new RuntimeException("Username already exists");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole("USER"); // Set default role for new users
         return userRepository.save(user);
     }
 

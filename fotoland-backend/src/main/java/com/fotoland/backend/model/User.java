@@ -31,5 +31,5 @@ public class User {
 
     private String profilePictureUrl; // URL da Foto de Perfil
 
-    // TODO: Adicionar roles para Spring Security
+    private String role; // Role for Spring Security (e.g., "USER", "ADMIN")
 }
