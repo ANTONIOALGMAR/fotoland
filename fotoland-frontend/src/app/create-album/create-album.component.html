@@ -1,31 +1,39 @@
+<div class="background-slideshow">
+  <div class="slide" style="background-image: url('assets/futuristic-background.jpg');"></div>
+  <div class="slide" style="background-image: url('assets/futuristic-background2.jpg');"></div>
+  <div class="slide" style="background-image: url('assets/futuristic-background3.jpg');"></div>
+</div>
+
 <div class="create-album-container">
-  <h2>Create New Album</h2>
-  <form (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="title">Title:</label>
-      <input type="text" id="title" name="title" [(ngModel)]="album.title" required>
-    </div>
-    <div class="form-group">
-      <label for="description">Description:</label>
-      <textarea id="description" name="description" [(ngModel)]="album.description"></textarea>
-    </div>
-    <div class="form-group">
-      <label for="type">Album Type:</label>
-      <select id="type" name="type" [(ngModel)]="album.type" required>
-        <option *ngFor="let type of albumTypes" [value]="type">{{ type }}</option>
-      </select>
-    </div>
+  <div class="create-album-form">
+    <h2>Create New Album</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" [(ngModel)]="album.title" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" [(ngModel)]="album.description"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="type">Album Type</label>
+        <select id="type" name="type" [(ngModel)]="album.type" required>
+          <option *ngFor="let type of albumTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
 
-    <div class="form-group" *ngIf="album.type === AlbumType.LOCATION">
-      <label for="location">Location:</label>
-      <input type="text" id="location" name="location" [(ngModel)]="album.location">
-    </div>
+      <div class="form-group" *ngIf="album.type === AlbumType.LOCATION">
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location" [(ngModel)]="album.location">
+      </div>
 
-    <div class="form-group" *ngIf="album.type === AlbumType.EVENT">
-      <label for="eventName">Event Name:</label>
-      <input type="text" id="eventName" name="eventName" [(ngModel)]="album.eventName">
-    </div>
+      <div class="form-group" *ngIf="album.type === AlbumType.EVENT">
+        <label for="eventName">Event Name</label>
+        <input type="text" id="eventName" name="eventName" [(ngModel)]="album.eventName">
+      </div>
 
-    <button type="submit">Create Album</button>
-  </form>
+      <button type="submit">Create Album</button>
+    </form>
+  </div>
 </div>

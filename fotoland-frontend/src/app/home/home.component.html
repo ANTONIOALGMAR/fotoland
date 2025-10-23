@@ -1,26 +1,48 @@
-<div *ngIf="user">
-  <h1>Welcome, {{ user.fullName }}!</h1>
-  <p>Username: {{ user.username }}</p>
-
-  <hr>
-
-  <h2>My Albums</h2>
-  <button routerLink="/create-album">Create New Album</button>
-
-  <div *ngIf="albums.length > 0; else noAlbums">
-    <div *ngFor="let album of albums" class="album-card">
-      <h3>{{ album.title }} ({{ album.type }})</h3>
-      <p>{{ album.description }}</p>
-      <p *ngIf="album.location">Location: {{ album.location }}</p>
-      <p *ngIf="album.eventName">Event: {{ album.eventName }}</p>
-      <!-- Add more album details or a link to view album details -->
-    </div>
-  </div>
-  <ng-template #noAlbums>
-    <p>You haven't created any albums yet. <a routerLink="/create-album">Create one now!</a></p>
-  </ng-template>
+<div class="background-slideshow">
+  <div class="slide" style="background-image: url('assets/futuristic-background.jpg');"></div>
+  <div class="slide" style="background-image: url('assets/futuristic-background2.jpg');"></div>
+  <div class="slide" style="background-image: url('assets/futuristic-background3.jpg');"></div>
 </div>
 
-<div *ngIf="!user">
-  <p>Loading user profile...</p>
+<div class="home-container">
+  <div *ngIf="user; else loadingProfile">
+    <header class="home-header">
+      <h1>Welcome, {{ user.fullName }}!</h1>
+      <p>@{{ user.username }}</p>
+    </header>
+
+    <div class="controls">
+      <h2>My Albums</h2>
+      <button class="btn-gradient" routerLink="/create-album">Create New Album</button>
+    </div>
+
+    <div *ngIf="albums.length > 0; else noAlbums" class="album-grid">
+      <div *ngFor="let album of albums" class="album-card">
+        <div class="album-card-header">
+          <h3>{{ album.title }}</h3>
+          <span class="album-card-type">{{ album.type }}</span>
+        </div>
+        <p class="album-card-description">{{ album.description }}</p>
+        <div class="album-card-footer">
+          <p *ngIf="album.location">Location: {{ album.location }}</p>
+          <p *ngIf="album.eventName">Event: {{ album.eventName }}</p>
+          <!-- In a future version, a button to view the album could go here -->
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noAlbums>
+      <div class="no-albums-card">
+        <p>You haven't created any albums yet.</p>
+        <button class="btn-gradient" routerLink="/create-album">Create Your First Album!</button>
+      </div>
+    </ng-template>
+
+  </div>
+
+  <ng-template #loadingProfile>
+    <div class="loading-indicator">
+      <p>Loading user profile...</p>
+    </div>
+  </ng-template>
 </div>

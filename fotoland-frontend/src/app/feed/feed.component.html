@@ -1,43 +1,54 @@
-<div class="feed-container">
-  <h1>Global Feed</h1>
+<div class="background-slideshow">
+  <div class="slide" style="background-image: url('assets/futuristic-background.jpg');"></div>
+  <div class="slide" style="background-image: url('assets/futuristic-background2.jpg');"></div>
+  <div class="slide" style="background-image: url('assets/futuristic-background3.jpg');"></div>
+</div>
 
-  <div *ngIf="loading">
-    <p>Loading feed...</p>
+<div class="feed-container">
+  <header class="feed-header">
+    <h1>Global Feed</h1>
+  </header>
+
+  <div *ngIf="loading" class="loading-indicator">
+    <p>Loading feed...</p> <!-- This could be replaced with a spinner component -->
   </div>
 
-  <div *ngIf="error">
-    <p class="error-message">{{ error }}</p>
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
   </div>
 
   <div *ngIf="!loading && albums.length > 0" class="album-list">
     <div *ngFor="let album of albums" class="album-card">
-      <h3>{{ album.title }} ({{ album.type }})</h3>
-      <p>{{ album.description }}</p>
-      <p *ngIf="album.author">By: {{ album.author.fullName }} - {{ album.author.username }}</p>
-      <p *ngIf="album.location">Location: {{ album.location }}</p>
-      <p *ngIf="album.eventName">Event: {{ album.eventName }}</p>
+      <div class="album-header">
+        <h3>{{ album.title }}</h3>
+        <span class="album-type">{{ album.type }}</span>
+      </div>
+      <p class="album-author">By: {{ album.author.fullName }} ({{ album.author.username }})</p>
+      <p class="album-description">{{ album.description }}</p>
+      <p *ngIf="album.location" class="album-meta">Location: {{ album.location }}</p>
+      <p *ngIf="album.eventName" class="album-meta">Event: {{ album.eventName }}</p>
 
       <div *ngIf="album.posts && album.posts.length > 0" class="post-list">
-        <h4>Posts:</h4>
-        <div *ngFor="let post of album.posts" class="post-item">
-          <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" [src]="post.mediaUrl" alt="Photo" class="post-media">
-          <ng-container *ngIf="post.type === 'VIDEO' && post.mediaUrl">
-            <div *ngIf="isYouTubeVideo(post.mediaUrl); else genericVideo" class="video-responsive">
-              <iframe [src]="getYouTubeEmbedUrl(post.mediaUrl)" frameborder="0" allowfullscreen></iframe>
+        <div *ngFor="let post of album.posts" class="post-card">
+          <div class="post-media-container">
+            <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" [src]="post.mediaUrl" alt="Photo Post">
+            <div *ngIf="post.type === 'VIDEO' && post.mediaUrl" class="video-responsive">
+              <iframe *ngIf="isYouTubeVideo(post.mediaUrl); else genericVideo" [src]="getYouTubeEmbedUrl(post.mediaUrl)" frameborder="0" allowfullscreen></iframe>
+              <ng-template #genericVideo>
+                <video [src]="post.mediaUrl" controls></video>
+              </ng-template>
             </div>
-            <ng-template #genericVideo>
-              <video [src]="post.mediaUrl" controls class="post-media"></video>
-            </ng-template>
-          </ng-container>
-          <p *ngIf="post.caption">{{ post.caption }}</p>
-          <small>Posted on: {{ post.createdAt | date:'short' }}</small>
+          </div>
+          <div class="post-content">
+            <p class="post-caption">{{ post.caption }}</p>
+            <p class="post-timestamp">{{ post.createdAt | date:'medium' }}</p>
+          </div>
         </div>
       </div>
-      <hr>
     </div>
   </div>
 
-  <div *ngIf="!loading && albums.length === 0 && !error">
-    <p>No albums found in the feed.</p>
+  <div *ngIf="!loading && albums.length === 0 && !error" class="empty-feed">
+    <p>No albums found in the feed. Be the first to create one!</p>
   </div>
 </div>

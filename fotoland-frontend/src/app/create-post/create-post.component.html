@@ -1,34 +1,42 @@
+<div class="background-slideshow">
+  <div class="slide" style="background-image: url('assets/futuristic-background.jpg');"></div>
+  <div class="slide" style="background-image: url('assets/futuristic-background2.jpg');"></div>
+  <div class="slide" style="background-image: url('assets/futuristic-background3.jpg');"></div>
+</div>
+
 <div class="create-post-container">
-  <h2>Create New Post</h2>
-  <form (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="album">Select Album:</label>
-      <select id="album" name="album" [(ngModel)]="selectedAlbumId" required>
-        <option *ngFor="let album of albums" [value]="album.id">{{ album.title }} ({{ album.type }})</option>
-      </select>
-    </div>
+  <div class="create-post-form">
+    <h2>Create New Post</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="album">Select Album</label>
+        <select id="album" name="album" [(ngModel)]="selectedAlbumId" required>
+          <option *ngFor="let album of albums" [value]="album.id">{{ album.title }} ({{ album.type }})</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label for="postType">Post Type:</label>
-      <select id="postType" name="postType" [(ngModel)]="post.type" required>
-        <option *ngFor="let type of postTypes" [value]="type">{{ type }}</option>
-      </select>
-    </div>
+      <div class="form-group">
+        <label for="postType">Post Type</label>
+        <select id="postType" name="postType" [(ngModel)]="post.type" required>
+          <option *ngFor="let type of postTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label for="mediaUrl">
-        <span *ngIf="post.type === PostType.PHOTO">Photo URL:</span>
-        <span *ngIf="post.type === PostType.VIDEO">Video URL:</span>
-      </label>
-      <input type="text" id="mediaUrl" name="mediaUrl" [(ngModel)]="post.mediaUrl" required
-             [placeholder]="post.type === PostType.PHOTO ? 'Enter photo URL' : 'Enter video URL'">
-    </div>
+      <div class="form-group">
+        <label for="mediaUrl">
+          <span *ngIf="post.type === PostType.PHOTO">Photo URL</span>
+          <span *ngIf="post.type === PostType.VIDEO">Video URL</span>
+        </label>
+        <input type="text" id="mediaUrl" name="mediaUrl" [(ngModel)]="post.mediaUrl" required
+               [placeholder]="post.type === PostType.PHOTO ? 'Enter photo URL' : 'Enter video URL'">
+      </div>
 
-    <div class="form-group">
-      <label for="caption">Caption:</label>
-      <textarea id="caption" name="caption" [(ngModel)]="post.caption"></textarea>
-    </div>
+      <div class="form-group">
+        <label for="caption">Caption</label>
+        <textarea id="caption" name="caption" [(ngModel)]="post.caption"></textarea>
+      </div>
 
-    <button type="submit">Create Post</button>
-  </form>
+      <button type="submit">Create Post</button>
+    </form>
+  </div>
 </div>
