@@ -10,10 +10,16 @@ RUN mvn clean package -DskipTests
 # Stage 2: Run
 # Use a slim Java runtime image for a smaller final image
 FROM openjdk:17-jdk-slim
+# Install network diagnostic tools
+RUN apt-get update && apt-get install -y dnsutils iputils-ping
 WORKDIR /app
 # Copy the built JAR from the 'build' stage
 COPY --from=build /usr/src/app/target/fotoland-backend-0.0.1-SNAPSHOT.jar app.jar
-# Expose the port the application will run on
+# Copy the entrypoint script
+COPY entrypoint.sh .
+# Make the script executable inside the container
+RUN chmod +x entrypoint.sh
+# Expose the port the app runs on
 EXPOSE 8080
-# Set the command to run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Set the entrypoint to our script
+ENTRYPOINT ["./entrypoint.sh"]
