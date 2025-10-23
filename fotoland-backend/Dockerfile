@@ -11,7 +11,7 @@ RUN mvn clean package -DskipTests
 # Use a slim Java runtime image for a smaller final image
 FROM openjdk:17-jdk-slim
 # Install network diagnostic tools
-RUN apt-get update && apt-get install -y dnsutils iputils-ping
+# Network diagnostic tools removed as they are no longer needed
 WORKDIR /app
 # Copy the built JAR from the 'build' stage
 COPY --from=build /usr/src/app/target/fotoland-backend-0.0.1-SNAPSHOT.jar app.jar
