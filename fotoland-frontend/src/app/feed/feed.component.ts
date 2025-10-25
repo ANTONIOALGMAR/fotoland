@@ -1,25 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth/services/auth.service'; // Assuming AuthService will handle fetching albums
+import { AuthService } from '../auth/services/auth.service';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'; // Import DomSanitizer
+import { Router, RouterLink } from '@angular/router'; // Import Router
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './feed.component.html',
-  styleUrl: './feed.component.css'
+ 
 })
 export class FeedComponent implements OnInit {
   albums: any[] = [];
   loading: boolean = true;
   error: string | null = null;
+  currentUserId: number | null = null; // To store the ID of the currently logged-in user
 
-  constructor(private authService: AuthService, private sanitizer: DomSanitizer) { } // Inject DomSanitizer
+  constructor(private authService: AuthService, private sanitizer: DomSanitizer, private router: Router) { } // Inject Router
 
   ngOnInit(): void {
     this.loadAllAlbums();
+    this.authService.getMe().subscribe({
+      next: (user) => {
+        this.currentUserId = user.id;
+      },
+      error: (err) => {
+        console.error('Error fetching current user:', err);
+        // Handle error, e.g., redirect to login if token is invalid
+      }
+    });
   }
 
   loadAllAlbums(): void {
@@ -51,5 +61,25 @@ export class FeedComponent implements OnInit {
       videoId = url.split('youtu.be/')[1].split('?')[0];
     }
     return this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${videoId}`);
+  }
+
+  canEditPost(post: any): boolean {
+    // Check if the post has an author and if the author's ID matches the current user's ID
+    return this.currentUserId !== null && post.album && post.album.author && post.album.author.id === this.currentUserId;
+  }
+
+  deletePost(postId: number): void {
+    if (confirm('Are you sure you want to delete this post?')) {
+      this.authService.deletePost(postId).subscribe({
+        next: () => {
+          console.log('Post deleted successfully.');
+          this.loadAllAlbums(); // Refresh the feed after deletion
+        },
+        error: (err) => {
+          console.error('Error deleting post:', err);
+          alert('Failed to delete post. Please try again.');
+        }
+      });
+    }
   }
 }
