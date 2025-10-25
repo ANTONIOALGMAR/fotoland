@@ -14,8 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration; // New import
-import java.util.List; // New import
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -33,23 +35,36 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(request -> {
-                CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-                configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                configuration.setAllowedHeaders(List.of("*"));
-                configuration.setAllowCredentials(true);
-                return configuration;
-            }))
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/auth/**").permitAll()
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/api/auth/**",   // login e registro públicos
+                    "/uploads/**",    // acesso a imagens
+                    "/", "/index"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.setAllowedOrigins(List.of(
+                "http://localhost:4200", // ambiente local
+                "https://sunny-tiramisu-e5bbdc.netlify.app", // produção Netlify
+                "https://68fccb9d2f47e9b5e1604501--sunny-tiramisu-e5bbdc.netlify.app", // preview build
+                "https://fotoland-frontend.onrender.com" // possível frontend alternativo
+            ));
+            configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            configuration.setAllowedHeaders(List.of("*"));
+            configuration.setAllowCredentials(true);
+            return configuration;
+        };
     }
 
     @Bean
@@ -59,9 +74,10 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
-        return new ProviderManager(authenticationProvider);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(provider);
     }
 }
+
