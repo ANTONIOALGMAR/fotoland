@@ -6,26 +6,39 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://fotoland-backend.onrender.com/api/auth';
-  private userApiUrl = 'http://localhost:8080/api/user';
-  private albumApiUrl = 'http://localhost:8080/api/albums'; // New API URL for albums
-  private uploadApiUrl = 'http://localhost:8080/api'; // New API URL for uploads
 
-  constructor(private http: HttpClient) { }
+  // 🔧 Ajuste automático de ambiente
+  private readonly BASE_URL =
+    window.location.hostname === 'localhost'
+      ? 'http://localhost:8080'
+      : 'https://fotoland-backend.onrender.com';
 
-  uploadProfilePicture(file: File): Observable<any> {
+  private readonly apiUrl = `${this.BASE_URL}/api/auth`;
+  private readonly userApiUrl = `${this.BASE_URL}/api/user`;
+  private readonly albumApiUrl = `${this.BASE_URL}/api/albums`;
+  private readonly uploadApiUrl = `${this.BASE_URL}/api`;
+  private readonly postApiUrl = `${this.BASE_URL}/api/posts`;
+
+  constructor(private http: HttpClient) {}
+
+  // 📸 Upload de imagem de perfil
+  uploadProfilePicture(file: File): Observable<{ fileUrl: string }> {
     const formData = new FormData();
     formData.append('file', file);
 
     const token = this.getToken();
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
     });
 
-    // Angular and the browser will handle the Content-Type header automatically for FormData
-    return this.http.post(`${this.uploadApiUrl}/upload`, formData, { headers });
+    return this.http.post<{ fileUrl: string }>(
+      `${this.uploadApiUrl}/upload`,
+      formData,
+      { headers }
+    );
   }
 
+  // 👤 Registro e login
   register(user: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
@@ -34,71 +47,51 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, credentials);
   }
 
+  // 🔑 Token e autenticação
   getToken(): string | null {
     return localStorage.getItem('jwt_token');
   }
 
   getMe(): Observable<any> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.get(`${this.userApiUrl}/me`, { headers });
+    return this.http.get(`${this.userApiUrl}/me`, this.getAuthHeaders());
   }
 
+  // 🖼️ Álbuns
   createAlbum(album: any): Observable<any> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.post(this.albumApiUrl, album, { headers });
+    return this.http.post(this.albumApiUrl, album, this.getAuthHeaders());
   }
 
   getMyAlbums(): Observable<any> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.get(`${this.albumApiUrl}/my`, { headers });
+    return this.http.get(`${this.albumApiUrl}/my`, this.getAuthHeaders());
   }
 
   getAllAlbums(): Observable<any> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.get(this.albumApiUrl, { headers });
+    return this.http.get(this.albumApiUrl, this.getAuthHeaders());
   }
 
+  // 📬 Posts
   createPost(post: any, albumId: number): Observable<any> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.post(`http://localhost:8080/api/posts/album/${albumId}`, post, { headers });
+    return this.http.post(`${this.postApiUrl}/album/${albumId}`, post, this.getAuthHeaders());
   }
 
   updatePost(postId: number, post: any): Observable<any> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.put(`http://localhost:8080/api/posts/${postId}`, post, { headers });
+    return this.http.put(`${this.postApiUrl}/${postId}`, post, this.getAuthHeaders());
   }
 
   deletePost(postId: number): Observable<any> {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.delete(`http://localhost:8080/api/posts/${postId}`, { headers });
+    return this.http.delete(`${this.postApiUrl}/${postId}`, this.getAuthHeaders());
   }
 
   getPostById(postId: number): Observable<any> {
+    return this.http.get(`${this.postApiUrl}/${postId}`, this.getAuthHeaders());
+  }
+
+  // 🧱 Cabeçalhos padrão com token
+  private getAuthHeaders() {
     const token = this.getToken();
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
     });
-    return this.http.get(`http://localhost:8080/api/posts/${postId}`, { headers });
+    return { headers };
   }
 }
