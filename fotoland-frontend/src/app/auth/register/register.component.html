@@ -29,8 +29,13 @@
         <input type="text" id="address" name="address" [(ngModel)]="user.address">
       </div>
       <div class="form-group">
-        <label for="profilePictureUrl">Profile Picture URL</label>
-        <input type="text" id="profilePictureUrl" name="profilePictureUrl" [(ngModel)]="user.profilePictureUrl">
+        <label for="profilePicture">Profile Picture</label>
+        <input type="file" id="profilePicture" (change)="onFileSelected($event)" hidden #profilePictureInput>
+        <button type="button" class="btn-outline" (click)="profilePictureInput.click()">Choose File</button>
+        <div *ngIf="selectedFileName" class="file-info">
+          <span>{{ selectedFileName }}</span>
+          <img *ngIf="imagePreview" [src]="imagePreview" class="image-preview">
+        </div>
       </div>
       <button type="submit">Register</button>
     </form>

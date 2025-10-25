@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../auth/services/auth.service'; // Assuming AuthService will handle post creation
-import { Router } from '@angular/router';
+import { AuthService } from '../auth/services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router'; // Import ActivatedRoute
 
 // Enum for AlbumType (should match backend)
 export enum AlbumType {
@@ -31,15 +31,27 @@ export class CreatePostComponent implements OnInit {
     caption: '',
     type: PostType.PHOTO // Default to PHOTO
   };
-  albums: any[] = []; // To store user's albums for selection
+  albums: any[] = [];
   selectedAlbumId: number | null = null;
-  PostType = PostType; // Make PostType enum accessible in template
-  postTypes = Object.values(PostType); // For dropdown
+  PostType = PostType;
+  postTypes = Object.values(PostType);
 
-  constructor(private authService: AuthService, private router: Router) { }
+  selectedFile: File | null = null;
+  selectedFileName: string = '';
+  mediaPreview: string | ArrayBuffer | null = null;
+
+  postId: number | null = null; // To store post ID if in edit mode
+  isEditMode: boolean = false; // Flag to indicate edit mode
+
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) { } // Inject ActivatedRoute
 
   ngOnInit(): void {
     this.loadMyAlbums();
+    this.postId = this.route.snapshot.paramMap.get('id') ? Number(this.route.snapshot.paramMap.get('id')) : null;
+    if (this.postId) {
+      this.isEditMode = true;
+      this.loadPostForEdit(this.postId);
+    }
   }
 
   loadMyAlbums(): void {
@@ -57,13 +69,70 @@ export class CreatePostComponent implements OnInit {
     });
   }
 
+  loadPostForEdit(id: number): void {
+    this.authService.getPostById(id).subscribe({
+      next: (response) => {
+        this.post = response;
+        this.selectedAlbumId = this.post.album.id;
+        if (this.post.mediaUrl) {
+          this.mediaPreview = this.post.mediaUrl;
+          this.selectedFileName = this.post.mediaUrl.substring(this.post.mediaUrl.lastIndexOf('/') + 1);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching post for edit:', error);
+        alert('Failed to load post for editing.');
+        this.router.navigate(['/feed']); // Redirect if post not found or error
+      }
+    });
+  }
+
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.mediaPreview = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   onSubmit(): void {
     if (this.selectedAlbumId === null) {
       alert('Please select an album.');
       return;
     }
 
-    this.authService.createPost(this.post, this.selectedAlbumId).subscribe({
+    if (this.selectedFile) {
+      this.authService.uploadProfilePicture(this.selectedFile).subscribe({
+        next: (response) => {
+          console.log('Media uploaded successfully:', response);
+          this.post.mediaUrl = response.fileUrl;
+          if (this.isEditMode) {
+            this.updatePost();
+          } else {
+            this.createPost();
+          }
+        },
+        error: (error) => {
+          console.error('Media upload failed:', error);
+          alert('Could not upload media. Please try again.');
+        }
+      });
+    } else if (this.isEditMode) {
+      // If in edit mode and no new file selected, proceed with update using existing mediaUrl
+      this.updatePost();
+    } else {
+      alert('Please select a media file to upload.');
+    }
+  }
+
+  createPost(): void {
+    this.authService.createPost(this.post, this.selectedAlbumId!).subscribe({
       next: (response) => {
         console.log('Post created successfully:', response);
         alert('Post created successfully!');
@@ -72,6 +141,24 @@ export class CreatePostComponent implements OnInit {
       error: (error) => {
         console.error('Post creation failed:', error);
         alert('Post creation failed: ' + (error.error.message || error.message));
+      }
+    });
+  }
+
+  updatePost(): void {
+    if (this.postId === null) {
+      alert('Error: Post ID is missing for update.');
+      return;
+    }
+    this.authService.updatePost(this.postId, this.post).subscribe({
+      next: (response) => {
+        console.log('Post updated successfully:', response);
+        alert('Post updated successfully!');
+        this.router.navigate(['/feed']);
+      },
+      error: (error) => {
+        console.error('Post update failed:', error);
+        alert('Post update failed: ' + (error.error.message || error.message));
       }
     });
   }

@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -31,25 +33,28 @@ public class FileUploadController {
     }
 
     @PostMapping
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "File is empty"));
+        }
         try {
-            // Generate a unique file name
+            // Generate a unique file name to prevent conflicts
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
             Path filePath = Paths.get(uploadDir + fileName);
 
             // Save the file to the filesystem
             Files.copy(file.getInputStream(), filePath);
 
-            // Construct the URL to access the file
-            // In a real app, this would be a CDN URL or a dedicated file server URL
-            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/api/files/") // A new endpoint to serve files (we'll need to create this)
-                    .path(fileName)
-                    .toUriString();
+            // Construct the URL to access the file. This path must be configured as a static resource.
+            String fileAccessUrl = "/uploads/" + fileName;
 
-            return ResponseEntity.ok(fileDownloadUri);
+            // Return the URL in a JSON object
+            Map<String, String> response = new HashMap<>();
+            response.put("fileUrl", fileAccessUrl);
+
+            return ResponseEntity.ok(response);
         } catch (IOException ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not upload the file: " + ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Could not upload the file: " + ex.getMessage()));
         }
     }
 }

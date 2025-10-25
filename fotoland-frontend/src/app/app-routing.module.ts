@@ -15,6 +15,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent }, // Adicionar rota para /home
   { path: 'create-album', component: CreateAlbumComponent }, // Add route for CreateAlbumComponent
   { path: 'create-post', component: CreatePostComponent }, // Add route for CreatePostComponent
+  { path: 'create-post/:id', component: CreatePostComponent }, // Add route for editing posts
   { path: 'feed', component: FeedComponent }, // Add route for FeedComponent
 ];
 

@@ -145,3 +145,38 @@ button[type="submit"]:hover {
   color: #fff;
   text-decoration: underline;
 }
+
+/* Custom File Upload Button */
+.btn-outline {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid rgba(0, 210, 255, 0.5);
+  border-radius: 8px;
+  background-color: transparent;
+  color: #00d2ff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-outline:hover {
+  background-color: rgba(0, 210, 255, 0.1);
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.image-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}

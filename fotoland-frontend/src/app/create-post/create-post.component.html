@@ -23,12 +23,14 @@
       </div>
 
       <div class="form-group">
-        <label for="mediaUrl">
-          <span *ngIf="post.type === PostType.PHOTO">Photo URL</span>
-          <span *ngIf="post.type === PostType.VIDEO">Video URL</span>
-        </label>
-        <input type="text" id="mediaUrl" name="mediaUrl" [(ngModel)]="post.mediaUrl" required
-               [placeholder]="post.type === PostType.PHOTO ? 'Enter photo URL' : 'Enter video URL'">
+        <label for="mediaFile">Media File</label>
+        <input type="file" id="mediaFile" (change)="onFileSelected($event)" hidden #mediaFileInput>
+        <button type="button" class="btn-outline" (click)="mediaFileInput.click()">Choose Media</button>
+        <div *ngIf="selectedFileName" class="file-info">
+          <span>{{ selectedFileName }}</span>
+          <img *ngIf="mediaPreview && post.type === PostType.PHOTO" [src]="mediaPreview" class="media-preview">
+          <video *ngIf="mediaPreview && post.type === PostType.VIDEO" [src]="mediaPreview" controls class="media-preview"></video>
+        </div>
       </div>
 
       <div class="form-group">
