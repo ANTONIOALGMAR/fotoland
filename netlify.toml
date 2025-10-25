@@ -1,6 +1,6 @@
 [build]
   base = "fotoland-frontend"
-  publish = "dist"
+  publish = "dist/browser"
   command = "npm install && npm run build -- --base-href /"
 
 [[redirects]]
