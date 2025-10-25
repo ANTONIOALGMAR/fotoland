@@ -37,11 +37,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Desativa CSRF (usamos JWT)
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS centralizado
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/auth/**",   // Rotas públicas (login, registro)
-                    "/uploads/**",    // Acesso a imagens
-                    "/", "/index"     // Página inicial
-                ).permitAll()
+                .requestMatchers("/api/**").permitAll() // Temporariamente permite tudo para depuração
                 .anyRequest().authenticated() // Todas as outras exigem autenticação
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
