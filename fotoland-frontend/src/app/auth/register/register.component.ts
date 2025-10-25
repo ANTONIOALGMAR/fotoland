@@ -10,9 +10,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class RegisterComponent {
   user = {
-    name: '',
+    fullName: '', // Adicionado
+    username: '', // Adicionado
     email: '',
     password: '',
+    phoneNumber: '', // Adicionado
+    address: '', // Adicionado
     profilePictureUrl: ''
   };
   
