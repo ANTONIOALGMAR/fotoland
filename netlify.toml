@@ -1,0 +1,9 @@
+[build]
+  base = "fotoland-frontend"
+  publish = "fotoland-frontend/dist/fotoland-frontend"
+  command = "npm install && npm run build -- --base-href /"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
