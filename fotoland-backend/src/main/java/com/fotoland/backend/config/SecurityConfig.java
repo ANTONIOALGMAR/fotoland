@@ -23,12 +23,12 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtRequestFilter jwtRequestFilter) {
-        this.userDetailsService = userDetailsService;
+    public SecurityConfig(JwtRequestFilter jwtRequestFilter, UserDetailsServiceImpl userDetailsService) {
         this.jwtRequestFilter = jwtRequestFilter;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -50,12 +50,11 @@ public class SecurityConfig {
         return request -> {
             CorsConfiguration configuration = new CorsConfiguration();
             
-            // ✅ Domínios permitidos
-            configuration.setAllowedOrigins(List.of(
-                "http://localhost:4200", // ambiente local
-                "https://sunny-tiramisu-e5bbdc.netlify.app", // build de produção Netlify
-                "https://68fd055d5ce779d67f949ea1--sunny-tiramisu-e5bbdc.netlify.app", // build preview Netlify
-                "https://fotoland-frontend.onrender.com" // alternativa Render
+            // ✅ Padrões de domínios permitidos (suporta Netlify previews)
+            configuration.setAllowedOriginPatterns(List.of(
+                "https://*.netlify.app", // Netlify (prod e previews)
+                "https://fotoland-frontend.onrender.com", // alternativa Render
+                "http://localhost:4200" // ambiente local
             ));
             
             // ✅ Métodos e cabeçalhos permitidos

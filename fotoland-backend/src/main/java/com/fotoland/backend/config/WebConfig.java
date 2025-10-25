@@ -17,11 +17,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) { // Add this method
         registry.addMapping("/**") // Apply CORS to all endpoints
-                .allowedOrigins(
-                        "https://sunny-tiramisu-e5bbdc.netlify.app",
-                        "https://68fccb9d2f47e9b5e1604501--sunny-tiramisu-e5bbdc.netlify.app",
-                        "https://fotoland-frontend.onrender.com"
-                    ) // Allow requests from your Netlify frontend and Render frontend
+                .allowedOriginPatterns(
+                        "https://*.netlify.app",
+                        "https://fotoland-frontend.onrender.com",
+                        "http://localhost:4200"
+                    ) // Allow Netlify previews, Render frontend, and local dev
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allowed HTTP methods
                 .allowedHeaders("*") // Allow all headers
                 .allowCredentials(true); // Allow credentials (e.g., cookies, authorization headers)
