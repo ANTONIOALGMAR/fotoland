@@ -34,7 +34,7 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
             User registeredUser = userService.registerNewUser(user);
-            return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body(com.fotoland.backend.dto.UserResponse.from(registeredUser));
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
