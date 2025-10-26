@@ -39,11 +39,18 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS centralizado
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite preflight OPTIONS
-                .requestMatchers("/api/upload").permitAll() // Permite upload explicitamente
-                .requestMatchers("/api/**").permitAll() // Permite outras APIs
-                .anyRequest().permitAll() // Permite tudo temporariamente
+                .requestMatchers("/api/auth/**").permitAll() // Login e registro públicos
+                .requestMatchers("/uploads/**").permitAll() // Servir arquivos públicos
+                .requestMatchers(HttpMethod.GET, "/api/albums").permitAll() // Feed público
+                .requestMatchers("/api/albums/**").authenticated() // Demais rotas de álbuns protegidas
+                .requestMatchers("/api/user/**").authenticated() // Perfil protegido
+                .requestMatchers("/api/posts/**").authenticated() // Posts protegidos
+                .anyRequest().permitAll() // Outras rotas permanecem públicas
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // Inserir filtro JWT antes do UsernamePasswordAuthenticationFilter
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
