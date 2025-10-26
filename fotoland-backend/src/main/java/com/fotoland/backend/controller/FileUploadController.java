@@ -16,7 +16,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/upload")
-@CrossOrigin(origins = "*")
 public class FileUploadController {
 
     // Define the directory where files will be stored
@@ -32,7 +31,7 @@ public class FileUploadController {
         }
     }
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data", produces = "application/json")
     public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "File is empty"));

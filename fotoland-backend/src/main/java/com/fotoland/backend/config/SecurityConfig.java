@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.http.HttpMethod;
 
 import java.util.List;
 
@@ -37,9 +38,13 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Desativa CSRF (usamos JWT)
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS centralizado
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/**").permitAll() // Temporariamente permite tudo para depuração
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite preflight OPTIONS
+                .requestMatchers("/api/upload").permitAll() // Permite upload explicitamente
+                .requestMatchers("/api/**").permitAll() // Permite outras APIs
+                .anyRequest().permitAll() // Permite tudo temporariamente
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
