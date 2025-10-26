@@ -7,7 +7,7 @@
 <div class="register-container">
   <div class="register-form">
     <h2>Create Account</h2>
-    <form (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmit()" #regForm="ngForm">
       <div class="form-group">
         <label for="fullName">Full Name</label>
         <input type="text" id="fullName" name="fullName" [(ngModel)]="user.fullName" required>
@@ -37,7 +37,7 @@
           <img *ngIf="imagePreview" [src]="imagePreview" class="image-preview">
         </div>
       </div>
-      <button type="submit">Register</button>
+      <button type="submit" [disabled]="regForm.invalid || isSubmitting">Register</button>
     </form>
     <p class="login-link">Already have an account? <a routerLink="/login">Login here</a></p>
   </div>
