@@ -62,7 +62,16 @@ public class JwtUtil {
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes;
+        try {
+            keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        } catch (IllegalArgumentException e) {
+            // SECRET_KEY não está em Base64, usa bytes brutos
+            keyBytes = SECRET_KEY.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        }
+        if (keyBytes.length < 32) { // < 256 bits
+            throw new IllegalStateException("JWT secret too small: require >= 256 bits per RFC 7518 §3.2");
+        }
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
