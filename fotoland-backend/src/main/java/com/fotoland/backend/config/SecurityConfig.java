@@ -43,8 +43,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/**").permitAll() // Permite outras APIs
                 .anyRequest().permitAll() // Permite tudo temporariamente
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
