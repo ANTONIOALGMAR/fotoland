@@ -39,11 +39,11 @@
       <div *ngIf="album.posts && album.posts.length > 0" class="mt-4 border-t pt-4">
         <div *ngFor="let post of album.posts" class="bg-gray-50 p-3 rounded-lg mb-3 last:mb-0">
           <div class="mb-2">
-            <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" [src]="post.mediaUrl" alt="Photo Post" class="w-full h-auto rounded-md">
+            <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" [src]="resolveMediaUrl(post.mediaUrl)" alt="Photo Post" class="w-full h-auto rounded-md">
             <div *ngIf="post.type === 'VIDEO' && post.mediaUrl" class="relative" style="padding-bottom: 56.25%; height: 0;">
               <iframe *ngIf="isYouTubeVideo(post.mediaUrl); else genericVideo" [src]="getYouTubeEmbedUrl(post.mediaUrl)" frameborder="0" allowfullscreen class="absolute top-0 left-0 w-full h-full rounded-md"></iframe>
               <ng-template #genericVideo>
-                <video [src]="post.mediaUrl" controls class="w-full h-auto rounded-md"></video>
+                <video [src]="resolveMediaUrl(post.mediaUrl)" controls class="w-full h-auto rounded-md"></video>
               </ng-template>
             </div>
           </div>
@@ -51,16 +51,41 @@
             <p class="text-gray-800 mb-1">{{ post.caption }}</p>
             <p class="text-xs text-gray-500">{{ post.createdAt | date:'medium' }}</p>
             <div class="mt-2 flex space-x-2" *ngIf="canEditPost(post)">
-              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs" [routerLink]="['/create-post', post.id]">Edit</button>
-              <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs" (click)="deletePost(post.id)">Delete</button>
+              <!-- edit buttons here -->
+            </div>
+
+            <!-- Comentários -->
+            <div class="mt-3">
+              <button class="px-3 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300" (click)="toggleComments(post.id)">
+                {{ showComments[post.id] ? 'Ocultar comentários' : 'Mostrar comentários' }}
+              </button>
+
+              <div *ngIf="showComments[post.id]" class="mt-3 border-t pt-3">
+                <!-- Lista de comentários -->
+                <div *ngIf="commentsByPostId[post.id] && commentsByPostId[post.id].length > 0; else semComentarios">
+                  <div *ngFor="let comment of commentsByPostId[post.id]" class="mb-2">
+                    <p class="text-sm text-gray-800">{{ comment.text }}</p>
+                    <p class="text-xs text-gray-500">Por: {{ comment.author?.fullName || comment.author?.username }} • {{ comment.createdAt | date:'short' }}</p>
+                    <button *ngIf="canDeleteComment(comment)" class="text-xs text-red-600 hover:underline" (click)="deleteComment(comment.id, post.id)">Excluir</button>
+                  </div>
+                </div>
+                <ng-template #semComentarios>
+                  <p class="text-sm text-gray-500">Ainda não há comentários.</p>
+                </ng-template>
+
+                <!-- Adicionar comentário -->
+                <div class="mt-2" *ngIf="isAuthenticated; else precisaLogin">
+                  <input class="w-full border rounded p-2 text-sm" [(ngModel)]="newCommentText[post.id]" placeholder="Escreva um comentário..." />
+                  <button class="mt-2 px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700" (click)="addComment(post.id)">Enviar</button>
+                </div>
+                <ng-template #precisaLogin>
+                  <p class="text-sm text-gray-500">Faça login para comentar.</p>
+                </ng-template>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div *ngIf="!loading && albums.length === 0 && !error" class="empty-feed">
-    <p>No albums found in the feed. Be the first to create one!</p>
   </div>
 </div>

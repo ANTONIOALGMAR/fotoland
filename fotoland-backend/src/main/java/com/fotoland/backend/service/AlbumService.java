@@ -32,4 +32,25 @@ public class AlbumService {
     public List<Album> findAllAlbums() {
         return albumRepository.findAll();
     }
+
+    public Album findById(Long id) {
+        return albumRepository.findById(id).orElseThrow(() -> new RuntimeException("Album not found"));
+    }
+
+    public Album updateAlbum(Long id, Album updated) {
+        Album existing = albumRepository.findById(id).orElseThrow(() -> new RuntimeException("Album not found"));
+        existing.setTitle(updated.getTitle());
+        existing.setDescription(updated.getDescription());
+        existing.setType(updated.getType());
+        existing.setLocation(updated.getLocation());
+        existing.setEventName(updated.getEventName());
+        return albumRepository.save(existing);
+    }
+
+    public void deleteAlbum(Long id) {
+        if (!albumRepository.existsById(id)) {
+            throw new RuntimeException("Album not found");
+        }
+        albumRepository.deleteById(id);
+    }
 }

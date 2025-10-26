@@ -12,7 +12,6 @@ export class RegisterComponent {
   user = {
     fullName: '', // Adicionado
     username: '', // Adicionado
-    email: '',
     password: '',
     phoneNumber: '', // Adicionado
     address: '', // Adicionado

@@ -1,0 +1,80 @@
+<div class="background-slideshow">
+  <div class="slide" style="background-image: url('assets/futuristic-background.jpg');"></div>
+  <div class="slide" style="background-image: url('assets/futuristic-background2.jpg');"></div>
+  <div class="slide" style="background-image: url('assets/futuristic-background3.jpg');"></div>
+</div>
+
+<div class="album-detail-container">
+  <div *ngIf="loading" class="loading-indicator">
+    <p>Loading album...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button class="btn-back" (click)="goBack()">Back to Albums</button>
+  </div>
+
+  <div *ngIf="!loading && !error && album" class="album-content">
+    <!-- Album Header -->
+    <header class="album-header">
+      <div class="album-info">
+        <h1>{{ album.title }}</h1>
+        <p class="album-description">{{ album.description }}</p>
+        <div class="album-meta">
+          <span class="album-type">{{ album.type }}</span>
+          <span *ngIf="album.location" class="album-location">📍 {{ album.location }}</span>
+          <span *ngIf="album.eventName" class="album-event">🎉 {{ album.eventName }}</span>
+        </div>
+      </div>
+      <div class="album-actions">
+        <button class="btn-primary" (click)="addPhoto()">Add Photo</button>
+        <button class="btn-secondary" (click)="editAlbum()">Edit Album</button>
+        <button class="btn-back" (click)="goBack()">Back</button>
+      </div>
+    </header>
+
+    <!-- Photos Grid -->
+    <div *ngIf="posts.length > 0; else noPosts" class="photos-grid">
+      <div *ngFor="let post of posts" class="photo-card">
+        <div class="photo-container" (click)="openLightbox(post)" title="Ampliar">
+          <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" 
+               [src]="resolveMediaUrl(post.mediaUrl)" 
+               [alt]="post.caption || 'Photo'" 
+               class="photo-image">
+          <div *ngIf="post.type === 'VIDEO' && post.mediaUrl" class="video-container">
+            <iframe *ngIf="isYouTubeVideo(post.mediaUrl); else genericVideo" 
+                    [src]="getYouTubeEmbedUrl(post.mediaUrl)" 
+                    frameborder="0" 
+                    allowfullscreen 
+                    class="video-iframe"></iframe>
+            <ng-template #genericVideo>
+              <video [src]="resolveMediaUrl(post.mediaUrl)" controls class="video-element"></video>
+            </ng-template>
+          </div>
+        </div>
+        <div class="photo-info" *ngIf="post.caption">
+          <p class="photo-caption">{{ post.caption }}</p>
+          <p class="photo-date">{{ post.createdAt | date:'medium' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noPosts>
+      <div class="no-posts-message">
+        <h3>No photos in this album yet</h3>
+        <p>Start adding some memories!</p>
+        <button class="btn-primary" (click)="addPhoto()">Add First Photo</button>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<!-- Lightbox overlay -->
+<div class="lightbox-overlay" *ngIf="lightboxOpen" (click)="closeLightbox()">
+  <div class="lightbox-content" (click)="$event.stopPropagation()">
+    <button class="lightbox-close" (click)="closeLightbox()">×</button>
+    <img *ngIf="lightboxType === 'PHOTO'" [src]="resolveMediaUrl(lightboxUrl)" alt="Zoom" class="lightbox-media">
+    <video *ngIf="lightboxType === 'VIDEO' && !isYouTubeVideo(lightboxUrl)" [src]="resolveMediaUrl(lightboxUrl)" controls class="lightbox-media"></video>
+    <iframe *ngIf="lightboxType === 'VIDEO' && isYouTubeVideo(lightboxUrl)" [src]="getYouTubeEmbedUrl(lightboxUrl)" frameborder="0" allowfullscreen class="lightbox-media"></iframe>
+  </div>
+</div>

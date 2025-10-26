@@ -43,11 +43,11 @@ export class LoginComponent {
         }
       },
       error: (error) => {
-        // Captura e exibe o erro caso o login falhe (ex: senha incorreta, servidor fora do ar etc.)
         console.error('❌ Erro ao tentar logar:', error);
-
-        // Exibe uma mensagem amigável ao usuário
-        alert('Falha no login: ' + (error.error?.message || error.message || 'Erro desconhecido'));
+        const status = (error && typeof error.status !== 'undefined') ? error.status : 0;
+        const url = error?.url || 'URL de login';
+        const detail = error?.error?.message || error.message || 'Erro desconhecido';
+        alert(`Falha no login (status ${status}) em ${url}: ${detail}`);
       }
     });
   }

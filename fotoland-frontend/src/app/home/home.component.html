@@ -26,7 +26,11 @@
         <div class="album-card-footer">
           <p *ngIf="album.location">Location: {{ album.location }}</p>
           <p *ngIf="album.eventName">Event: {{ album.eventName }}</p>
-          <!-- In a future version, a button to view the album could go here -->
+          <div class="album-actions">
+            <button class="btn-view" (click)="viewAlbum(album.id)">Ver Álbum</button>
+            <button class="btn-edit" (click)="editAlbum(album.id)">Editar</button>
+            <button class="btn-delete" (click)="deleteAlbum(album.id)">Excluir</button>
+          </div>
         </div>
       </div>
     </div>

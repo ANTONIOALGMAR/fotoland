@@ -1,1 +1,78 @@
-<router-outlet></router-outlet>
+<div class="app-layout">
+  <!-- Botão Hamburguer para abrir/fechar sidebar (apenas quando autenticado e sidebar fechada) -->
+  <button class="hamburger" (click)="toggleSidebar()" aria-label="Alternar menu" *ngIf="isAuthenticated && !isSidebarOpen">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Sidebar (apenas quando autenticado) -->
+  <aside class="sidebar" [ngClass]="{ 'collapsed': !isSidebarOpen }" *ngIf="isAuthenticated">
+    <div class="sidebar-header">
+      <span>Fotoland</span>
+      <button class="collapse-btn" (click)="toggleSidebar()" aria-label="Recolher menu" title="Recolher menu">
+        ←
+      </button>
+    </div>
+    <nav class="nav-links">
+      <!-- Seção: Álbuns (somente autenticado) -->
+      <div class="accordion-section">
+        <button class="accordion-header" (click)="toggleSection('album')">
+          Álbuns
+          <span class="chevron" [ngClass]="{ 'open': sections.album }">⌄</span>
+        </button>
+        <div class="accordion-content" [ngClass]="{ 'open': sections.album }">
+          <a routerLink="/home" class="nav-link">Meus Álbuns</a>
+          <a routerLink="/create-album" class="nav-link">Criar Álbum</a>
+        </div>
+      </div>
+
+      <!-- Seção: Posts (somente autenticado) -->
+      <div class="accordion-section">
+        <button class="accordion-header" (click)="toggleSection('post')">
+          Posts
+          <span class="chevron" [ngClass]="{ 'open': sections.post }">⌄</span>
+        </button>
+        <div class="accordion-content" [ngClass]="{ 'open': sections.post }">
+          <a routerLink="/create-post" class="nav-link">Criar Post</a>
+        </div>
+      </div>
+
+      <!-- Seção: Feed (sempre visível) -->
+      <div class="accordion-section">
+        <button class="accordion-header" (click)="toggleSection('feed')">
+          Feed
+          <span class="chevron" [ngClass]="{ 'open': sections.feed }">⌄</span>
+        </button>
+        <div class="accordion-content" [ngClass]="{ 'open': sections.feed }">
+          <a routerLink="/feed" class="nav-link">Ver Feed</a>
+        </div>
+      </div>
+
+      <!-- Seção: Comentários (placeholder) -->
+      <div class="accordion-section">
+        <button class="accordion-header" (click)="toggleSection('comment')">
+          Comentários
+          <span class="chevron" [ngClass]="{ 'open': sections.comment }">⌄</span>
+        </button>
+        <div class="accordion-content" [ngClass]="{ 'open': sections.comment }">
+          <a routerLink="/feed" class="nav-link">Ver comentários (no Feed)</a>
+        </div>
+      </div>
+
+      <!-- Logout quando autenticado -->
+      <button class="logout-btn" (click)="onLogout()">Logout</button>
+    </nav>
+  </aside>
+
+  <main class="content" [ngClass]="{ 'expanded': !isSidebarOpen || !isAuthenticated }">
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+    
+    <!-- Rodapé com créditos -->
+    <footer class="app-footer">
+      <p>Desenvolvido por Antonio Algmar. Todos os direitos reservados.</p>
+    </footer>
+  </main>
+</div>

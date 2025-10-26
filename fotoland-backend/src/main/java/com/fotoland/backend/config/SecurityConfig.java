@@ -60,11 +60,14 @@ public class SecurityConfig {
         return request -> {
             CorsConfiguration configuration = new CorsConfiguration();
             
-            // ✅ Padrões de domínios permitidos (suporta Netlify previews)
+            // ✅ Padrões de domínios permitidos (suporta Netlify previews e localhost em várias portas)
             configuration.setAllowedOriginPatterns(List.of(
                 "https://*.netlify.app", // Netlify (prod e previews)
                 "https://fotoland-frontend.onrender.com", // alternativa Render
-                "http://localhost:4200" // ambiente local
+                "http://localhost:4200", // ambiente local padrão
+                "http://localhost:4201", // dev server alternativo
+                "http://localhost:4202", // dev server alternativo
+                "http://localhost:*" // qualquer porta local
             ));
             
             // ✅ Métodos e cabeçalhos permitidos

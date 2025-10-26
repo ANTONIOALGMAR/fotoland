@@ -6,7 +6,7 @@
 
 <div class="create-album-container">
   <div class="create-album-form">
-    <h2>Create New Album</h2>
+    <h2>{{ isEditMode ? 'Edit Album' : 'Create New Album' }}</h2>
     <form (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="title">Title</label>

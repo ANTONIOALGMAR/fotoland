@@ -46,12 +46,23 @@ export class CreatePostComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) { } // Inject ActivatedRoute
 
   ngOnInit(): void {
-    this.loadMyAlbums();
+    // Ler albumId via query params (ao vir do detalhe do álbum)
+    this.route.queryParamMap.subscribe(params => {
+      const albumIdParam = params.get('albumId');
+      if (albumIdParam) {
+        this.selectedAlbumId = Number(albumIdParam);
+      }
+    });
+
+    // Detectar modo de edição apenas quando a rota contém o ID do post
     this.postId = this.route.snapshot.paramMap.get('id') ? Number(this.route.snapshot.paramMap.get('id')) : null;
     if (this.postId) {
       this.isEditMode = true;
       this.loadPostForEdit(this.postId);
     }
+
+    // Carregar álbuns após inicializar parâmetros
+    this.loadMyAlbums();
   }
 
   loadMyAlbums(): void {
@@ -59,7 +70,10 @@ export class CreatePostComponent implements OnInit {
       next: (response) => {
         this.albums = response;
         if (this.albums.length > 0) {
-          this.selectedAlbumId = this.albums[0].id;
+          // Não sobrescrever se já veio um albumId pela rota
+          if (!this.selectedAlbumId) {
+            this.selectedAlbumId = this.albums[0].id;
+          }
         }
       },
       error: (error) => {
