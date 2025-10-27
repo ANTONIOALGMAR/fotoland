@@ -7,8 +7,7 @@ import { AuthService } from '../auth/services/auth.service';
   selector: 'app-album-detail',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './album-detail.component.html',
-  styleUrl: './album-detail.component.css'
+  templateUrl: './album-detail.component.html'
 })
 export class AlbumDetailComponent implements OnInit {
   album: any = null;
