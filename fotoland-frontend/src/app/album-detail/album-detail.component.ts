@@ -38,21 +38,11 @@ export class AlbumDetailComponent implements OnInit {
     this.loading = true;
     this.authService.getAlbumById(this.albumId).subscribe({
       next: (response) => {
-        this.album = response;
-        // Em vez de depender de album.posts (pode estar lazy no backend), buscar via API dedicada
-        this.authService.getPostsByAlbumId(this.albumId!).subscribe({
-          next: (posts) => {
-            this.posts = posts || [];
-            this.loading = false;
-            console.log('Album details:', this.album);
-            console.log('Album posts:', this.posts);
-          },
-          error: (error) => {
-            console.error('Error fetching album posts:', error);
-            this.posts = [];
-            this.loading = false;
-          }
-        });
+        this.album = response;        
+        this.posts = this.album.posts || []; // Assumindo que os posts vêm com o álbum
+        this.loading = false;
+        console.log('Album details:', this.album);
+        console.log('Album posts:', this.posts);
       },
       error: (error) => {
         console.error('Error fetching album details:', error);
@@ -62,8 +52,9 @@ export class AlbumDetailComponent implements OnInit {
     });
   }
 
-  // Resolver media URL via serviço
+  // Este método irá construir a URL completa para a imagem/vídeo
   resolveMediaUrl(url: string): string {
+    // A implementação deste método deve estar no AuthService
     return this.authService.resolveMediaUrl(url);
   }
 
@@ -72,7 +63,7 @@ export class AlbumDetailComponent implements OnInit {
   lightboxUrl: string = '';
   lightboxType: 'PHOTO' | 'VIDEO' | null = null;
 
-  openLightbox(post: any): void {
+  openLightbox(post: any): void {    
     this.lightboxType = post.type;
     this.lightboxUrl = post.mediaUrl || '';
     this.lightboxOpen = true;
@@ -86,8 +77,7 @@ export class AlbumDetailComponent implements OnInit {
 
   addPhoto(): void {
     if (this.albumId) {
-      // Navega para a criação de post passando o albumId como query param
-      this.router.navigate(['/create-post'], { queryParams: { albumId: this.albumId } });
+      this.router.navigate(['/create-post', this.albumId]);
     }
   }
 

@@ -1,11 +1,8 @@
 package com.fotoland.backend.service;
 
 import com.fotoland.backend.model.Album;
-import com.fotoland.backend.model.Post;
 import com.fotoland.backend.model.User;
 import com.fotoland.backend.repository.AlbumRepository;
-import com.fotoland.backend.repository.CommentRepository;
-import com.fotoland.backend.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,17 +15,13 @@ public class AlbumService {
 
     private final AlbumRepository albumRepository;
     private final UserService userService;
-    private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public AlbumService(AlbumRepository albumRepository, UserService userService, PostRepository postRepository, CommentRepository commentRepository) {
+    public AlbumService(AlbumRepository albumRepository, UserService userService) {
         this.albumRepository = albumRepository;
         this.userService = userService;
-        this.postRepository = postRepository;
-        this.commentRepository = commentRepository;
     }
 
     public Album createAlbum(Album album, String username) {

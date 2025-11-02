@@ -54,26 +54,23 @@ export class CreateAlbumComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error loading album for edit:', error);
-          const status = (error && typeof error.status !== 'undefined') ? error.status : 0;
+          // Usando o operador de encadeamento opcional para mais segurança
+          const status = error?.status ?? 0;
 
           if (status === 401) {
             alert('Sessão expirada. Faça login novamente.');
             this.router.navigate(['/login']);
-            return;
-          }
-          if (status === 403) {
+          } else if (status === 403) {
             alert('Você não tem permissão para editar este álbum.');
             this.router.navigate(['/home']);
-            return;
-          }
-          if (status === 404) {
+          } else if (status === 404) {
             alert('Álbum não encontrado.');
             this.router.navigate(['/home']);
-            return;
+          } else {
+            // Mensagem de erro mais genérica para outros casos
+            alert(`Erro ao carregar álbum para edição (status ${status}).`);
+            this.router.navigate(['/home']);
           }
-
-          alert(`Erro ao carregar álbum para edição (status ${status}).`);
-          this.router.navigate(['/home']);
         }
       });
     }
@@ -90,9 +87,9 @@ export class CreateAlbumComponent implements OnInit {
         },
         error: (error) => {
           console.error('❌ Falha ao atualizar álbum:', error);
-          const status = (error && typeof error.status !== 'undefined') ? error.status : 0;
+          const status = error?.status ?? 0;
           const url = error?.url || 'URL de álbuns';
-          const detail = error?.error?.message || error.message || 'Erro desconhecido';
+          const detail = error?.error?.message || error?.message || 'Erro desconhecido';
           alert(`Falha ao atualizar álbum (status ${status}) em ${url}: ${detail}`);
         }
       });
@@ -106,9 +103,9 @@ export class CreateAlbumComponent implements OnInit {
         },
         error: (error) => {
           console.error('❌ Falha ao criar álbum:', error);
-          const status = (error && typeof error.status !== 'undefined') ? error.status : 0;
+          const status = error?.status ?? 0;
           const url = error?.url || 'URL de álbuns';
-          const detail = error?.error?.message || error.message || 'Erro desconhecido';
+          const detail = error?.error?.message || error?.message || 'Erro desconhecido';
           alert(`Falha ao criar álbum (status ${status}) em ${url}: ${detail}`);
         }
       });
