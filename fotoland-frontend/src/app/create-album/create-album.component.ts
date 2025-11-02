@@ -3,14 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth/services/auth.service'; // Assuming AuthService will handle album creation
 import { Router, ActivatedRoute } from '@angular/router';
-
-// Enum for AlbumType (should match backend)
-export enum AlbumType {
-  GENERAL = 'GENERAL',
-  PROFILE = 'PROFILE',
-  LOCATION = 'LOCATION',
-  EVENT = 'EVENT'
-}
+import { Album, AlbumType } from '../../../../api.models';
 
 @Component({
   selector: 'app-create-album',
@@ -20,7 +13,8 @@ export enum AlbumType {
   styleUrl: './create-album.component.css'
 })
 export class CreateAlbumComponent implements OnInit {
-  album: any = {
+  // Use a partial Album type for the form model
+  album: Partial<Album> = {
     title: '',
     description: '',
     type: AlbumType.GENERAL,

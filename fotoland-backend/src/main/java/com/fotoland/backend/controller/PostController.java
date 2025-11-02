@@ -39,20 +39,23 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post post, Authentication authentication) {
         // Authorization should be handled in the service layer
-        Post updatedPost = postService.updatePost(id, post);
+        String username = authentication.getName();
+        Post updatedPost = postService.updatePost(id, post, username);
         return new ResponseEntity<>(updatedPost, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id, Authentication authentication) {
         // Authorization should be handled in the service layer
-        postService.deletePost(id);
+        String username = authentication.getName();
+        postService.deletePost(id, username);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/album/{albumId}")
     public ResponseEntity<Post> createPost(@PathVariable Long albumId, @RequestBody Post post, Authentication authentication) {
-        Post createdPost = postService.createPost(post, albumId);
+        String username = authentication.getName();
+        Post createdPost = postService.createPost(post, albumId, username);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
 }

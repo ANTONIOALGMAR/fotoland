@@ -22,9 +22,6 @@ public class AlbumController {
 
     @PostMapping
     public ResponseEntity<Album> createAlbum(@RequestBody Album album, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
         Album createdAlbum = albumService.createAlbum(album, username);
@@ -33,9 +30,6 @@ public class AlbumController {
 
     @GetMapping("/my")
     public ResponseEntity<List<Album>> getMyAlbums(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
         List<Album> albums = albumService.findAlbumsByUsername(username);
@@ -56,17 +50,14 @@ public class AlbumController {
 
   @PutMapping("/{id}")
   public ResponseEntity<Album> updateAlbum(@PathVariable Long id, @RequestBody Album album, Authentication authentication) {
-    if (authentication == null || !authentication.isAuthenticated()) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-    String username = ((org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal()).getUsername();
+    String username = authentication.getName();
     Album updated = albumService.updateAlbum(id, album, username);
     return ResponseEntity.ok(updated);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteAlbum(@PathVariable Long id, Authentication authentication) {
-    String username = ((org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal()).getUsername();
+    String username = authentication.getName();
     albumService.deleteAlbum(id, username);
     return ResponseEntity.noContent().build();
   }

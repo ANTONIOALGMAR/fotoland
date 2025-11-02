@@ -4,6 +4,7 @@ import com.fotoland.backend.model.Album;
 import com.fotoland.backend.model.Post;
 import com.fotoland.backend.repository.AlbumRepository;
 import com.fotoland.backend.repository.PostRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,9 +20,13 @@ public class PostService {
         this.albumRepository = albumRepository;
     }
 
-    public Post createPost(Post post, Long albumId) {
+    public Post createPost(Post post, Long albumId, String username) {
         Album album = albumRepository.findById(albumId)
                 .orElseThrow(() -> new RuntimeException("Album not found"));
+        // Security Check: Ensure the user owns the album they are posting to.
+        if (!album.getAuthor().getUsername().equals(username)) {
+            throw new AccessDeniedException("User does not have permission to post in this album");
+        }
         post.setAlbum(album);
         return postRepository.save(post);
     }
@@ -39,9 +44,14 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException("Post not found"));
     }
 
-    public Post updatePost(Long id, Post updatedPost) {
+    public Post updatePost(Long id, Post updatedPost, String username) {
         Post existingPost = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        // Security Check: Ensure the user owns the post.
+        if (!existingPost.getAlbum().getAuthor().getUsername().equals(username)) {
+            throw new AccessDeniedException("User does not have permission to update this post");
+        }
 
         existingPost.setCaption(updatedPost.getCaption());
         existingPost.setMediaUrl(updatedPost.getMediaUrl());
@@ -51,10 +61,13 @@ public class PostService {
         return postRepository.save(existingPost);
     }
 
-    public void deletePost(Long id) {
-        if (!postRepository.existsById(id)) {
-            throw new RuntimeException("Post not found");
+    public void deletePost(Long id, String username) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        // Security Check: Ensure the user owns the post.
+        if (!post.getAlbum().getAuthor().getUsername().equals(username)) {
+            throw new AccessDeniedException("User does not have permission to delete this post");
         }
-        postRepository.deleteById(id);
+        postRepository.delete(post);
     }
 }

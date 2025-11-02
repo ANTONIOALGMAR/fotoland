@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { Album, Post, User, Comment } from '../../../../../api.models';
 
 @Injectable({
   providedIn: 'root'
@@ -28,26 +29,19 @@ export class AuthService {
   uploadProfilePicture(file: File): Observable<{ fileUrl: string }> {
     const formData = new FormData();
     formData.append('file', file);
-
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      ...(token ? { Authorization: `Bearer ${token}` } : {})
-    });
-
     return this.http.post<{ fileUrl: string }>(
       `${this.uploadApiUrl}/upload`,
-      formData,
-      { headers }
+      formData
     );
   }
 
   // 👤 Registro e login
-  register(user: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, user);
+  register(user: Partial<User>): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/register`, user);
   }
 
-  login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
+  login(credentials: any): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, credentials);
   }
 
   // 🔑 Token e autenticação
@@ -60,84 +54,75 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  getMe(): Observable<any> {
-    return this.http.get(`${this.userApiUrl}/me`, this.getAuthHeaders());
+  getMe(): Observable<User> {
+    return this.http.get<User>(`${this.userApiUrl}/me`);
   }
 
   // 🖼️ Álbuns
-  createAlbum(album: any): Observable<any> {
-    return this.http.post(this.albumApiUrl, album, this.getAuthHeaders());
+  createAlbum(album: Partial<Album>): Observable<Album> {
+    return this.http.post<Album>(this.albumApiUrl, album);
   }
 
-  getMyAlbums(): Observable<any> {
-    return this.http.get(`${this.albumApiUrl}/my`, this.getAuthHeaders());
+  getMyAlbums(): Observable<Album[]> {
+    return this.http.get<Album[]>(`${this.albumApiUrl}/my`);
   }
 
-  getAllAlbums(): Observable<any> {
-    return this.http.get(this.albumApiUrl, this.getAuthHeaders());
+  getAllAlbums(): Observable<Album[]> {
+    return this.http.get<Album[]>(this.albumApiUrl);
   }
 
-  getAlbumById(id: number): Observable<any> {
-    return this.http.get(`${this.albumApiUrl}/${id}`, this.getAuthHeaders());
+  getAlbumById(id: number): Observable<Album> {
+    return this.http.get<Album>(`${this.albumApiUrl}/${id}`);
   }
 
-  updateAlbum(id: number, album: any): Observable<any> {
-    return this.http.put(`${this.albumApiUrl}/${id}`, album, this.getAuthHeaders());
+  updateAlbum(id: number, album: Partial<Album>): Observable<Album> {
+    return this.http.put<Album>(`${this.albumApiUrl}/${id}`, album);
   }
 
   deleteAlbum(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.albumApiUrl}/${id}`, this.getAuthHeaders());
+    return this.http.delete<void>(`${this.albumApiUrl}/${id}`);
   }
 
   // 📬 Posts
-  createPost(post: any, albumId: number): Observable<any> {
-    return this.http.post(`${this.postApiUrl}/album/${albumId}`, post, this.getAuthHeaders());
+  createPost(post: Partial<Post>, albumId: number): Observable<Post> {
+    return this.http.post<Post>(`${this.postApiUrl}/album/${albumId}`, post);
   }
 
-  getAllPosts(): Observable<any> {
-    return this.http.get(this.postApiUrl, this.getAuthHeaders());
+  getAllPosts(): Observable<Post[]> {
+    return this.http.get<Post[]>(this.postApiUrl);
   }
 
-  getPostsByAlbumId(albumId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.postApiUrl}/album/${albumId}`, this.getAuthHeaders());
+  getPostsByAlbumId(albumId: number): Observable<Post[]> {
+    return this.http.get<Post[]>(`${this.postApiUrl}/album/${albumId}`);
   }
 
-  updatePost(postId: number, post: any): Observable<any> {
-    return this.http.put(`${this.postApiUrl}/${postId}`, post, this.getAuthHeaders());
+  updatePost(postId: number, post: Partial<Post>): Observable<Post> {
+    return this.http.put<Post>(`${this.postApiUrl}/${postId}`, post);
   }
 
-  deletePost(postId: number): Observable<any> {
-    return this.http.delete(`${this.postApiUrl}/${postId}`, this.getAuthHeaders());
+  deletePost(postId: number): Observable<void> {
+    return this.http.delete<void>(`${this.postApiUrl}/${postId}`);
   }
 
-  getPostById(postId: number): Observable<any> {
-    return this.http.get(`${this.postApiUrl}/${postId}`, this.getAuthHeaders());
+  getPostById(postId: number): Observable<Post> {
+    return this.http.get<Post>(`${this.postApiUrl}/${postId}`);
   }
 
   // 💬 Comments
-  getCommentsByPostId(postId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.commentsUrl}/post/${postId}`, this.getAuthHeaders());
+  getCommentsByPostId(postId: number): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.commentsUrl}/post/${postId}`);
   }
 
-  addComment(postId: number, text: string): Observable<any> {
-    return this.http.post<any>(`${this.commentsUrl}/post/${postId}`, { text }, this.getAuthHeaders());
+  addComment(postId: number, text: string): Observable<Comment> {
+    return this.http.post<Comment>(`${this.commentsUrl}/post/${postId}`, { text });
   }
 
-  updateComment(id: number, text: string): Observable<any> {
-    return this.http.put<any>(`${this.commentsUrl}/${id}`, { text }, this.getAuthHeaders());
+  updateComment(id: number, text: string): Observable<Comment> {
+    return this.http.put<Comment>(`${this.commentsUrl}/${id}`, { text });
   }
 
   deleteComment(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.commentsUrl}/${id}`, this.getAuthHeaders());
-  }
-
-  // 🧱 Cabeçalhos padrão com token
-  private getAuthHeaders() {
-    const token = this.getToken();
-    const headers = new HttpHeaders({
-      ...(token ? { Authorization: `Bearer ${token}` } : {})
-    });
-    return { headers };
+    return this.http.delete<void>(`${this.commentsUrl}/${id}`);
   }
 
   // 🔗 Resolver URL de mídia (img/video) para backend correto
@@ -153,10 +138,5 @@ export class AuthService {
     }
     // Qualquer outro formato relativo
     return `${this.BASE_URL}/${trimmed.replace(/^\/*/, '')}`;
-  }
-
-  // 🔄 Alias para compatibilidade com código existente
-  createComment(postId: number, text: string): Observable<any> {
-    return this.addComment(postId, text);
   }
 }

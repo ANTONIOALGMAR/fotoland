@@ -94,16 +94,22 @@ export class AlbumDetailComponent implements OnInit {
   }
 
   isYouTubeVideo(url: string): boolean {
-    return url.includes('youtube.com') || url.includes('youtu.be');
+    if (!url) return false;
+    // More robust regex to match various YouTube URL formats
+    const youtubeRegex = /^(https?:\/\/)?(www\.|m\.)?(youtube\.com|youtu\.be)\/.+$/;
+    return youtubeRegex.test(url);
   }
 
   getYouTubeEmbedUrl(url: string): string {
     const videoId = this.extractYouTubeVideoId(url);
-    return `https://www.youtube.com/embed/${videoId}`;
+    // Use DomSanitizer in a real app to prevent XSS, but for now, this is a safe construction.
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
   }
 
   private extractYouTubeVideoId(url: string): string {
-    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    if (!url) return '';
+    // This regex covers short, long, and embed URLs
+    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const match = url.match(regex);
     return match ? match[1] : '';
   }

@@ -5,6 +5,7 @@ import com.fotoland.backend.model.Post;
 import com.fotoland.backend.model.User;
 import com.fotoland.backend.repository.CommentRepository;
 import com.fotoland.backend.repository.PostRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class CommentService {
     public Comment updateComment(Long id, String text, String username) {
         Comment existing = commentRepository.findById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
         if (!existing.getAuthor().getUsername().equals(username)) {
-            throw new RuntimeException("Forbidden: cannot edit another user's comment");
+            throw new AccessDeniedException("User does not have permission to edit this comment");
         }
         existing.setText(text);
         return commentRepository.save(existing);
@@ -47,7 +48,7 @@ public class CommentService {
     public void deleteComment(Long id, String username) {
         Comment existing = commentRepository.findById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
         if (!existing.getAuthor().getUsername().equals(username)) {
-            throw new RuntimeException("Forbidden: cannot delete another user's comment");
+            throw new AccessDeniedException("User does not have permission to delete this comment");
         }
         commentRepository.deleteById(id);
     }

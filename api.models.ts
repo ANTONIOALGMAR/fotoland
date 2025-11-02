@@ -34,3 +34,10 @@ export interface Album {
   author: User;
   posts: Post[];
 }
+
+export interface Comment {
+  id: number;
+  text: string;
+  author: User;
+  createdAt: string; // or Date
+}
