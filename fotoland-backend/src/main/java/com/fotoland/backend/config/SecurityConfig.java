@@ -40,8 +40,8 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 2. Define a política de sessão
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite preflight OPTIONS
+                .requestMatchers("/uploads/**").permitAll() // Servir arquivos públicos (MOVIDO PARA CIMA)
                 .requestMatchers("/api/auth/**").permitAll() // Login e registro públicos
-                .requestMatchers("/uploads/**").permitAll() // Servir arquivos públicos
                 .requestMatchers(HttpMethod.GET, "/api/albums").permitAll() // Feed público
                 // 3. Protege as rotas restantes
                 .requestMatchers("/api/albums/**", "/api/posts/**", "/api/upload", "/api/comments/**").authenticated()
