@@ -44,7 +44,8 @@ public class SecurityConfig {
                 .requestMatchers("/uploads/**").permitAll() // Servir arquivos públicos
                 .requestMatchers(HttpMethod.GET, "/api/albums").permitAll() // Feed público
                 // 3. Protege as rotas restantes
-                .requestMatchers("/api/albums/**", "/api/user/**", "/api/posts/**", "/api/upload", "/api/comments/**").authenticated()
+                .requestMatchers("/api/albums/**", "/api/posts/**", "/api/upload", "/api/comments/**").authenticated()
+                .requestMatchers("/api/user/**").hasRole("USER") // Explicitly grant access to users with ROLE_USER
                 .anyRequest().authenticated() // 4. Torna todas as outras rotas seguras por padrão
             )
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // 5. Adiciona o filtro JWT
