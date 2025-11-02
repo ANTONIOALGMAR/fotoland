@@ -20,7 +20,7 @@ public class FileUploadController {
     // Define the directory where files will be stored
     // IMPORTANT: In a production environment, this should be external storage (S3, GCS, etc.)
     // For local development, we'll use a directory within the project or a temp folder.
-    private final String uploadDir = "uploads/"; // Relative to project root
+    private final String uploadDir = "src/main/resources/static/uploads/"; // Relative to project root
 
     public FileUploadController() throws IOException {
         // Ensure the upload directory exists
