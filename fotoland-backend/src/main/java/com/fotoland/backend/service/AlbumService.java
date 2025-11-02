@@ -3,6 +3,7 @@ package com.fotoland.backend.service;
 import com.fotoland.backend.model.Album;
 import com.fotoland.backend.model.User;
 import com.fotoland.backend.repository.AlbumRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +44,11 @@ public class AlbumService {
         return albumRepository.findById(id).orElseThrow(() -> new RuntimeException("Album not found"));
     }
 
-    public Album updateAlbum(Long id, Album updated) {
+    public Album updateAlbum(Long id, Album updated, String username) {
         Album existing = albumRepository.findById(id).orElseThrow(() -> new RuntimeException("Album not found"));
+        if (!existing.getAuthor().getUsername().equals(username)) {
+            throw new AccessDeniedException("User does not have permission to update this album");
+        }
         existing.setTitle(updated.getTitle());
         existing.setDescription(updated.getDescription());
         existing.setType(updated.getType());
@@ -54,7 +58,11 @@ public class AlbumService {
     }
 
     @Transactional
-    public void deleteAlbum(Long id) {
+    public void deleteAlbum(Long id, String username) {
+        Album album = albumRepository.findById(id).orElseThrow(() -> new RuntimeException("Album not found"));
+        if (!album.getAuthor().getUsername().equals(username)) {
+            throw new AccessDeniedException("User does not have permission to delete this album");
+        }
         // Use native queries to ensure deletion order and avoid JPA lifecycle issues
         entityManager.createNativeQuery("DELETE FROM comment WHERE post_id IN (SELECT id FROM post WHERE album_id = ?)")
             .setParameter(1, id)

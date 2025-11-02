@@ -38,29 +38,20 @@ public class PostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post post, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        // Authorization should be handled in the service layer
         Post updatedPost = postService.updatePost(id, post);
         return new ResponseEntity<>(updatedPost, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        // Authorization should be handled in the service layer
         postService.deletePost(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/album/{albumId}")
     public ResponseEntity<Post> createPost(@PathVariable Long albumId, @RequestBody Post post, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        // In a real app, you'd verify the authenticated user owns the albumId
-        // For now, we'll trust the albumId
         Post createdPost = postService.createPost(post, albumId);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }

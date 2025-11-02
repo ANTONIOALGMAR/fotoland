@@ -59,26 +59,15 @@ public class AlbumController {
     if (authentication == null || !authentication.isAuthenticated()) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-    Album existing = albumService.findById(id);
     String username = ((org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal()).getUsername();
-    if (!existing.getAuthor().getUsername().equals(username)) {
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    }
-    Album updated = albumService.updateAlbum(id, album);
+    Album updated = albumService.updateAlbum(id, album, username);
     return ResponseEntity.ok(updated);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteAlbum(@PathVariable Long id, Authentication authentication) {
-    if (authentication == null || !authentication.isAuthenticated()) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-    Album existing = albumService.findById(id);
     String username = ((org.springframework.security.core.userdetails.UserDetails) authentication.getPrincipal()).getUsername();
-    if (!existing.getAuthor().getUsername().equals(username)) {
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-    }
-    albumService.deleteAlbum(id);
+    albumService.deleteAlbum(id, username);
     return ResponseEntity.noContent().build();
   }
 }

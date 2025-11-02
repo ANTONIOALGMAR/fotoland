@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth/services/auth.service';
+import { Album, Post } from '../../../../api.models'; // Import strong types
 
 @Component({
   selector: 'app-album-detail',
@@ -11,8 +12,8 @@ import { AuthService } from '../auth/services/auth.service';
   styleUrls: ['./album-detail.component.css']
 })
 export class AlbumDetailComponent implements OnInit {
-  album: any = null;
-  posts: any[] = [];
+  album: Album | null = null;
+  posts: Post[] = [];
   loading: boolean = true;
   error: string | null = null;
   albumId: number | null = null;
@@ -39,7 +40,8 @@ export class AlbumDetailComponent implements OnInit {
     this.authService.getAlbumById(this.albumId).subscribe({
       next: (response) => {
         this.album = response;        
-        this.posts = this.album.posts || []; // Assumindo que os posts vêm com o álbum
+        // Usando optional chaining (?.) para acessar 'posts' de forma segura, caso 'album' seja nulo.
+        this.posts = this.album?.posts || [];
         this.loading = false;
         console.log('Album details:', this.album);
         console.log('Album posts:', this.posts);
@@ -63,7 +65,7 @@ export class AlbumDetailComponent implements OnInit {
   lightboxUrl: string = '';
   lightboxType: 'PHOTO' | 'VIDEO' | null = null;
 
-  openLightbox(post: any): void {    
+  openLightbox(post: Post): void {    
     this.lightboxType = post.type;
     this.lightboxUrl = post.mediaUrl || '';
     this.lightboxOpen = true;
@@ -114,7 +116,8 @@ export class AlbumDetailComponent implements OnInit {
     if (confirm('Are you sure you want to delete this post?')) {
       this.authService.deletePost(postId).subscribe({
         next: () => {
-          this.loadAlbumDetails(); // Reload posts
+          // Otimização: remove o post da lista local em vez de recarregar tudo.
+          this.posts = this.posts.filter(p => p.id !== postId);
         },
         error: (error) => {
           console.error('Error deleting post:', error);

@@ -35,23 +35,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 1. Aplica CORS primeiro
             .csrf(csrf -> csrf.disable()) // Desativa CSRF (usamos JWT)
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS centralizado
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 2. Define a política de sessão
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite preflight OPTIONS
                 .requestMatchers("/api/auth/**").permitAll() // Login e registro públicos
                 .requestMatchers("/uploads/**").permitAll() // Servir arquivos públicos
                 .requestMatchers(HttpMethod.GET, "/api/albums").permitAll() // Feed público
-                .requestMatchers("/api/albums/**").authenticated() // Demais rotas de álbuns protegidas
-                .requestMatchers("/api/user/**").authenticated() // Perfil protegido
-                .requestMatchers("/api/posts/**").authenticated() // Posts protegidos
-                .requestMatchers("/api/upload").authenticated() // Upload de arquivos
-                .anyRequest().permitAll() // Outras rotas permanecem públicas
+                // 3. Protege as rotas restantes
+                .requestMatchers("/api/albums/**", "/api/user/**", "/api/posts/**", "/api/upload", "/api/comments/**").authenticated()
+                .anyRequest().authenticated() // 4. Torna todas as outras rotas seguras por padrão
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // 5. Adiciona o filtro JWT
 
-        // Inserir filtro JWT antes do UsernamePasswordAuthenticationFilter
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -84,7 +81,8 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(4);
+        // Aumentando a força do BCrypt. O padrão é 10. Valores entre 10 e 12 são recomendados.
+        return new BCryptPasswordEncoder(10);
     }
 
     @Bean
