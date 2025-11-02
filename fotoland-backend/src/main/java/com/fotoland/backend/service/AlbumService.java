@@ -62,15 +62,21 @@ public class AlbumService {
         // 1. Obter todas as postagens do álbum
         List<Post> posts = postRepository.findByAlbumId(id);
 
-        // 2. Para cada postagem, excluir os comentários associados
+        // 2. Desassociar postagens do álbum
+        for (Post post : posts) {
+            post.setAlbum(null);
+            postRepository.save(post);
+        }
+
+        // 3. Para cada postagem, excluir os comentários associados
         for (Post post : posts) {
             commentRepository.deleteAll(commentRepository.findByPostId(post.getId()));
         }
 
-        // 3. Excluir todas as postagens do álbum
+        // 4. Excluir todas as postagens do álbum
         postRepository.deleteAll(posts);
 
-        // 4. Finalmente, excluir o álbum
+        // 5. Finalmente, excluir o álbum
         albumRepository.delete(album);
     }
 }
