@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Album, Post, User, Comment } from '../../../../../api.models';
 
@@ -29,9 +29,15 @@ export class AuthService {
   uploadProfilePicture(file: File): Observable<{ fileUrl: string }> {
     const formData = new FormData();
     formData.append('file', file);
+    console.log('📤 Enviando upload para:', `${this.uploadApiUrl}/upload`);
     return this.http.post<{ fileUrl: string }>(
       `${this.uploadApiUrl}/upload`,
       formData
+    ).pipe(
+      catchError((error) => {
+        console.error('🚨 Erro ao enviar upload:', error);
+        return throwError(() => error);
+      })
     );
   }
 
