@@ -9,6 +9,8 @@ import com.fotoland.backend.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
@@ -18,6 +20,9 @@ public class AlbumService {
     private final UserService userService;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public AlbumService(AlbumRepository albumRepository, UserService userService, PostRepository postRepository, CommentRepository commentRepository) {
         this.albumRepository = albumRepository;
@@ -57,26 +62,17 @@ public class AlbumService {
 
     @Transactional
     public void deleteAlbum(Long id) {
-        Album album = albumRepository.findById(id).orElseThrow(() -> new RuntimeException("Album not found with id: " + id));
+        // Use native queries to ensure deletion order and avoid JPA lifecycle issues
+        entityManager.createNativeQuery("DELETE FROM comment WHERE post_id IN (SELECT id FROM post WHERE album_id = ?)")
+            .setParameter(1, id)
+            .executeUpdate();
 
-        // 1. Obter todas as postagens do álbum
-        List<Post> posts = postRepository.findByAlbumId(id);
+        entityManager.createNativeQuery("DELETE FROM post WHERE album_id = ?")
+            .setParameter(1, id)
+            .executeUpdate();
 
-        // 2. Desassociar postagens do álbum
-        for (Post post : posts) {
-            post.setAlbum(null);
-            postRepository.save(post);
-        }
-
-        // 3. Para cada postagem, excluir os comentários associados
-        for (Post post : posts) {
-            commentRepository.deleteAll(commentRepository.findByPostId(post.getId()));
-        }
-
-        // 4. Excluir todas as postagens do álbum
-        postRepository.deleteAll(posts);
-
-        // 5. Finalmente, excluir o álbum
-        albumRepository.delete(album);
+        entityManager.createNativeQuery("DELETE FROM album WHERE id = ?")
+            .setParameter(1, id)
+            .executeUpdate();
     }
 }
