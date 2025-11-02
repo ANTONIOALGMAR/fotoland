@@ -47,7 +47,7 @@ export class CreatePostComponent implements OnInit {
 
   ngOnInit(): void {
     // Ler albumId via query params (ao vir do detalhe do álbum)
-    this.route.queryParamMap.subscribe(params => {
+    this.route.paramMap.subscribe(params => {
       const albumIdParam = params.get('albumId');
       if (albumIdParam) {
         this.selectedAlbumId = Number(albumIdParam);
