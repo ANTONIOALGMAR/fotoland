@@ -19,7 +19,8 @@ const routes: Routes = [
   { path: 'edit-album/:id', component: CreateAlbumComponent, canActivate: [AuthGuard] }, // Proteger com AuthGuard
   { path: 'album/:id', component: AlbumDetailComponent, canActivate: [AuthGuard] }, // Proteger com AuthGuard
   { path: 'create-post', component: CreatePostComponent, canActivate: [AuthGuard] }, // Proteger com AuthGuard
-  { path: 'create-post/:id', component: CreatePostComponent, canActivate: [AuthGuard] }, // Proteger com AuthGuard
+  { path: 'edit-post/:id', component: CreatePostComponent, canActivate: [AuthGuard] }, // Rota para editar post
+
   { path: 'feed', component: FeedComponent, canActivate: [AuthGuard] }, // Proteger com AuthGuard
 ];
 

@@ -7,7 +7,8 @@ import { AuthService } from '../auth/services/auth.service';
   selector: 'app-album-detail',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './album-detail.component.html'
+  templateUrl: './album-detail.component.html',
+  styleUrls: ['./album-detail.component.css']
 })
 export class AlbumDetailComponent implements OnInit {
   album: any = null;
@@ -113,5 +114,9 @@ export class AlbumDetailComponent implements OnInit {
     const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
     const match = url.match(regex);
     return match ? match[1] : '';
+  }
+
+  editPost(postId: number): void {
+    this.router.navigate(['/edit-post', postId]);
   }
 }

@@ -37,6 +37,10 @@
     <div *ngIf="posts.length > 0; else noPosts" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <div *ngFor="let post of posts" class="bg-white shadow-md rounded-lg overflow-hidden">
         <div class="relative w-full h-48 bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden" (click)="openLightbox(post)" title="Ampliar">
+          <div class="post-actions">
+            <button (click)="editPost(post.id)">Edit</button>
+            <button (click)="deletePost(post.id)">Delete</button>
+          </div>
           <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" 
                [src]="resolveMediaUrl(post.mediaUrl)" 
                [alt]="post.caption || 'Photo'" 

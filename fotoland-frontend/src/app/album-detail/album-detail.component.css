@@ -1,0 +1,19 @@
+.post-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-bottom-left-radius: 0.5rem;
+}
+
+.post-actions button {
+  background-color: white;
+  color: black;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
