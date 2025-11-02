@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/albums").permitAll() // Feed público
                 // 3. Protege as rotas restantes
                 .requestMatchers("/api/albums/**", "/api/posts/**", "/api/upload", "/api/comments/**").authenticated()
-                .requestMatchers("/api/user/**").hasAuthority("ROLE_USER") // Explicitly grant access to users with ROLE_USER
+                .requestMatchers("/api/user/**").authenticated() // Reverte para authenticated() para depuração do 403
                 .anyRequest().authenticated() // 4. Torna todas as outras rotas seguras por padrão
             )
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // 5. Adiciona o filtro JWT
