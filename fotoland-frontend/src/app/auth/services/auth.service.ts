@@ -40,8 +40,8 @@ export class AuthService {
     return this.http.post<User>(`${this.apiUrl}/register`, user);
   }
 
-  login(credentials: any): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, credentials);
+  login(credentials: any): Observable<{ jwt: string }> {
+    return this.http.post<{ jwt: string }>(`${this.apiUrl}/login`, credentials);
   }
 
   // 🔑 Token e autenticação
