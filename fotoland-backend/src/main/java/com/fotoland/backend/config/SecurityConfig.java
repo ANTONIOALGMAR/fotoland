@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/albums/**").authenticated() // Demais rotas de álbuns protegidas
                 .requestMatchers("/api/user/**").authenticated() // Perfil protegido
                 .requestMatchers("/api/posts/**").authenticated() // Posts protegidos
+                .requestMatchers("/api/upload").authenticated() // Upload de arquivos
                 .anyRequest().permitAll() // Outras rotas permanecem públicas
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

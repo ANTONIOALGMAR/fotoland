@@ -25,8 +25,10 @@ public class FileUploadController {
     public FileUploadController() throws IOException {
         // Ensure the upload directory exists
         Path uploadPath = Paths.get(uploadDir);
+        System.out.println("Upload directory absolute path: " + uploadPath.toAbsolutePath());
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
+            System.out.println("Upload directory created.");
         }
     }
 
