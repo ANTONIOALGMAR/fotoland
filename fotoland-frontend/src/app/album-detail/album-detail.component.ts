@@ -119,4 +119,17 @@ export class AlbumDetailComponent implements OnInit {
   editPost(postId: number): void {
     this.router.navigate(['/edit-post', postId]);
   }
+
+  deletePost(postId: number): void {
+    if (confirm('Are you sure you want to delete this post?')) {
+      this.authService.deletePost(postId).subscribe({
+        next: () => {
+          this.loadAlbumDetails(); // Reload posts
+        },
+        error: (error) => {
+          console.error('Error deleting post:', error);
+        }
+      });
+    }
+  }
 }
