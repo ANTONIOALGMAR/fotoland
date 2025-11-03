@@ -44,14 +44,19 @@ export class RegisterComponent {
   async onSubmit(): Promise<void> {
     if (this.isSubmitting) return; // evita duplo clique
     this.isSubmitting = true;
-
+  
     try {
       // Se o usuário escolheu uma imagem, faz upload primeiro
       if (this.selectedFile) {
-        const uploadResponse = await this.authService.uploadProfilePicture(this.selectedFile).toPromise();
-        this.user.profilePictureUrl = uploadResponse?.fileUrl || '';
+        try {
+          const uploadResponse = await this.authService.uploadProfilePicture(this.selectedFile).toPromise();
+          this.user.profilePictureUrl = uploadResponse?.fileUrl || '';
+        } catch (uploadError) {
+          console.error('Falha no upload, prosseguindo sem foto:', uploadError);
+          this.user.profilePictureUrl = '';
+        }
       }
-
+  
       // Em seguida, registra o usuário
       const response = await this.authService.register(this.user).toPromise();
       console.log('Usuário registrado com sucesso:', response);
