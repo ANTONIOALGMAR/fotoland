@@ -1,35 +1,22 @@
 package com.fotoland.backend.controller;
 
+import com.fotoland.backend.service.S3Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/upload")
 public class FileUploadController {
 
-    // Define the directory where files will be stored
-    // IMPORTANT: In a production environment, this should be external storage (S3, GCS, etc.)
-    // For local development, we'll use a directory within the project or a temp folder.
-    private final String uploadDir = "src/main/resources/static/uploads/"; // Relative to project root
+    private final S3Service s3Service;
 
-    public FileUploadController() throws IOException {
-        // Ensure the upload directory exists
-        Path uploadPath = Paths.get(uploadDir);
-        System.out.println("Upload directory absolute path: " + uploadPath.toAbsolutePath());
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-            System.out.println("Upload directory created.");
-        }
+    public FileUploadController(S3Service s3Service) {
+        this.s3Service = s3Service;
     }
 
     @PostMapping(consumes = "multipart/form-data", produces = "application/json")
@@ -38,23 +25,11 @@ public class FileUploadController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "File is empty"));
         }
         try {
-            // Generate a unique file name to prevent conflicts
-            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            Path filePath = Paths.get(uploadDir + fileName);
-
-            // Save the file to the filesystem
-            Files.copy(file.getInputStream(), filePath);
-
-            // Construct the URL to access the file. This path must be configured as a static resource.
-            String fileAccessUrl = "/uploads/" + fileName;
-
-            // Return the URL in a JSON object
-            Map<String, String> response = new HashMap<>();
-            response.put("fileUrl", fileAccessUrl);
-
-            return ResponseEntity.ok(response);
+            String fileUrl = s3Service.uploadFile(file);
+            return ResponseEntity.ok(Map.of("fileUrl", fileUrl));
         } catch (IOException ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Could not upload the file: " + ex.getMessage()));
         }
     }
 }
+

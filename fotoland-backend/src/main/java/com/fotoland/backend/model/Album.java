@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(indexes = {
+    @Index(name = "idx_album_author_id", columnList = "user_id")
+})
 public class Album {
 
     @Id

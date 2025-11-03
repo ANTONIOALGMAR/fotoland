@@ -2,6 +2,8 @@ package com.fotoland.backend.controller;
 
 import com.fotoland.backend.model.Album;
 import com.fotoland.backend.service.AlbumService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -29,16 +31,16 @@ public class AlbumController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<Album>> getMyAlbums(Authentication authentication) {
+    public ResponseEntity<Page<Album>> getMyAlbums(Authentication authentication, Pageable pageable) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
-        List<Album> albums = albumService.findAlbumsByUsername(username);
+        Page<Album> albums = albumService.findAlbumsByUsername(username, pageable);
         return ResponseEntity.ok(albums);
     }
 
     @GetMapping
-    public ResponseEntity<List<Album>> getAllAlbums() {
-        List<Album> albums = albumService.findAllAlbums();
+    public ResponseEntity<Page<Album>> getAllAlbums(Pageable pageable) {
+        Page<Album> albums = albumService.findAllAlbums(pageable);
         return ResponseEntity.ok(albums);
     }
 

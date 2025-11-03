@@ -3,13 +3,14 @@ package com.fotoland.backend.service;
 import com.fotoland.backend.model.Album;
 import com.fotoland.backend.model.User;
 import com.fotoland.backend.repository.AlbumRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.List;
 
 @Service
 public class AlbumService {
@@ -31,13 +32,13 @@ public class AlbumService {
         return albumRepository.save(album);
     }
 
-    public List<Album> findAlbumsByUsername(String username) {
+    public Page<Album> findAlbumsByUsername(String username, Pageable pageable) {
         User user = userService.findByUsername(username);
-        return albumRepository.findByAuthor(user);
+        return albumRepository.findByAuthor(user, pageable);
     }
 
-    public List<Album> findAllAlbums() {
-        return albumRepository.findAll();
+    public Page<Album> findAllAlbums(Pageable pageable) {
+        return albumRepository.findAll(pageable);
     }
 
     public Album findById(Long id) {

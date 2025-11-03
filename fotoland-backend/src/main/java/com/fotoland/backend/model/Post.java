@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(indexes = {
+    @Index(name = "idx_post_album_id", columnList = "album_id"),
+    @Index(name = "idx_post_created_at", columnList = "createdAt")
+})
 public class Post {
 
     @Id

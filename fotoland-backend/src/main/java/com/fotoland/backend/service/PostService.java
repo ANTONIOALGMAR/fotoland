@@ -4,10 +4,10 @@ import com.fotoland.backend.model.Album;
 import com.fotoland.backend.model.Post;
 import com.fotoland.backend.repository.AlbumRepository;
 import com.fotoland.backend.repository.PostRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PostService {
@@ -31,12 +31,12 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public Page<Post> getAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 
-    public List<Post> getPostsByAlbumId(Long albumId) {
-        return postRepository.findByAlbumId(albumId);
+    public Page<Post> getPostsByAlbumId(Long albumId, Pageable pageable) {
+        return postRepository.findByAlbumId(albumId, pageable);
     }
 
     public Post getPostById(Long id) {
