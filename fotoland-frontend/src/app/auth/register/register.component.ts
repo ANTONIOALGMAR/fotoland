@@ -28,8 +28,25 @@ export class RegisterComponent {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
-    
+
     if (file) {
+      // Validação de tipo e tamanho (até 10MB)
+      const MAX_FILE_SIZE_MB = 10;
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecione um arquivo de imagem.');
+        this.selectedFile = null;
+        this.selectedFileName = '';
+        this.imagePreview = null;
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        alert(`Arquivo excede ${MAX_FILE_SIZE_MB}MB. Escolha um menor.`);
+        this.selectedFile = null;
+        this.selectedFileName = '';
+        this.imagePreview = null;
+        return;
+      }
+
       this.selectedFile = file;
       this.selectedFileName = file.name;
 
@@ -65,7 +82,11 @@ export class RegisterComponent {
     } catch (error) {
       console.error('Erro no cadastro:', error);
       if (error instanceof HttpErrorResponse) {
-        alert('Falha no cadastro: ' + (error.error?.message || error.message));
+        const detail =
+          typeof error.error === 'string'
+            ? error.error
+            : (error.error?.message || error.message);
+        alert('Falha no cadastro: ' + detail);
       } else {
         alert('Ocorreu um erro inesperado. Tente novamente.');
       }
