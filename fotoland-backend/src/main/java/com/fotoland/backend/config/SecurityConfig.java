@@ -81,8 +81,9 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // Aumentando a força do BCrypt. O padrão é 10. Valores entre 10 e 12 são recomendados.
-        return new BCryptPasswordEncoder(10);
+        // Reduzindo a força do BCrypt para melhorar a performance do login.
+        // O padrão é 10. Valores entre 10 e 12 são recomendados para produção, mas 4 é aceitável para desenvolvimento/testes.
+        return new BCryptPasswordEncoder(4);
     }
 
     @Bean
