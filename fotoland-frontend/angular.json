@@ -25,7 +25,7 @@
               "src/assets",
               {
                 "glob": "_redirects",
-                "input": "./fotoland-frontend", // Path relative to project root
+                "input": "src",
                 "output": "/"
               }
             ],
