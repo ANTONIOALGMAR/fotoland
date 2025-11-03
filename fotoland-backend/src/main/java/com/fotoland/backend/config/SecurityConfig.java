@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite preflight OPTIONS
                 .requestMatchers("/uploads/**").permitAll() // Servir arquivos públicos (MOVIDO PARA CIMA)
                 .requestMatchers("/api/auth/**").permitAll() // Login e registro públicos
-                .requestMatchers("/api/upload").permitAll() // Permitir upload sem autenticação
+                .requestMatchers("/api/upload", "/api/upload/**").permitAll() // Permitir upload sem autenticação (corrigido)
                 .requestMatchers(HttpMethod.GET, "/api/albums").permitAll() // Feed público
                 // 3. Protege as rotas restantes
                 .requestMatchers("/api/albums/**", "/api/posts/**", "/api/comments/**").authenticated()
@@ -64,7 +64,7 @@ public class SecurityConfig {
             configuration.setAllowedOrigins(List.of(
                 "https://fotoland-frontend.onrender.com", // Render frontend
                 "https://fotoland.onrender.com", // Render frontend principal
-                "https://*.onrender.com", // Qualquer subdomínio no Render
+                "https://fotoland-backend.onrender.com", // Render backend
                 "http://localhost:4200", // ambiente local padrão
                 "http://localhost:4201", // dev server alternativo
                 "http://localhost:4202", // dev server alternativo
