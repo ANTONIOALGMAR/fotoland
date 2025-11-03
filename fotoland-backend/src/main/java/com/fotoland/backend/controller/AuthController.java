@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = {
+    "https://fotoland.onrender.com",
+    "https://fotoland-frontend.onrender.com",
+    "http://localhost:4200"
+})
 public class AuthController {
 
     private final UserService userService;

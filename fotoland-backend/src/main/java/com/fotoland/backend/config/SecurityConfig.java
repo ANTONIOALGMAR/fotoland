@@ -35,23 +35,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 1. Aplica CORS primeiro
-            .csrf(csrf -> csrf.disable()) // Desativa CSRF (usamos JWT)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 2. Define a política de sessão
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite preflight OPTIONS
-                .requestMatchers("/uploads/**").permitAll() // Servir arquivos públicos (MOVIDO PARA CIMA)
-                .requestMatchers("/api/auth/**").permitAll() // Login e registro públicos
-                .requestMatchers("/api/upload", "/api/upload/**").permitAll() // Permitir upload sem autenticação (corrigido)
-                .requestMatchers(HttpMethod.GET, "/api/albums").permitAll() // Feed público
-                // 3. Protege as rotas restantes
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll() // explícito
+                .requestMatchers("/api/upload", "/api/upload/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/albums").permitAll()
                 .requestMatchers("/api/albums/**", "/api/posts/**", "/api/comments/**").authenticated()
-                .requestMatchers("/api/user/**").authenticated() // Reverte para authenticated() para depuração do 403
-                .anyRequest().authenticated() // 4. Torna todas as outras rotas seguras por padrão
+                .requestMatchers("/api/user/**").authenticated()
+                .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // 5. Adiciona o filtro JWT
-
-
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -59,26 +57,20 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             CorsConfiguration configuration = new CorsConfiguration();
-            
-            // ✅ Padrões de domínios permitidos (suporta Netlify previews e localhost em várias portas)
-            configuration.setAllowedOrigins(List.of(
-                "https://fotoland-frontend.onrender.com", // Render frontend
-                "https://fotoland.onrender.com", // Render frontend principal
-                "https://fotoland-backend.onrender.com", // Render backend
-                "http://localhost:4200", // ambiente local padrão
-                "http://localhost:4201", // dev server alternativo
-                "http://localhost:4202", // dev server alternativo
-                "http://localhost:4203", // dev server alternativo
-                "http://localhost:4204", // dev server alternativo
-                "http://localhost:*" // qualquer porta local
+
+            // Use padrões para cobrir subdomínios do Render e localhost
+            configuration.setAllowedOriginPatterns(List.of(
+                "https://fotoland.onrender.com",
+                "https://fotoland-frontend.onrender.com",
+                "https://*.onrender.com",
+                "http://localhost:*"
             ));
-            
-            // ✅ Métodos e cabeçalhos permitidos
+
             configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-            configuration.setAllowedHeaders(List.of("*"));
-            configuration.setExposedHeaders(List.of("Authorization")); // expõe cabeçalhos necessários no frontend
-            configuration.setAllowCredentials(true); // permite envio de credenciais (tokens, cookies)
-            configuration.setMaxAge(3600L); // cache do preflight por 1h
+            configuration.setAllowedHeaders(List.of("Content-Type", "Authorization")); // explícito para preflight
+            configuration.setExposedHeaders(List.of("Authorization"));
+            configuration.setAllowCredentials(true);
+            configuration.setMaxAge(3600L);
 
             return configuration;
         };
