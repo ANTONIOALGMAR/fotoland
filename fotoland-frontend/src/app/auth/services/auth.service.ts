@@ -53,11 +53,11 @@ export class AuthService {
 
   // 🔑 Token e autenticação
   getToken(): string | null {
-    const raw = localStorage.getItem('jwt_token');
-    if (!raw) return null;
-    const token = raw.trim();
-    if (token === '' || token === 'undefined' || token === 'null') return null;
-    return token;
+      const raw = localStorage.getItem('jwt_token');
+      if (!raw) return null;
+      const token = raw.trim();
+      if (token === '' || token === 'undefined' || token === 'null') return null;
+      return token;
   }
 
   logout(): void {

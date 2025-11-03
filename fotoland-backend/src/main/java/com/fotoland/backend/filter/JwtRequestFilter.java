@@ -77,4 +77,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/upload")
                 || path.startsWith("/uploads/");
     }
+
+    // ... existing code ...
 }
