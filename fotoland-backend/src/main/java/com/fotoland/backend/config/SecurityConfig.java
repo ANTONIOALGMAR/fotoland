@@ -42,9 +42,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite preflight OPTIONS
                 .requestMatchers("/uploads/**").permitAll() // Servir arquivos públicos (MOVIDO PARA CIMA)
                 .requestMatchers("/api/auth/**").permitAll() // Login e registro públicos
+                .requestMatchers("/api/upload").permitAll() // Permitir upload sem autenticação
                 .requestMatchers(HttpMethod.GET, "/api/albums").permitAll() // Feed público
                 // 3. Protege as rotas restantes
-                .requestMatchers("/api/albums/**", "/api/posts/**", "/api/upload", "/api/comments/**").authenticated()
+                .requestMatchers("/api/albums/**", "/api/posts/**", "/api/comments/**").authenticated()
                 .requestMatchers("/api/user/**").authenticated() // Reverte para authenticated() para depuração do 403
                 .anyRequest().authenticated() // 4. Torna todas as outras rotas seguras por padrão
             )
@@ -62,9 +63,13 @@ public class SecurityConfig {
             // ✅ Padrões de domínios permitidos (suporta Netlify previews e localhost em várias portas)
             configuration.setAllowedOrigins(List.of(
                 "https://fotoland-frontend.onrender.com", // Render frontend
+                "https://fotoland.onrender.com", // Render frontend principal
+                "https://*.onrender.com", // Qualquer subdomínio no Render
                 "http://localhost:4200", // ambiente local padrão
                 "http://localhost:4201", // dev server alternativo
                 "http://localhost:4202", // dev server alternativo
+                "http://localhost:4203", // dev server alternativo
+                "http://localhost:4204", // dev server alternativo
                 "http://localhost:*" // qualquer porta local
             ));
             
