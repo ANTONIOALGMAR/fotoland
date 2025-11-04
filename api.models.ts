@@ -13,7 +13,8 @@ export enum PostType {
 export interface User {
   id: number;
   username: string;
-  // Add other user properties as needed
+  role?: 'USER' | 'ADMIN';
+  fullName?: string;
 }
 
 export interface Post {

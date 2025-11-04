@@ -72,6 +72,11 @@ export class AuthService {
     return this.http.get<User>(`${this.userApiUrl}/me`);
   }
 
+  // Helper para verificar se usuário é ADMIN
+  isAdmin(): Observable<boolean> {
+    return this.getMe().pipe(map((u) => (u as any)?.role === 'ADMIN'));
+  }
+
   // 🖼️ Álbuns
   createAlbum(album: Partial<Album>): Observable<Album> {
     return this.http.post<Album>(this.albumApiUrl, album);

@@ -18,6 +18,7 @@ export class FeedComponent implements OnInit {
   commentsByPostId: { [postId: number]: any[] } = {};
   newCommentText: { [postId: number]: string } = {};
   showComments: { [postId: number]: boolean } = {};
+  isAdmin: boolean = false;
 
   constructor(private authService: AuthService, private sanitizer: DomSanitizer, private router: Router) { } // Inject Router
 
@@ -26,6 +27,7 @@ export class FeedComponent implements OnInit {
     this.authService.getMe().subscribe({
       next: (user) => {
         this.currentUserId = user.id;
+        this.isAdmin = (user as any)?.role === 'ADMIN';
       },
       error: (err: any) => {
         console.error('Error fetching current user:', err);
@@ -85,6 +87,22 @@ export class FeedComponent implements OnInit {
         error: (err: any) => {
           console.error('Error deleting post:', err);
           alert('Failed to delete post. Please try again.');
+        }
+      });
+    }
+  }
+
+  adminDeletePost(postId: number): void {
+    if (!this.isAdmin) return;
+    if (confirm('ADMIN: confirmar exclusão deste post?')) {
+      this.authService.adminDeletePost(postId).subscribe({
+        next: () => {
+          console.log('Post excluído por ADMIN.');
+          this.loadAllAlbums();
+        },
+        error: (err) => {
+          console.error('Erro ao excluir post (admin):', err);
+          alert('Falha ao excluir post (admin).');
         }
       });
     }

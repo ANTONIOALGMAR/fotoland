@@ -42,6 +42,7 @@ export class CreatePostComponent implements OnInit {
 
   postId: number | null = null; // To store post ID if in edit mode
   isEditMode: boolean = false; // Flag to indicate edit mode
+  isAdmin: boolean = false;
 
   constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) { } // Inject ActivatedRoute
 
@@ -63,6 +64,12 @@ export class CreatePostComponent implements OnInit {
 
     // Carregar álbuns após inicializar parâmetros
     this.loadMyAlbums();
+
+    // Obter role do usuário para decidir atualização via ADMIN
+    this.authService.getMe().subscribe({
+      next: (u) => this.isAdmin = (u as any)?.role === 'ADMIN',
+      error: () => this.isAdmin = false
+    });
   }
 
   loadMyAlbums(): void {
@@ -164,7 +171,11 @@ export class CreatePostComponent implements OnInit {
       alert('Error: Post ID is missing for update.');
       return;
     }
-    this.authService.updatePost(this.postId, this.post).subscribe({
+    const update$ = this.isAdmin
+      ? this.authService.adminUpdatePost(this.postId, this.post)
+      : this.authService.updatePost(this.postId, this.post);
+
+    update$.subscribe({
       next: (response) => {
         console.log('Post updated successfully:', response);
         alert('Post updated successfully!');
@@ -172,7 +183,7 @@ export class CreatePostComponent implements OnInit {
       },
       error: (error) => {
         console.error('Post update failed:', error);
-        alert('Post update failed: ' + (error.error.message || error.message));
+        alert('Post update failed: ' + (error.error?.message || error.message));
       }
     });
   }
