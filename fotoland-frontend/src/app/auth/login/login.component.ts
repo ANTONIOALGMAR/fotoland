@@ -46,7 +46,9 @@ export class LoginComponent {
         console.error('❌ Erro ao tentar logar:', error);
         const status = (error && typeof error.status !== 'undefined') ? error.status : 0;
         const url = error?.url || 'URL de login';
-        const detail = error?.error?.message || error.message || 'Erro desconhecido';
+        const detail = typeof error?.error === 'string'
+          ? error.error
+          : (error?.error?.message || error.message || 'Erro desconhecido');
         alert(`Falha no login (status ${status}) em ${url}: ${detail}`);
       }
     });

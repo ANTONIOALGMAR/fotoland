@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
 
     private final PostService postService;
+    private final com.fotoland.backend.service.LikeService likeService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, com.fotoland.backend.service.LikeService likeService) {
         this.postService = postService;
+        this.likeService = likeService;
     }
 
     @GetMapping
@@ -58,5 +60,25 @@ public class PostController {
         String username = authentication.getName();
         Post createdPost = postService.createPost(post, albumId, username);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<java.util.Map<String, Long>> likePost(@PathVariable Long postId, Authentication authentication) {
+        String username = authentication.getName();
+        long count = likeService.likePost(postId, username);
+        return ResponseEntity.ok(java.util.Map.of("likeCount", count));
+    }
+
+    @DeleteMapping("/{postId}/like")
+    public ResponseEntity<java.util.Map<String, Long>> unlikePost(@PathVariable Long postId, Authentication authentication) {
+        String username = authentication.getName();
+        long count = likeService.unlikePost(postId, username);
+        return ResponseEntity.ok(java.util.Map.of("likeCount", count));
+    }
+
+    @GetMapping("/{postId}/likes/count")
+    public ResponseEntity<java.util.Map<String, Long>> getPostLikes(@PathVariable Long postId) {
+        long count = likeService.getPostLikes(postId);
+        return ResponseEntity.ok(java.util.Map.of("likeCount", count));
     }
 }

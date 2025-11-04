@@ -14,9 +14,11 @@ import java.util.List;
 @RequestMapping("/api/comments")
 public class CommentController {
     private final CommentService commentService;
+    private final com.fotoland.backend.service.LikeService likeService;
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, com.fotoland.backend.service.LikeService likeService) {
         this.commentService = commentService;
+        this.likeService = likeService;
     }
 
     @GetMapping("/post/{postId}")
@@ -47,5 +49,25 @@ public class CommentController {
         String username = authentication.getName();
         commentService.deleteComment(id, username);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{commentId}/like")
+    public ResponseEntity<java.util.Map<String, Long>> likeComment(@PathVariable Long commentId, Authentication authentication) {
+        String username = authentication.getName();
+        long count = likeService.likeComment(commentId, username);
+        return ResponseEntity.ok(java.util.Map.of("likeCount", count));
+    }
+
+    @DeleteMapping("/{commentId}/like")
+    public ResponseEntity<java.util.Map<String, Long>> unlikeComment(@PathVariable Long commentId, Authentication authentication) {
+        String username = authentication.getName();
+        long count = likeService.unlikeComment(commentId, username);
+        return ResponseEntity.ok(java.util.Map.of("likeCount", count));
+    }
+
+    @GetMapping("/{commentId}/likes/count")
+    public ResponseEntity<java.util.Map<String, Long>> getCommentLikes(@PathVariable Long commentId) {
+        long count = likeService.getCommentLikes(commentId);
+        return ResponseEntity.ok(java.util.Map.of("likeCount", count));
     }
 }
