@@ -60,6 +60,17 @@
         </div>
       </div>
 
+      <!-- Seção: Chat -->
+      <div class="accordion-section">
+        <button class="accordion-header" (click)="toggleSection('chat')">
+          Chat
+          <span class="chevron" [ngClass]="{ 'open': sections.chat }">⌄</span>
+        </button>
+        <div class="accordion-content" [ngClass]="{ 'open': sections.chat }">
+          <a routerLink="/chat" class="nav-link">Abrir Chat</a>
+        </div>
+      </div>
+
       <!-- Logout quando autenticado -->
       <button class="logout-btn" (click)="onLogout()">Logout</button>
     </nav>
