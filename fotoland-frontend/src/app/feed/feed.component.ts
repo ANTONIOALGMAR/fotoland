@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/services/auth.service';
+import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-feed',
@@ -20,7 +24,7 @@ export class FeedComponent implements OnInit {
   showComments: { [postId: number]: boolean } = {};
   isAdmin: boolean = false;
 
-  constructor(private authService: AuthService, private sanitizer: DomSanitizer, private router: Router) { } // Inject Router
+  constructor(private authService: AuthService, private sanitizer: DomSanitizer, private router: Router) { }
 
   ngOnInit(): void {
     this.loadAllAlbums();
@@ -100,7 +104,7 @@ export class FeedComponent implements OnInit {
           console.log('Post excluído por ADMIN.');
           this.loadAllAlbums();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Erro ao excluir post (admin):', err);
           alert('Falha ao excluir post (admin).');
         }
@@ -184,11 +188,10 @@ export class FeedComponent implements OnInit {
       size: 20
     }).subscribe({
       next: (posts) => {
-        // Se quiser, mapeie posts por álbum; por agora mostra posts em alguma listagem
         this.loading = false;
         // ... atualize um array de posts no componente conforme sua UI ...
       },
-      error: (err) => {
+      error: (err: any) => {
         this.loading = false;
         this.error = 'Falha ao buscar posts.';
         console.error(err);

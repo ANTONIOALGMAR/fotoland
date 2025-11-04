@@ -72,9 +72,9 @@ export class AuthService {
     return this.http.get<User>(`${this.userApiUrl}/me`);
   }
 
-  // Helper para verificar se usuário é ADMIN
+  // Keep a single helper to check admin role
   isAdmin(): Observable<boolean> {
-    return this.getMe().pipe(map((u) => (u as any)?.role === 'ADMIN'));
+      return this.getMe().pipe(map((u) => (u as any)?.role === 'ADMIN'));
   }
 
   // 🖼️ Álbuns
@@ -171,13 +171,14 @@ export class AuthService {
     return `${this.BASE_URL}/${trimmed.replace(/^\/*/, '')}`;
   }
 
+  // Keep a single searchPosts implementation
   searchPosts(filters: {
     q?: string;
     type?: 'PHOTO' | 'VIDEO';
     albumId?: number;
     author?: string;
-    createdFrom?: string; // ISO 8601, ex: '2024-01-01T00:00:00Z'
-    createdTo?: string;   // ISO 8601
+    createdFrom?: string;
+    createdTo?: string;
     page?: number;
     size?: number;
   }): Observable<Post[]> {
@@ -194,58 +195,17 @@ export class AuthService {
     return this.http.get<any>(`${this.BASE_URL}/api/search/posts?${params.toString()}`).pipe(
       map((res) => Array.isArray(res) ? res : (res?.content ?? [])),
       catchError((error) => {
-        console.error('Erro na busca de posts:', error);
         return throwError(() => error);
       })
     );
   }
 
-  // Moderação ADMIN
-  adminUpdatePost(id: number, post: Partial<Post>): Observable<Post> {
-    return this.http.put<Post>(`${this.BASE_URL}/api/admin/posts/${id}`, post).pipe(
-      catchError((error) => {
-        console.error('Falha ao atualizar post (admin):', error);
-        return throwError(() => error);
-      })
-    );
+  // Endpoints de moderação de posts (ADMIN)
+  adminUpdatePost(postId: number, post: Partial<Post>): Observable<Post> {
+    return this.http.put<Post>(`${this.BASE_URL}/api/admin/posts/${postId}`, post);
   }
 
-  adminDeletePost(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.BASE_URL}/api/admin/posts/${id}`).pipe(
-      catchError((error) => {
-        console.error('Falha ao excluir post (admin):', error);
-        return throwError(() => error);
-      })
-    );
-  }
-
-  // Busca avançada de posts
-  searchPosts(filters: {
-    q?: string;
-    type?: 'PHOTO' | 'VIDEO';
-    albumId?: number;
-    author?: string;
-    createdFrom?: string; // ISO 8601
-    createdTo?: string;   // ISO 8601
-    page?: number;
-    size?: number;
-  }): Observable<Post[]> {
-    const params = new URLSearchParams();
-    if (filters.q) params.set('q', filters.q);
-    if (filters.type) params.set('type', filters.type);
-    if (filters.albumId !== undefined) params.set('albumId', String(filters.albumId));
-    if (filters.author) params.set('author', filters.author);
-    if (filters.createdFrom) params.set('createdFrom', filters.createdFrom);
-    if (filters.createdTo) params.set('createdTo', filters.createdTo);
-    if (filters.page !== undefined) params.set('page', String(filters.page));
-    if (filters.size !== undefined) params.set('size', String(filters.size));
-
-    return this.http.get<any>(`${this.BASE_URL}/api/search/posts?${params.toString()}`).pipe(
-      map((res) => Array.isArray(res) ? res : (res?.content ?? [])),
-      catchError((error) => {
-        console.error('Erro na busca de posts:', error);
-        return throwError(() => error);
-      })
-    );
+  adminDeletePost(postId: number): Observable<void> {
+    return this.http.delete<void>(`${this.BASE_URL}/api/admin/posts/${postId}`);
   }
 }
