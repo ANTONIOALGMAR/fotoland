@@ -1,0 +1,18 @@
+<div class="chat-container">
+  <h2>Chat Coletivo</h2>
+
+  <div *ngIf="connecting" class="status">Conectando ao chat...</div>
+
+  <div class="messages">
+    <div *ngFor="let m of messages" class="message">
+      <span class="sender">{{ m.sender || 'Anônimo' }}</span>
+      <span class="content">{{ m.content }}</span>
+      <span class="time">{{ m.timestamp | date:'shortTime' }}</span>
+    </div>
+  </div>
+
+  <div class="composer">
+    <input [(ngModel)]="newMessage" type="text" placeholder="Digite uma mensagem..." />
+    <button (click)="send()" [disabled]="!newMessage.trim()">Enviar</button>
+  </div>
+</div>

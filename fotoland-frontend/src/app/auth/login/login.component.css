@@ -126,6 +126,44 @@ button[type="submit"]:hover {
   box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2);
 }
 
+button[type="submit"][disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Loading indicator */
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #00d2ff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 0.95rem;
+}
+
+.error {
+  margin-top: 10px;
+  color: #ff7979;
+  font-size: 0.9rem;
+}
+
 /* Register Link */
 .register-link {
   margin-top: 25px;

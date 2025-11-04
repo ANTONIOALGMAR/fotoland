@@ -9,6 +9,7 @@ import { FeedComponent } from './feed/feed.component'; // Import FeedComponent
 import { CreatePostComponent } from './create-post/create-post.component'; // Import CreatePostComponent
 import { AlbumDetailComponent } from './album-detail/album-detail.component'; // Import AlbumDetailComponent
 import { AuthGuard } from './auth/guards/auth.guard'; // Import AuthGuard
+import { ChatComponent } from './chat/chat.component'; // Import ChatComponent
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent }, // Set LandingPageComponent as the default route
@@ -21,8 +22,8 @@ const routes: Routes = [
   { path: 'create-post', component: CreatePostComponent, canActivate: [AuthGuard] }, // Proteger com AuthGuard
   { path: 'create-post/:albumId', component: CreatePostComponent, canActivate: [AuthGuard] }, // Rota para criar post em um álbum específico
   { path: 'edit-post/:id', component: CreatePostComponent, canActivate: [AuthGuard] }, // Rota para editar post
-
   { path: 'feed', component: FeedComponent, canActivate: [AuthGuard] }, // Proteger com AuthGuard
+  { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] }, // nova rota
 ];
 
 @NgModule({
