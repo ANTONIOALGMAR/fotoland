@@ -70,4 +70,20 @@ public class PostService {
         }
         postRepository.delete(post);
     }
+
+    // Métodos ADMIN sem verificar o autor do post
+    public Post adminUpdatePost(Long id, Post updatedPost) {
+        Post existingPost = postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        existingPost.setCaption(updatedPost.getCaption());
+        existingPost.setMediaUrl(updatedPost.getMediaUrl());
+        existingPost.setType(updatedPost.getType());
+        return postRepository.save(existingPost);
+    }
+
+    public void adminDeletePost(Long id) {
+        Post existingPost = postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        postRepository.delete(existingPost);
+    }
 }

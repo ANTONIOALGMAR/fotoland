@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/services/auth.service';
-import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router'; // Import Router
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-feed',
@@ -151,5 +147,34 @@ export class FeedComponent implements OnInit {
         }
       });
     }
+  }
+
+  search = {
+    q: '',
+    type: '',
+    author: '',
+  };
+
+  onSearch(): void {
+    this.loading = true;
+    this.error = null;
+    this.authService.searchPosts({
+      q: this.search.q || undefined,
+      type: (this.search.type as 'PHOTO' | 'VIDEO') || undefined,
+      author: this.search.author || undefined,
+      page: 0,
+      size: 20
+    }).subscribe({
+      next: (posts) => {
+        // Se quiser, mapeie posts por álbum; por agora mostra posts em alguma listagem
+        this.loading = false;
+        // ... atualize um array de posts no componente conforme sua UI ...
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = 'Falha ao buscar posts.';
+        console.error(err);
+      }
+    });
   }
 }
