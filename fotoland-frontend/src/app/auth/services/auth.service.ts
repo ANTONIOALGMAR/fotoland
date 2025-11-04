@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Album, Post, User, Comment } from '../../../../../api.models';
 
@@ -10,11 +10,14 @@ import { Album, Post, User, Comment } from '../../../../../api.models';
 })
 export class AuthService {
 
-  // 🔧 Ajuste automático de ambiente
+  private readonly BASE_URL_OVERRIDE = (typeof window !== 'undefined' ? localStorage.getItem('backend_base_url') : null);
+
   private readonly BASE_URL = (
-    /^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/.test(window.location.hostname)
-      ? 'http://localhost:8080'
-      : 'https://fotoland-backend.onrender.com'
+    this.BASE_URL_OVERRIDE
+      ? this.BASE_URL_OVERRIDE
+      : (/^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/.test(window.location.hostname)
+          ? 'http://localhost:8080'
+          : 'https://fotoland-backend.onrender.com')
   ).replace(/:+$/, '');
 
   private readonly apiUrl = `${this.BASE_URL}/api/auth`;
@@ -75,11 +78,23 @@ export class AuthService {
   }
 
   getMyAlbums(): Observable<Album[]> {
-    return this.http.get<Album[]>(`${this.albumApiUrl}/my`);
+    return this.http.get<any>(`${this.albumApiUrl}/my`).pipe(
+      map((res) => Array.isArray(res) ? res : (res?.content ?? [])),
+      catchError((error) => {
+        console.error('Erro ao buscar meus álbuns:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   getAllAlbums(): Observable<Album[]> {
-    return this.http.get<Album[]>(this.albumApiUrl);
+    return this.http.get<any>(this.albumApiUrl).pipe(
+      map((res) => Array.isArray(res) ? res : (res?.content ?? [])),
+      catchError((error) => {
+        console.error('Erro ao buscar álbuns públicos:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   getAlbumById(id: number): Observable<Album> {
