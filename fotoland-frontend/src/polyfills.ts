@@ -42,3 +42,11 @@ import 'zone.js';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+// Definir 'global' para navegadores que não o possuem (polyfill para libs que esperam Node.js)
+(function () {
+  const w = window as any;
+  if (typeof w.global === 'undefined') {
+    w.global = w;
+  }
+})();
