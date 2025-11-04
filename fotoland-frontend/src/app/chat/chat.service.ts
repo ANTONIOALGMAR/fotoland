@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
-import * as SockJS from 'sockjs-client';
 
 export interface ChatMsg {
   sender: string;
@@ -26,8 +25,13 @@ export class ChatService {
     return new Promise((resolve, reject) => {
       const token = localStorage.getItem('jwt_token') || '';
 
+      // Escolhe o esquema ws/wss baseado no protocolo atual
+      const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+      const wsBase = this.BASE_URL.replace(/^http(s)?:/, `${scheme}:`);
+      const url = `${wsBase}/ws-native`;
+
       this.client = new Client({
-        webSocketFactory: () => new SockJS(`${this.BASE_URL}/ws`),
+        webSocketFactory: () => new WebSocket(url),
         connectHeaders: token ? { Authorization: `Bearer ${token}` } : {},
         debug: (str) => console.debug('[STOMP]', str),
         reconnectDelay: 5000,

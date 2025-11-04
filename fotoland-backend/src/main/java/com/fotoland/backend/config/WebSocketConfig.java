@@ -21,6 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(@NonNull StompEndpointRegistry registry) {
+        // Endpoint com SockJS (existente)
         registry
             .addEndpoint("/ws")
             .setAllowedOriginPatterns(
@@ -30,6 +31,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 "http://localhost:*"
             )
             .withSockJS();
+
+        // Endpoint nativo WebSocket (sem SockJS)
+        registry
+            .addEndpoint("/ws-native")
+            .setAllowedOriginPatterns(
+                "https://fotoland.onrender.com",
+                "https://fotoland-frontend.onrender.com",
+                "https://*.onrender.com",
+                "http://localhost:*"
+            );
     }
 
     @Override

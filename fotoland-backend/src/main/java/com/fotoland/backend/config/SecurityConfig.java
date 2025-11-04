@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/albums/**", "/api/posts/**", "/api/comments/**").authenticated()
                 .requestMatchers("/api/user/**").authenticated()
                 // Libera o endpoint de handshake do WebSocket/SockJS
-                .requestMatchers("/ws/**").permitAll()
+                .requestMatchers("/ws-native/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
