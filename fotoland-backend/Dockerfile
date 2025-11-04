@@ -1,6 +1,6 @@
 # Stage 1: Build
 # Use a Maven image to get the JDK and Maven build tools
-FROM maven:3.8.5-openjdk-17 AS build
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /usr/src/app
 # Copy the entire project context
 COPY . .
@@ -9,7 +9,7 @@ RUN mvn clean package -DskipTests
 
 # Stage 2: Run
 # Use a slim Java runtime image for a smaller final image
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre
 # Install network diagnostic tools
 # Network diagnostic tools removed as they are no longer needed
 WORKDIR /app
