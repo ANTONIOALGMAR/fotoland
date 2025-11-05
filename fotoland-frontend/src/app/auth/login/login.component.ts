@@ -29,20 +29,10 @@ export class LoginComponent {
     this.loading = true;
     this.authService.login(this.credentials).subscribe({
       next: (response) => {
-        console.log('✅ Login realizado com sucesso:', response);
-
-        // Verifica se o backend retornou um token JWT
         if (response.jwt) {
-          // Salva o token JWT no armazenamento local do navegador (localStorage)
           localStorage.setItem('jwt_token', response.jwt);
-
-          // Exibe uma mensagem de sucesso
-          alert('Login realizado com sucesso!');
-
-          // Redireciona o usuário para a rota "/home"
           this.router.navigate(['/home']);
         } else {
-          // Caso o token não venha na resposta
           this.errorMessage = '⚠️ Falha no login: token não recebido do servidor';
         }
         this.loading = false;

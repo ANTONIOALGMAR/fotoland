@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Album, Post, User, Comment } from '../../../../../api.models';
@@ -207,5 +207,26 @@ export class AuthService {
 
   adminDeletePost(postId: number): Observable<void> {
     return this.http.delete<void>(`${this.BASE_URL}/api/admin/posts/${postId}`);
+  }
+
+  warmup(): Observable<void> {
+    return this.http.get(`${this.BASE_URL}/api/search/posts?page=0&size=1`)
+      .pipe(map(() => void 0), catchError(() => of(void 0)));
+  }
+
+  createRoom(name: string): Observable<{ id: number; name: string }> {
+    return this.http.post<{ id: number; name: string }>(`${this.BASE_URL}/api/chat/rooms`, { name });
+  }
+
+  getMyRooms(): Observable<Array<{ id: number; room: { id: number; name: string }, user: any }>> {
+    return this.http.get<Array<{ id: number; room: { id: number; name: string }, user: any }>>(`${this.BASE_URL}/api/chat/rooms/mine`);
+  }
+
+  inviteToRoom(roomId: number, username: string): Observable<any> {
+    return this.http.post<any>(`${this.BASE_URL}/api/chat/rooms/${roomId}/invite`, { username });
+  }
+
+  acceptInvite(inviteId: number): Observable<void> {
+    return this.http.post<void>(`${this.BASE_URL}/api/chat/invites/${inviteId}/accept`, {});
   }
 }

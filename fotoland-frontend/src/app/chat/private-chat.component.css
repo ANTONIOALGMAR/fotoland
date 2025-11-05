@@ -1,0 +1,10 @@
+.chat-container { max-width: 720px; margin: 0 auto; padding: 16px; }
+.room-actions, .invite { display: flex; gap: 8px; margin-bottom: 12px; }
+.rooms-list { margin: 12px 0; }
+.messages { border: 1px solid #ddd; border-radius: 8px; padding: 8px; min-height: 240px; background: #fafafa; }
+.message { display: flex; gap: 8px; padding: 4px 0; border-bottom: 1px dashed #eee; }
+.message:last-child { border-bottom: none; }
+.sender { font-weight: 600; color: #2a7ae4; }
+.content { flex: 1; }
+.time { color: #666; font-size: 12px; }
+.composer { display: flex; gap: 8px; margin-top: 8px; }

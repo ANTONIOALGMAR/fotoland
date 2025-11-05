@@ -66,11 +66,42 @@ export class ChatService {
     this.client = null;
   }
 
+  connectToRoom(roomId: number, onMessage: (msg: ChatMsg) => void): Promise<void> {
+    if (!this.client || !this.client.connected) {
+      return this.connect(() => {}); // garante conexão
+    }
+    this.subscription = this.client!.subscribe(`/topic/room.${roomId}`, (message: IMessage) => {
+      try {
+        onMessage(JSON.parse(message.body));
+      } catch {
+        console.warn('Invalid chat room message payload:', message.body);
+      }
+    });
+    return Promise.resolve();
+  }
+
+  sendToRoom(roomId: number, content: string): void {
+    if (!this.client || !this.client.connected) return;
+    const token = localStorage.getItem('jwt_token') || '';
+    const payload: ChatMsg = {
+      sender: this.getUsernameFromToken(),
+      content,
+      timestamp: Date.now(),
+      // @ts-ignore add roomId to payload
+      roomId
+    } as any;
+    this.client.publish({
+      destination: '/app/chat.room.send',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: JSON.stringify(payload),
+    });
+  }
+
   send(content: string): void {
     if (!this.client || !this.client.connected) return;
     const token = localStorage.getItem('jwt_token') || '';
     const payload: ChatMsg = {
-      sender: '',
+      sender: this.getUsernameFromToken(),
       content,
       timestamp: Date.now(),
     };
@@ -79,5 +110,20 @@ export class ChatService {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
       body: JSON.stringify(payload),
     });
+  }
+
+  getUsernameFromToken(): string {
+    const token = localStorage.getItem('jwt_token') || '';
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return 'me';
+      // Handle URL-safe base64
+      const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const padded = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, '=');
+      const payload = JSON.parse(atob(padded));
+      return payload?.username || payload?.sub || 'me';
+    } catch {
+      return 'me';
+    }
   }
 }

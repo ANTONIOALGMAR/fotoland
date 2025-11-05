@@ -1,42 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth/services/auth.service'; // Import AuthService
-import { CommonModule } from '@angular/common'; // Import CommonModule for *ngIf
-import { RouterLink, Router } from '@angular/router'; // Import RouterLink and Router for navigation
+import { AuthService } from '../auth/services/auth.service';
+import { CommonModule } from '@angular/common';
+import { RouterLink, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { User, Album } from '../../../../api.models';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink], // Add CommonModule and RouterLink
+  imports: [CommonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  user: any = null; // Property to store user data
-  albums: any[] = []; // Property to store user albums
+  user: User | null = null;
+  albums: Album[] = [];
 
-  constructor(private authService: AuthService, private router: Router) { } // Inject AuthService and Router
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    this.authService.getMe().subscribe({
-      next: (response) => {
-        this.user = response;
-        console.log('User profile:', this.user);
-        this.loadAlbums(); // Load albums after user profile is fetched
+    forkJoin({
+      user: this.authService.getMe(),
+      albums: this.authService.getMyAlbums()
+    }).subscribe({
+      next: ({ user, albums }: { user: User; albums: Album[] }) => {
+        this.user = user;
+        this.albums = albums;
       },
-      error: (error) => {
-        console.error('Error fetching user profile:', error);
-      }
-    });
-  }
-
-  loadAlbums(): void {
-    this.authService.getMyAlbums().subscribe({
-      next: (response) => {
-        this.albums = response;
-        console.log('User albums:', this.albums);
-      },
-      error: (error) => {
-        console.error('Error fetching user albums:', error);
+      error: (error: unknown) => {
+        console.error('Error fetching data:', error);
       }
     });
   }
@@ -62,5 +54,15 @@ export class HomeComponent implements OnInit {
         }
       });
     }
+  }
+  loadAlbums(): void {
+    this.authService.getMyAlbums().subscribe({
+      next: (response) => {
+        this.albums = response;
+      },
+      error: (error) => {
+        console.error('Error fetching user albums:', error);
+      }
+    });
   }
 }

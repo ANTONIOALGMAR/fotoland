@@ -23,7 +23,11 @@ const routes: Routes = [
   { path: 'create-post/:albumId', component: CreatePostComponent, canActivate: [AuthGuard] }, // Rota para criar post em um álbum específico
   { path: 'edit-post/:id', component: CreatePostComponent, canActivate: [AuthGuard] }, // Rota para editar post
   { path: 'feed', component: FeedComponent, canActivate: [AuthGuard] }, // Proteger com AuthGuard
-  { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] }, // nova rota
+  { 
+    path: 'private-chat', 
+    loadComponent: () => import('./chat/private-chat.component').then(m => m.PrivateChatComponent), 
+    canActivate: [AuthGuard] 
+  }
 ];
 
 @NgModule({

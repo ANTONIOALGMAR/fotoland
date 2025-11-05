@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/albums").permitAll()
                 .requestMatchers("/api/albums/**", "/api/posts/**", "/api/comments/**").authenticated()
                 .requestMatchers("/api/user/**").authenticated()
-                // Libera o endpoint de handshake do WebSocket/SockJS
+                .requestMatchers("/api/chat/**").authenticated()
                 .requestMatchers("/ws-native/**").permitAll()
                 .anyRequest().authenticated()
             )
