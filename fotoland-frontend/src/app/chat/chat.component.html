@@ -1,6 +1,7 @@
 <div class="chat-container">
   <app-nav-header
     [title]="'Chat Coletivo'"
+    [showChatNav]="true"
     (navigatePrivate)="irParaPrivado()"
     (navigateGroup)="irParaColetivo()"
     (cancel)="cancelar()"
