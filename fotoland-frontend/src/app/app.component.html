@@ -7,7 +7,8 @@
   </button>
 
   <!-- Sidebar (apenas quando autenticado) -->
-  <aside class="sidebar" [ngClass]="{ 'collapsed': !isSidebarOpen }" *ngIf="isAuthenticated">
+  <!-- Oculta a sidebar quando não autenticado -->
+  <aside class="sidebar" *ngIf="isAuthenticated">
     <div class="sidebar-header">
       <span>Fotoland</span>
       <button class="collapse-btn" (click)="toggleSidebar()" aria-label="Recolher menu" title="Recolher menu">
@@ -69,6 +70,18 @@
         <div class="accordion-content" [ngClass]="{ 'open': sections.chat }">
           <a routerLink="/chat" class="nav-link">Chat Coletivo</a>
           <a routerLink="/private-chat" class="nav-link">Chat Privado</a>
+        </div>
+      </div>
+
+      <!-- Seção: Conta -->
+      <div class="accordion-section">
+        <button class="accordion-header" (click)="toggleSection('account')">
+          Conta
+          <span class="chevron" [ngClass]="{ 'open': sections.account }">⌄</span>
+        </button>
+        <div class="accordion-content" [ngClass]="{ 'open': sections.account }">
+          <a routerLink="/profile" class="nav-link">Perfil</a>
+          <a routerLink="/settings" class="nav-link">Configurações</a>
         </div>
       </div>
 

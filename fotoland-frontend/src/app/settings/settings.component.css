@@ -1,0 +1,5 @@
+.settings-page { padding: 16px; display: grid; gap: 24px; }
+.card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; }
+.row { margin-bottom: 12px; display: grid; gap: 6px; }
+.btn { padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+.btn.primary { background: #4a6cf7; color: white; border: none; }

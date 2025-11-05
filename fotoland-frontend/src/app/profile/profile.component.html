@@ -1,0 +1,36 @@
+<div class="profile-page">
+  <app-nav-header [showChatNav]="false" [showCancel]="false" [showBack]="true"></app-nav-header>
+
+  <div *ngIf="loading" class="loading">
+    Carregando perfil...
+  </div>
+
+  <div *ngIf="!loading && user" class="profile-card">
+    <div class="profile-picture">
+      <img [src]="authService.resolveMediaUrl(form.profilePictureUrl || '')" alt="Foto de perfil" />
+      <div class="upload-controls">
+        <input type="file" id="profilePicture" (change)="onFileSelected($event)" hidden #profilePictureInput>
+        <button class="btn-outline" (click)="profilePictureInput.click()">Escolher imagem</button>
+        <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
+        <img *ngIf="imagePreview" [src]="imagePreview" class="image-preview">
+        <button class="btn" (click)="uploadProfilePicture()" [disabled]="!selectedFile || saving">Enviar</button>
+      </div>
+    </div>
+
+    <div class="profile-form">
+      <label>Nome completo</label>
+      <input [(ngModel)]="form.fullName" type="text">
+
+      <label>Username</label>
+      <input [(ngModel)]="form.username" type="text">
+
+      <label>Telefone</label>
+      <input [(ngModel)]="form.phoneNumber" type="text">
+
+      <label>Endereço</label>
+      <input [(ngModel)]="form.address" type="text">
+
+      <button class="btn primary" (click)="saveProfile()" [disabled]="saving">Salvar</button>
+    </div>
+  </div>
+</div>

@@ -48,7 +48,8 @@ export class AppComponent implements OnInit, OnDestroy {
     post: true,
     feed: true,
     comment: false,
-    chat: false
+    chat: false,
+    account: true
   };
 
   onLogout(): void {
@@ -60,7 +61,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
 
-  toggleSection(section: 'album' | 'post' | 'feed' | 'comment' | 'chat'): void {
+  toggleSection(section: 'album' | 'post' | 'feed' | 'comment' | 'chat' | 'account'): void {
     this.sections[section] = !this.sections[section];
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { Album, Post, User, Comment } from '../../../../../api.models';
 })
 export class AuthService {
 
-  private readonly BASE_URL_OVERRIDE = (typeof window !== 'undefined' ? localStorage.getItem('backend_base_url') : null);
+  private readonly BASE_URL_OVERRIDE = (typeof window !== 'undefined' && isDevMode() ? localStorage.getItem('backend_base_url') : null);
 
   private readonly BASE_URL = (
     this.BASE_URL_OVERRIDE
@@ -33,13 +33,15 @@ export class AuthService {
   uploadProfilePicture(file: File): Observable<{ fileUrl: string }> {
     const formData = new FormData();
     formData.append('file', file);
-    console.log('📤 Enviando upload para:', `${this.uploadApiUrl}/upload`);
     return this.http.post<{ fileUrl: string }>(
       `${this.uploadApiUrl}/upload`,
       formData
     ).pipe(
       catchError((error) => {
-        console.error('🚨 Erro ao enviar upload:', error);
+        // Evitar logs detalhados em produção
+        if (isDevMode()) {
+          console.error('Erro ao enviar upload:', error);
+        }
         return throwError(() => error);
       })
     );
@@ -228,5 +230,19 @@ export class AuthService {
 
   acceptInvite(inviteId: number): Observable<void> {
     return this.http.post<void>(`${this.BASE_URL}/api/chat/invites/${inviteId}/accept`, {});
+  }
+
+  // Atualizar perfil do usuário logado
+  updateMe(profile: Partial<User>): Observable<User> {
+    return this.http.put<User>(`${this.userApiUrl}/me`, profile).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  // Alterar senha do usuário logado
+  changePassword(payload: { currentPassword: string; newPassword: string }): Observable<void> {
+    return this.http.post<void>(`${this.userApiUrl}/me/change-password`, payload).pipe(
+      catchError((error) => throwError(() => error))
+    );
   }
 }
