@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface ChatMsg {
   sender: string;
   content: string;
   timestamp: number;
+  id?: number;
+  roomId?: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -80,21 +84,20 @@ export class ChatService {
     return Promise.resolve();
   }
 
-  sendToRoom(roomId: number, content: string): void {
-    if (!this.client || !this.client.connected) return;
-    const token = localStorage.getItem('jwt_token') || '';
-    const payload: ChatMsg = {
-      sender: this.getUsernameFromToken(),
-      content,
-      timestamp: Date.now(),
-      // @ts-ignore add roomId to payload
-      roomId
-    } as any;
-    this.client.publish({
-      destination: '/app/chat.room.send',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-      body: JSON.stringify(payload),
-    });
+  // Ajuste da interface para permitir CRUD
+  // (id e roomId podem vir do backend)
+  constructor(private http: HttpClient) {}
+
+  getRoomMessages(roomId: number): Observable<ChatMsg[]> {
+    return this.http.get<ChatMsg[]>(`${this.BASE_URL}/api/chat/rooms/${roomId}/messages`);
+  }
+
+  updateMessage(messageId: number, content: string): Observable<ChatMsg> {
+    return this.http.put<ChatMsg>(`${this.BASE_URL}/api/chat/messages/${messageId}`, { content });
+  }
+
+  deleteMessage(messageId: number): Observable<void> {
+    return this.http.delete<void>(`${this.BASE_URL}/api/chat/messages/${messageId}`);
   }
 
   send(content: string): void {
@@ -107,6 +110,22 @@ export class ChatService {
     };
     this.client.publish({
       destination: '/app/chat.send',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: JSON.stringify(payload),
+    });
+  }
+
+  sendToRoom(roomId: number, content: string): void {
+    if (!this.client || !this.client.connected) return;
+    const token = localStorage.getItem('jwt_token') || '';
+    const payload: ChatMsg = {
+      sender: this.getUsernameFromToken(),
+      content,
+      timestamp: Date.now(),
+      roomId
+    };
+    this.client.publish({
+      destination: '/app/chat.room.send',
       headers: token ? { Authorization: `Bearer ${token}` } : {},
       body: JSON.stringify(payload),
     });

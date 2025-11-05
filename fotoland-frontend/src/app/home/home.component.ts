@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { User, Album } from '../../../../api.models';
+import { Location } from '@angular/common';
+import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, NavHeaderComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -16,7 +18,7 @@ export class HomeComponent implements OnInit {
   user: User | null = null;
   albums: Album[] = [];
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private location: Location) { }
 
   ngOnInit(): void {
     forkJoin({
@@ -65,4 +67,8 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+  irParaPrivado(): void { this.router.navigate(['/private-chat']); }
+  irParaColetivo(): void { this.router.navigate(['/chat']); }
+  cancelar(): void { /* sem campos locais aqui */ }
+  voltar(): void { this.location.back(); }
 }

@@ -1,3 +1,11 @@
+<app-nav-header
+  [title]="'Feed'"
+  (navigatePrivate)="irParaPrivado()"
+  (navigateGroup)="irParaColetivo()"
+  (cancel)="cancelar()"
+  (back)="voltar()"
+></app-nav-header>
+
 <div class="background-slideshow">
   <div class="slide" style="background-image: url('assets/futuristic-background.jpg');"></div>
   <div class="slide" style="background-image: url('assets/futuristic-background2.jpg');"></div>

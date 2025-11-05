@@ -3,13 +3,15 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
+import { NavHeaderComponent } from '../../shared/nav-header/nav-header.component';
 
 @Component({
   selector: 'app-login',
-  standalone: true, // Este componente não faz parte de um módulo, é independente
-  imports: [FormsModule, RouterLink, CommonModule], // Importa o FormsModule (para ngModel), RouterLink e CommonModule (para *ngIf)
-  templateUrl: './login.component.html', // Caminho do arquivo HTML do componente
-  styleUrls: ['./login.component.css'] // Corrigido para "styleUrls" (plural)
+  standalone: true,
+  imports: [FormsModule, RouterLink, CommonModule, NavHeaderComponent],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   // Objeto para armazenar as credenciais informadas pelo usuário no formulário
@@ -21,7 +23,7 @@ export class LoginComponent {
   errorMessage: string | null = null;
 
   // Injeta o roteador e o serviço de autenticação no construtor
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private location: Location) {}
 
   // Método chamado quando o formulário é submetido
   onSubmit(): void {
@@ -50,4 +52,8 @@ export class LoginComponent {
       }
     });
   }
+  irParaPrivado(): void { this.router.navigate(['/private-chat']); }
+  irParaColetivo(): void { this.router.navigate(['/chat']); }
+  cancelar(): void { this.credentials = { username: '', password: '' }; this.errorMessage = null; }
+  voltar(): void { this.location.back(); }
 }

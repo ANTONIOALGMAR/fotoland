@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Location } from '@angular/common';
+import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, NavHeaderComponent],
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.css']
 })
@@ -24,7 +26,7 @@ export class FeedComponent implements OnInit {
   showComments: { [postId: number]: boolean } = {};
   isAdmin: boolean = false;
 
-  constructor(private authService: AuthService, private sanitizer: DomSanitizer, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private sanitizer: DomSanitizer, private location: Location) { }
 
   ngOnInit(): void {
     this.loadAllAlbums();
@@ -198,4 +200,8 @@ export class FeedComponent implements OnInit {
       }
     });
   }
+  irParaPrivado(): void { this.router.navigate(['/private-chat']); }
+  irParaColetivo(): void { this.router.navigate(['/chat']); }
+  cancelar(): void { /* limpar campos se necessário */ }
+  voltar(): void { this.location.back(); }
 }

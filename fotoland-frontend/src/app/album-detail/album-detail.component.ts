@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth/services/auth.service';
-import { Album, Post } from '../../../../api.models'; // Import strong types
+import { Album, Post } from '../../../../api.models';
+import { Location } from '@angular/common';
+import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
 
 @Component({
   selector: 'app-album-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, NavHeaderComponent],
   templateUrl: './album-detail.component.html',
   styleUrls: ['./album-detail.component.css']
 })
@@ -21,7 +23,8 @@ export class AlbumDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -131,4 +134,8 @@ export class AlbumDetailComponent implements OnInit {
       });
     }
   }
+  irParaPrivado(): void { this.router.navigate(['/private-chat']); }
+  irParaColetivo(): void { this.router.navigate(['/chat']); }
+  cancelar(): void { this.closeLightbox(); }
+  voltar(): void { this.location.back(); }
 }

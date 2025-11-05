@@ -2,11 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService, ChatMsg } from './chat.service';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NavHeaderComponent],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
@@ -15,7 +18,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   newMessage: string = '';
   connecting: boolean = true;
 
-  constructor(private chat: ChatService) {}
+  constructor(private chat: ChatService, private router: Router, private location: Location) {}
 
   async ngOnInit() {
     this.connecting = true;
@@ -35,5 +38,21 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!text) return;
     this.chat.send(text);
     this.newMessage = '';
+  }
+
+  irParaPrivado(): void {
+    this.router.navigate(['/private-chat']);
+  }
+
+  irParaColetivo(): void {
+    this.router.navigate(['/chat']);
+  }
+
+  cancelar(): void {
+    this.newMessage = '';
+  }
+
+  voltar(): void {
+    this.location.back();
   }
 }

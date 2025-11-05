@@ -1,3 +1,10 @@
+<app-nav-header
+  [title]="'Bem-vindo ao Fotoland'"
+  (navigatePrivate)="irParaPrivado()"
+  (navigateGroup)="irParaColetivo()"
+  (cancel)="cancelar()"
+  (back)="voltar()"
+></app-nav-header>
 <div class="landing-container">
   <div class="background-slideshow">
     <div class="slide" style="background-image: url('assets/futuristic-background.jpg');"></div>

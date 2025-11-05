@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth/services/auth.service';
-import { ActivatedRoute, Router } from '@angular/router'; // Import ActivatedRoute
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 // Enum for AlbumType (should match backend)
 export enum AlbumType {
@@ -18,10 +19,12 @@ export enum PostType {
   VIDEO = 'VIDEO'
 }
 
+import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
+
 @Component({
   selector: 'app-create-post',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, NavHeaderComponent],
   templateUrl: './create-post.component.html',
   styleUrl: './create-post.component.css'
 })
@@ -44,7 +47,7 @@ export class CreatePostComponent implements OnInit {
   isEditMode: boolean = false; // Flag to indicate edit mode
   isAdmin: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) { } // Inject ActivatedRoute
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private location: Location) { }
 
   ngOnInit(): void {
     // Ler albumId via query params (ao vir do detalhe do álbum)
@@ -187,4 +190,16 @@ export class CreatePostComponent implements OnInit {
       }
     });
   }
+  irParaPrivado(): void { this.router.navigate(['/private-chat']); }
+  irParaColetivo(): void { this.router.navigate(['/chat']); }
+  cancelar(): void {
+    this.post = { mediaUrl: '', caption: '', type: PostType.PHOTO };
+    this.selectedAlbumId = null;
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.mediaPreview = null;
+    this.isEditMode = false;
+    this.postId = null;
+  }
+  voltar(): void { this.location.back(); }
 }

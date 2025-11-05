@@ -1,38 +1,65 @@
 <div class="chat-container">
-  <h2>Chat Privado</h2>
+  <app-nav-header
+    [title]="'Chat Privado'"
+    [disableCancel]="connecting"
+    (navigatePrivate)="irParaPrivado()"
+    (navigateGroup)="irParaColetivo()"
+    (cancel)="cancelar()"
+    (back)="voltar()"
+  ></app-nav-header>
 
   <div class="room-actions">
-    <input [(ngModel)]="newRoomName" type="text" placeholder="Nome da sala" />
-    <button (click)="createRoom()" [disabled]="!newRoomName.trim()">Criar sala</button>
+    <input [(ngModel)]="newRoomName" type="text" placeholder="Nome da sala" (keyup.enter)="createRoom()" class="border px-2 py-1 rounded mr-2" />
+    <button (click)="createRoom()" [disabled]="!newRoomName.trim()" class="bg-blue-600 text-white px-3 py-1 rounded disabled:opacity-50">Criar sala</button>
   </div>
 
-  <div class="rooms-list">
+  <div class="rooms-list mt-4">
     <h3>Minhas salas</h3>
-    <div *ngFor="let r of rooms">
-      <button (click)="joinRoom(r.id)">{{ r.room.name }} (ID {{ r.id }})</button>
+    <div *ngIf="rooms.length === 0" class="text-sm text-gray-600">Você ainda não tem salas.</div>
+    <div *ngFor="let r of rooms" class="mt-2">
+      <button (click)="joinRoom(r.id)" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">{{ r.room.name }} (ID {{ r.id }})</button>
     </div>
   </div>
 
-  <div *ngIf="selectedRoomId">
-    <h3>Sala atual: {{ selectedRoomId }}</h3>
-    <div class="invite">
-      <input [(ngModel)]="inviteUsername" type="text" placeholder="Convidar usuário (nickname)" />
-      <button (click)="invite()" [disabled]="!inviteUsername.trim()">Convidar</button>
+  <div *ngIf="selectedRoomId" class="mt-6">
+    <h3>Sala atual: {{ selectedRoomName || selectedRoomId }}</h3>
+    <div class="invite mt-2">
+      <input [(ngModel)]="inviteUsername" type="text" placeholder="Convidar usuário (nickname)" (keyup.enter)="invite()" class="border px-2 py-1 rounded mr-2" />
+      <button (click)="invite()" [disabled]="!inviteUsername.trim()" class="bg-green-600 text-white px-3 py-1 rounded disabled:opacity-50">Convidar</button>
     </div>
 
-    <div *ngIf="connecting" class="status">Conectando à sala...</div>
+    <div *ngIf="connecting" class="status mt-2 text-sm text-gray-600">Conectando à sala...</div>
 
-    <div class="messages">
-      <div *ngFor="let m of messages" class="message">
-        <span class="sender">{{ m.sender || 'Anônimo' }}</span>
-        <span class="content">{{ m.content }}</span>
-        <span class="time">{{ m.timestamp | date:'shortTime' }}</span>
+    <div class="messages mt-4 space-y-2">
+      <div *ngFor="let m of messages" class="message p-2 border rounded">
+        <div class="text-xs text-gray-600 flex justify-between">
+          <span class="sender">{{ m.sender || 'Anônimo' }}</span>
+          <span class="time">{{ m.timestamp | date:'shortTime' }}</span>
+        </div>
+
+        <div *ngIf="editingMessageId !== m.id">
+          <span class="content break-words">{{ m.content }}</span>
+        </div>
+
+        <div *ngIf="editingMessageId === m.id" class="mt-2">
+          <input [(ngModel)]="editContent" type="text" class="border px-2 py-1 rounded w-full" />
+          <div class="mt-2 flex gap-2">
+            <button (click)="saveEdit(m)" [disabled]="!editContent.trim()" class="bg-blue-600 text-white px-3 py-1 rounded disabled:opacity-50">Salvar</button>
+            <button (click)="cancelEdit()" class="bg-gray-400 text-white px-3 py-1 rounded">Cancelar</button>
+          </div>
+        </div>
+
+        <div class="mt-2 flex gap-2" *ngIf="canEdit(m) && editingMessageId !== m.id">
+          <button (click)="startEdit(m)" class="bg-yellow-500 text-white px-3 py-1 rounded">Editar</button>
+          <button (click)="delete(m)" class="bg-red-600 text-white px-3 py-1 rounded">Excluir</button>
+        </div>
       </div>
     </div>
 
-    <div class="composer">
-      <input [(ngModel)]="newMessage" type="text" placeholder="Digite uma mensagem..." />
-      <button (click)="send()" [disabled]="!newMessage.trim()">Enviar</button>
+    <div class="composer mt-4 flex gap-2">
+      <input [(ngModel)]="newMessage" type="text" placeholder="Digite uma mensagem..." (keyup.enter)="send()" class="border px-2 py-1 rounded flex-1" />
+      <button (click)="send()" [disabled]="connecting || !newMessage.trim()" class="bg-blue-700 text-white px-4 py-1 rounded disabled:opacity-50">Enviar</button>
+      <button (click)="cancelar()" class="bg-gray-500 text-white px-3 py-1 rounded">Cancelar</button>
     </div>
   </div>
 </div>

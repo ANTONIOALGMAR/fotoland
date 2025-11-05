@@ -25,73 +25,96 @@ export class RegisterComponent {
 
   constructor(private router: Router, private authService: AuthService) {}
 
+  irParaPrivado(): void { this.router.navigate(['/private-chat']); }
+  irParaColetivo(): void { this.router.navigate(['/chat']); }
+  cancelar(): void {
+    this.user = { fullName: '', username: '', password: '', phoneNumber: '', address: '', profilePictureUrl: '' };
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.imagePreview = null;
+    this.isSubmitting = false;
+  }
+  voltar(): void { history.back(); }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-
-    if (file) {
-      // Validação de tipo e tamanho (até 10MB)
-      const MAX_FILE_SIZE_MB = 10;
-      if (!file.type.startsWith('image/')) {
-        alert('Por favor, selecione um arquivo de imagem.');
-        this.selectedFile = null;
-        this.selectedFileName = '';
-        this.imagePreview = null;
-        return;
-      }
-      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-        alert(`Arquivo excede ${MAX_FILE_SIZE_MB}MB. Escolha um menor.`);
-        this.selectedFile = null;
-        this.selectedFileName = '';
-        this.imagePreview = null;
-        return;
-      }
-
-      this.selectedFile = file;
-      this.selectedFileName = file.name;
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result;
-      };
-      reader.readAsDataURL(file);
+    const file = input?.files?.[0] || null;
+    if (!file) {
+      this.selectedFile = null;
+      this.selectedFileName = '';
+      this.imagePreview = null;
+      return;
     }
+    this.selectedFile = file;
+    this.selectedFileName = file.name;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result;
+    };
+    reader.readAsDataURL(file);
   }
 
-  async onSubmit(): Promise<void> {
-    if (this.isSubmitting) return; // evita duplo clique
+  onSubmit(): void {
+    if (this.isSubmitting) return;
     this.isSubmitting = true;
-  
-    try {
-      // Se o usuário escolheu uma imagem, faz upload primeiro
-      if (this.selectedFile) {
-        try {
-          const uploadResponse = await this.authService.uploadProfilePicture(this.selectedFile).toPromise();
-          this.user.profilePictureUrl = uploadResponse?.fileUrl || '';
-        } catch (uploadError) {
-          console.error('Falha no upload, prosseguindo sem foto:', uploadError);
-          this.user.profilePictureUrl = '';
-        }
-      }
-  
-      // Em seguida, registra o usuário
-      const response = await this.authService.register(this.user).toPromise();
-      console.log('Usuário registrado com sucesso:', response);
-      alert('Cadastro realizado com sucesso!');
-      this.router.navigate(['/login']);
-    } catch (error) {
-      console.error('Erro no cadastro:', error);
-      if (error instanceof HttpErrorResponse) {
-        const detail =
-          typeof error.error === 'string'
+
+    const afterUploadAndRegister = () => {
+      // Primeiro registra o usuário
+      this.authService.register(this.user).subscribe({
+        next: () => {
+          // Em seguida faz login automático com as credenciais informadas
+          this.authService.login({
+            username: this.user.username,
+            password: this.user.password
+          }).subscribe({
+            next: (resp) => {
+              if (resp.jwt) {
+                localStorage.setItem('jwt_token', resp.jwt);
+                alert('✅ Conta criada e login efetuado!');
+                this.router.navigate(['/home']);
+              } else {
+                alert('⚠️ Registro ok, mas falha ao logar automaticamente. Faça login manualmente.');
+                this.router.navigate(['/login']);
+              }
+              this.isSubmitting = false;
+            },
+            error: (err) => {
+              console.error('Erro ao fazer login pós-registro:', err);
+              alert('⚠️ Registro ok, mas falha ao logar automaticamente. Faça login manualmente.');
+              this.isSubmitting = false;
+              this.router.navigate(['/login']);
+            }
+          });
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isSubmitting = false;
+          console.error('Erro no registro:', error);
+          const detail = typeof error?.error === 'string'
             ? error.error
-            : (error.error?.message || error.message);
-        alert('Falha no cadastro: ' + detail);
-      } else {
-        alert('Ocorreu um erro inesperado. Tente novamente.');
-      }
-    } finally {
-      this.isSubmitting = false;
+            : (error?.error?.message || error.message || 'Erro desconhecido');
+          alert(`❌ Falha no registro: ${detail}`);
+        }
+      });
+    };
+
+    if (this.selectedFile) {
+      this.authService.uploadProfilePicture(this.selectedFile).subscribe({
+        next: (res) => {
+          this.user.profilePictureUrl = res.fileUrl;
+          afterUploadAndRegister();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isSubmitting = false;
+          console.error('Erro ao enviar foto de perfil:', error);
+          const detail = typeof error?.error === 'string'
+            ? error.error
+            : (error?.error?.message || error.message || 'Erro no upload');
+          alert(`❌ Falha ao enviar a foto: ${detail}`);
+        }
+      });
+    } else {
+      afterUploadAndRegister();
     }
   }
 }

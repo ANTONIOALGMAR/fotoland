@@ -1,7 +1,11 @@
 <div class="chat-container">
-  <h2>Chat Coletivo</h2>
-
-  <div *ngIf="connecting" class="status">Conectando ao chat...</div>
+  <app-nav-header
+    [title]="'Chat Coletivo'"
+    (navigatePrivate)="irParaPrivado()"
+    (navigateGroup)="irParaColetivo()"
+    (cancel)="cancelar()"
+    (back)="voltar()"
+  ></app-nav-header>
 
   <div class="messages">
     <div *ngFor="let m of messages" class="message">
@@ -14,5 +18,6 @@
   <div class="composer">
     <input [(ngModel)]="newMessage" type="text" placeholder="Digite uma mensagem..." />
     <button (click)="send()" [disabled]="!newMessage.trim()">Enviar</button>
+    <button (click)="cancelar()" class="bg-gray-500 text-white px-3 py-1 rounded">Cancelar</button>
   </div>
 </div>

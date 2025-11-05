@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../auth/services/auth.service'; // Assuming AuthService will handle album creation
+import { AuthService } from '../auth/services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Album, AlbumType } from '../../../../api.models';
+import { Location } from '@angular/common';
+import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
 
 @Component({
   selector: 'app-create-album',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, NavHeaderComponent],
   templateUrl: './create-album.component.html',
   styleUrl: './create-album.component.css'
 })
@@ -26,7 +28,7 @@ export class CreateAlbumComponent implements OnInit {
   isEditMode = false;
   albumId: number | null = null;
 
-  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute, private location: Location) { }
 
   ngOnInit(): void {
     // Check if we're in edit mode by looking for an ID parameter
@@ -105,4 +107,12 @@ export class CreateAlbumComponent implements OnInit {
       });
     }
   }
+  irParaPrivado(): void { this.router.navigate(['/private-chat']); }
+  irParaColetivo(): void { this.router.navigate(['/chat']); }
+  cancelar(): void {
+    this.album = { title: '', description: '', type: AlbumType.GENERAL, location: '', eventName: '' };
+    this.isEditMode = false;
+    this.albumId = null;
+  }
+  voltar(): void { this.location.back(); }
 }
