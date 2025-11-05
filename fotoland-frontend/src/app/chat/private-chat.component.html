@@ -2,6 +2,8 @@
   <app-nav-header
     [title]="'Chat Privado'"
     [showChatNav]="true"
+    [showPrivateNav]="false"
+    [showGroupNav]="true"
     [disableCancel]="connecting"
     (navigatePrivate)="irParaPrivado()"
     (navigateGroup)="irParaColetivo()"

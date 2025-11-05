@@ -41,6 +41,16 @@ const routes: Routes = [
     loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'explore',
+    loadComponent: () => import('./explore/explore.component').then(m => m.ExploreComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'notifications',
+    loadComponent: () => import('./notifications/notifications.component').then(m => m.NotificationsComponent),
+    canActivate: [AuthGuard]
+  },
   { path: '**', redirectTo: 'login', pathMatch: 'full' }
 ];
 @NgModule({

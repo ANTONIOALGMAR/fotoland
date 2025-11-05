@@ -58,3 +58,24 @@ npm --prefix fotoland-frontend run build
   ```bash
   npm --prefix fotoland-frontend run start
   ```
+
+## Fase 2 — Explorar e Notificações
+
+- Explorar (`/explore`): busca de posts por texto, tipo e autor usando `searchPosts`.
+- Notificações (`/notifications`): listar notificações do usuário e marcar como lidas.
+- Ambas protegidas por `AuthGuard`. Links adicionados na sidebar (Descobrir, Notificações).
+
+### Endpoints backend esperados
+- `GET /api/search/posts` — já utilizado pelo frontend.
+- `GET /api/notifications/mine` — lista do usuário logado.
+- `PUT /api/notifications/{id}/read` — marcar como lida.
+
+> Caso seu backend use caminhos diferentes, ajuste em `auth.service.ts`.
+
+## Build/Run
+```bash
+npm --prefix fotoland-frontend run build
+```
+```bash
+npm --prefix fotoland-frontend run start
+```

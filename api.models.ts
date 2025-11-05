@@ -42,3 +42,11 @@ export interface Comment {
   author: User;
   createdAt: string; // or Date
 }
+
+export interface Notification {
+  id: number;
+  type: 'FOLLOW' | 'COMMENT' | 'LIKE' | 'INVITE' | 'SYSTEM';
+  message: string;
+  createdAt: string; // or Date
+  read: boolean;
+}

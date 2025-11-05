@@ -10,10 +10,10 @@
       <img [src]="authService.resolveMediaUrl(form.profilePictureUrl || '')" alt="Foto de perfil" />
       <div class="upload-controls">
         <input type="file" id="profilePicture" (change)="onFileSelected($event)" hidden #profilePictureInput>
-        <button class="btn-outline" (click)="profilePictureInput.click()">Escolher imagem</button>
+        <button class="btn secondary" (click)="profilePictureInput.click()">Escolher imagem</button>
         <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
         <img *ngIf="imagePreview" [src]="imagePreview" class="image-preview">
-        <button class="btn" (click)="uploadProfilePicture()" [disabled]="!selectedFile || saving">Enviar</button>
+        <button class="btn primary" (click)="uploadProfilePicture()" [disabled]="!selectedFile || saving">Enviar</button>
       </div>
     </div>
 

@@ -6,9 +6,8 @@
     <span></span>
   </button>
 
-  <!-- Sidebar (apenas quando autenticado) -->
-  <!-- Oculta a sidebar quando não autenticado -->
-  <aside class="sidebar" *ngIf="isAuthenticated">
+  <!-- Sidebar (apenas quando autenticado e aberta) -->
+  <aside class="sidebar" *ngIf="isAuthenticated && isSidebarOpen">
     <div class="sidebar-header">
       <span>Fotoland</span>
       <button class="collapse-btn" (click)="toggleSidebar()" aria-label="Recolher menu" title="Recolher menu">
@@ -82,6 +81,28 @@
         <div class="accordion-content" [ngClass]="{ 'open': sections.account }">
           <a routerLink="/profile" class="nav-link">Perfil</a>
           <a routerLink="/settings" class="nav-link">Configurações</a>
+        </div>
+      </div>
+
+      <!-- Seção: Descobrir -->
+      <div class="accordion-section">
+        <button class="accordion-header" (click)="toggleSection('discover')">
+          Descobrir
+          <span class="chevron" [ngClass]="{ 'open': sections.discover }">⌄</span>
+        </button>
+        <div class="accordion-content" [ngClass]="{ 'open': sections.discover }">
+          <a routerLink="/explore" class="nav-link">Explorar/Buscar</a>
+        </div>
+      </div>
+
+      <!-- Seção: Notificações -->
+      <div class="accordion-section">
+        <button class="accordion-header" (click)="toggleSection('notifications')">
+          Notificações
+          <span class="chevron" [ngClass]="{ 'open': sections.notifications }">⌄</span>
+        </button>
+        <div class="accordion-content" [ngClass]="{ 'open': sections.notifications }">
+          <a routerLink="/notifications" class="nav-link">Minhas Notificações</a>
         </div>
       </div>
 

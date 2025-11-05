@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { Album, Post, User, Comment } from '../../../../../api.models';
+import { Album, Post, User, Comment, Notification } from '../../../../../api.models';
 
 @Injectable({
   providedIn: 'root'
@@ -242,6 +242,19 @@ export class AuthService {
   // Alterar senha do usuário logado
   changePassword(payload: { currentPassword: string; newPassword: string }): Observable<void> {
     return this.http.post<void>(`${this.userApiUrl}/me/change-password`, payload).pipe(
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  getMyNotifications(): Observable<Notification[]> {
+    return this.http.get<any>(`${this.BASE_URL}/api/notifications/mine`).pipe(
+      map((res) => Array.isArray(res) ? res : (res?.content ?? [])),
+      catchError((error) => throwError(() => error))
+    );
+  }
+
+  markNotificationAsRead(id: number): Observable<void> {
+    return this.http.put<void>(`${this.BASE_URL}/api/notifications/${id}/read`, {}).pipe(
       catchError((error) => throwError(() => error))
     );
   }

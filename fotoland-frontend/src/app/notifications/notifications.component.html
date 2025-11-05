@@ -1,0 +1,19 @@
+<div class="notifications-page">
+  <app-nav-header [showChatNav]="false" [showCancel]="false" [showBack]="true"></app-nav-header>
+
+  <h2>Notificações</h2>
+
+  <div *ngIf="loading" class="loading">Carregando...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <ul class="list" *ngIf="!loading && !error">
+    <li class="item" *ngFor="let n of notifications" [class.read]="n.read">
+      <div class="message">{{ n.message }}</div>
+      <div class="meta">
+        <span class="type">{{ n.type }}</span>
+        <span class="date">{{ n.createdAt }}</span>
+      </div>
+      <button class="btn" (click)="markAsRead(n)" [disabled]="n.read">Marcar como lida</button>
+    </li>
+  </ul>
+</div>

@@ -6,6 +6,6 @@
 .profile-form { display: grid; gap: 8px; max-width: 520px; }
 .profile-form input { padding: 8px; border: 1px solid #ddd; border-radius: 6px; }
 .btn { padding: 8px 12px; border-radius: 6px; cursor: pointer; }
-.btn-outline { background: transparent; border: 1px solid #666; }
 .btn.primary { background: #4a6cf7; color: white; border: none; }
+.btn.secondary { background: #00b894; color: white; border: none; }
 .loading { padding: 24px; }

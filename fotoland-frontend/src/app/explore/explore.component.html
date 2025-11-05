@@ -1,0 +1,33 @@
+<div class="explore-page">
+  <app-nav-header [showChatNav]="false" [showCancel]="false" [showBack]="true"></app-nav-header>
+
+  <section class="card">
+    <h2>Explorar Posts</h2>
+    <div class="filters">
+      <input type="text" placeholder="Texto" [(ngModel)]="search.q">
+      <select [(ngModel)]="search.type">
+        <option value="">Tipo</option>
+        <option value="PHOTO">Foto</option>
+        <option value="VIDEO">Vídeo</option>
+      </select>
+      <input type="text" placeholder="Autor (username)" [(ngModel)]="search.author">
+      <button class="btn primary" (click)="onSearch()">Buscar</button>
+    </div>
+  </section>
+
+  <section class="results" *ngIf="!loading">
+    <div class="error" *ngIf="error">{{ error }}</div>
+    <div class="grid">
+      <div class="post-card" *ngFor="let post of results">
+        <img [src]="resolve(post.mediaUrl)" alt="media">
+        <div class="meta">
+          <span class="caption">{{ post.caption }}</span>
+          <span class="type">{{ post.type }}</span>
+          <span class="date">{{ post.createdAt }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="loading" *ngIf="loading">Carregando...</div>
+</div>
