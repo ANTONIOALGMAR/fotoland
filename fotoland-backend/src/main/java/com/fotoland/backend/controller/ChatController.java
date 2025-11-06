@@ -7,16 +7,32 @@ import org.springframework.stereotype.Controller;
 import java.security.Principal;
 
 import com.fotoland.backend.service.ChatRoomService;
+import com.fotoland.backend.repository.ChatMessageRepository;
+import com.fotoland.backend.repository.ChatRoomRepository;
+import com.fotoland.backend.repository.ChatRoomMemberRepository;
+import com.fotoland.backend.model.ChatMessageEntity;
+import com.fotoland.backend.model.ChatRoom;
 
 @Controller
 public class ChatController {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatRoomService chatRoomService;
+    private final ChatMessageRepository messageRepo;
+    private final ChatRoomRepository roomRepo;
+    private final ChatRoomMemberRepository memberRepo;
+    private final com.fotoland.backend.service.NotificationService notificationService;
 
-    public ChatController(SimpMessagingTemplate messagingTemplate, ChatRoomService chatRoomService) {
+    public ChatController(SimpMessagingTemplate messagingTemplate, ChatRoomService chatRoomService,
+                          ChatMessageRepository messageRepo, ChatRoomRepository roomRepo,
+                          ChatRoomMemberRepository memberRepo,
+                          com.fotoland.backend.service.NotificationService notificationService) {
         this.messagingTemplate = messagingTemplate;
         this.chatRoomService = chatRoomService;
+        this.messageRepo = messageRepo;
+        this.roomRepo = roomRepo;
+        this.memberRepo = memberRepo;
+        this.notificationService = notificationService;
     }
 
     @MessageMapping("/chat.send")
@@ -25,6 +41,14 @@ public class ChatController {
         message.setSender(principal != null ? principal.getName() : incoming.getSender());
         message.setContent(incoming.getContent());
         message.setTimestamp(System.currentTimeMillis());
+
+        // Persistência global
+        ChatMessageEntity entity = new ChatMessageEntity();
+        entity.setRoom(null);
+        entity.setSenderUsername(message.getSender());
+        entity.setContent(message.getContent());
+        entity.setClientTimestamp(incoming.getTimestamp());
+        messageRepo.save(entity);
 
         messagingTemplate.convertAndSend("/topic/global", message);
     }
@@ -41,6 +65,25 @@ public class ChatController {
         message.setContent(incoming.getContent());
         message.setTimestamp(System.currentTimeMillis());
         message.setRoomId(incoming.getRoomId());
+
+        ChatRoom room = roomRepo.findById(incoming.getRoomId()).orElse(null);
+        if (room != null) {
+            ChatMessageEntity entity = new ChatMessageEntity();
+            entity.setRoom(room);
+            entity.setSenderUsername(username);
+            entity.setContent(incoming.getContent());
+            entity.setClientTimestamp(incoming.getTimestamp());
+            messageRepo.save(entity);
+
+            // Notificar demais membros da sala (exclui o remetente)
+            for (var m : memberRepo.findByRoom_Id(room.getId())) {
+                String target = m.getUser().getUsername();
+                if (!target.equals(username)) {
+                    notificationService.notifyUser(target, com.fotoland.backend.model.Notification.Type.CHAT_MESSAGE,
+                        java.util.Map.of("roomId", room.getId(), "sender", username));
+                }
+            }
+        }
 
         messagingTemplate.convertAndSend("/topic/room." + incoming.getRoomId(), message);
     }

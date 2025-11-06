@@ -9,8 +9,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
-
 @RestController
 @RequestMapping("/api/search")
 public class SearchController {
@@ -34,7 +32,7 @@ public class SearchController {
         Specification<Post> spec = Specification.where(null);
 
         if (q != null && !q.isBlank()) {
-            String like = "%" + q.toLowerCase() + "%";
+            String like = "%" + q.toLowerCase().trim() + "%";
             spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("caption")), like));
         }
         if (type != null) {
@@ -44,19 +42,21 @@ public class SearchController {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("album").get("id"), albumId));
         }
         if (author != null && !author.isBlank()) {
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("album").get("author").get("username"), author));
+            String authorLike = "%" + author.trim().toLowerCase() + "%";
+            spec = spec.and((root, query, cb) ->
+                cb.like(cb.lower(root.get("album").get("author").get("username")), authorLike)
+            );
         }
         try {
             if (createdFrom != null && !createdFrom.isBlank()) {
-                Instant from = Instant.parse(createdFrom);
+                java.time.LocalDateTime from = java.time.LocalDateTime.parse(createdFrom);
                 spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("createdAt"), from));
             }
             if (createdTo != null && !createdTo.isBlank()) {
-                Instant to = Instant.parse(createdTo);
+                java.time.LocalDateTime to = java.time.LocalDateTime.parse(createdTo);
                 spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("createdAt"), to));
             }
         } catch (Exception ignored) {}
-
         Page<Post> page = postRepository.findAll(spec, pageable);
         return ResponseEntity.ok(page);
     }
