@@ -15,6 +15,13 @@ export interface User {
   username: string;
   role?: 'USER' | 'ADMIN';
   fullName?: string;
+  email?: string;
+  phoneNumber?: string;
+  address?: string;
+  profilePictureUrl?: string;
+  state?: string;
+  country?: string;
+  cep?: string;
 }
 
 export interface Post {

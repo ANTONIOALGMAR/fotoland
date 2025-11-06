@@ -10,10 +10,14 @@ public class UserResponse {
     private String address;
     private String profilePictureUrl;
     private String role;
+    private String email;    // novo
+    private String state;    // novo
+    private String country;  // novo
+    private String zipCode;  // novo
 
     public UserResponse() {}
 
-    public UserResponse(Long id, String username, String fullName, String phoneNumber, String address, String profilePictureUrl, String role) {
+    public UserResponse(Long id, String username, String fullName, String phoneNumber, String address, String profilePictureUrl, String role, String email, String state, String country, String zipCode) {
         this.id = id;
         this.username = username;
         this.fullName = fullName;
@@ -21,6 +25,10 @@ public class UserResponse {
         this.address = address;
         this.profilePictureUrl = profilePictureUrl;
         this.role = role;
+        this.email = email;
+        this.state = state;
+        this.country = country;
+        this.zipCode = zipCode;
     }
 
     public static UserResponse from(User user) {
@@ -31,7 +39,11 @@ public class UserResponse {
             user.getPhoneNumber(),
             user.getAddress(),
             user.getProfilePictureUrl(),
-            user.getRole()
+            user.getRole(),
+            user.getEmail(),
+            user.getState(),
+            user.getCountry(),
+            user.getZipCode()
         );
     }
 
@@ -42,6 +54,10 @@ public class UserResponse {
     public String getAddress() { return address; }
     public String getProfilePictureUrl() { return profilePictureUrl; }
     public String getRole() { return role; }
+    public String getEmail() { return email; }         // novo
+    public String getState() { return state; }         // novo
+    public String getCountry() { return country; }     // novo
+    public String getZipCode() { return zipCode; }     // novo
 
     public void setId(Long id) { this.id = id; }
     public void setUsername(String username) { this.username = username; }
@@ -50,4 +66,7 @@ public class UserResponse {
     public void setAddress(String address) { this.address = address; }
     public void setProfilePictureUrl(String profilePictureUrl) { this.profilePictureUrl = profilePictureUrl; }
     public void setRole(String role) { this.role = role; }
+    public void setEmail(String email) { this.email = email; }       // novo
+    public void setState(String state) { this.state = state; }       // novo
+    public void setCountry(String country) { this.country = country; } // novo
 }

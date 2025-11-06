@@ -234,9 +234,7 @@ export class AuthService {
 
   // Atualizar perfil do usuário logado
   updateMe(profile: Partial<User>): Observable<User> {
-    return this.http.put<User>(`${this.userApiUrl}/me`, profile).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.http.put<User>(`${this.userApiUrl}/me`, profile);
   }
 
   // Alterar senha do usuário logado

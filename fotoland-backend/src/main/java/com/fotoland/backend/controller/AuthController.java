@@ -6,6 +6,8 @@ import com.fotoland.backend.model.User;
 import com.fotoland.backend.service.UserDetailsServiceImpl;
 import com.fotoland.backend.service.UserService;
 import com.fotoland.backend.util.JwtUtil;
+import com.fotoland.backend.service.EmailService; // novo
+import com.fotoland.backend.service.SmsService;   // novo
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,18 +29,26 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
+    private final EmailService emailService; // novo
+    private final SmsService smsService;     // novo
 
-    public AuthController(UserService userService, AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil) {
+    public AuthController(UserService userService, AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, EmailService emailService, SmsService smsService) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtil;
+        this.emailService = emailService;
+        this.smsService = smsService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
             User registeredUser = userService.registerNewUser(user);
+            emailService.send(registeredUser.getEmail(), "Bem-vindo ao Fotoland", "Sua conta foi criada com sucesso!");
+            if (registeredUser.getPhoneNumber() != null && !registeredUser.getPhoneNumber().isBlank()) {
+                smsService.send(registeredUser.getPhoneNumber(), "Bem-vindo ao Fotoland! Sua conta foi criada.");
+            }
             return ResponseEntity.status(HttpStatus.CREATED).body(com.fotoland.backend.dto.UserResponse.from(registeredUser));
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CepService } from '../../shared/services/cep.service'; // novo
 
 @Component({
   selector: 'app-register',
@@ -10,29 +11,48 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class RegisterComponent {
   user = {
-    fullName: '', // Adicionado
-    username: '', // Adicionado
+    fullName: '',
+    username: '',
+    email: '',
     password: '',
-    phoneNumber: '', // Adicionado
-    address: '', // Adicionado
+    phoneNumber: '',
+    address: '',
+    state: '',
+    country: '',
+    cep: '',
     profilePictureUrl: ''
   };
-  
+
   selectedFile: File | null = null;
   selectedFileName = '';
   imagePreview: string | ArrayBuffer | null = null;
   isSubmitting = false;
+  showPassword = false;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private cepService: CepService) {}
 
   irParaPrivado(): void { this.router.navigate(['/private-chat']); }
   irParaColetivo(): void { this.router.navigate(['/chat']); }
   cancelar(): void {
-    this.user = { fullName: '', username: '', password: '', phoneNumber: '', address: '', profilePictureUrl: '' };
+    this.user = { fullName: '', username: '', email: '', password: '', phoneNumber: '', address: '', state: '', country: '', cep: '', profilePictureUrl: '' };
     this.selectedFile = null;
     this.selectedFileName = '';
     this.imagePreview = null;
     this.isSubmitting = false;
+  }
+
+  toggleShowPassword(): void { this.showPassword = !this.showPassword; }
+
+  onCepLookup(): void {
+    const cep = (this.user.cep || '').trim();
+    this.cepService.lookup(cep).subscribe({
+      next: (res: { address: string; state: string; country: string }) => {
+        this.user.address = res.address;
+        this.user.state = res.state;
+        this.user.country = res.country;
+      },
+      error: () => { alert('CEP inválido ou não encontrado.'); }
+    });
   }
   voltar(): void { history.back(); }
 

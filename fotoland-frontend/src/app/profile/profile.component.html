@@ -1,11 +1,10 @@
 <div class="profile-page">
   <app-nav-header [showChatNav]="false" [showCancel]="false" [showBack]="true"></app-nav-header>
 
-  <div *ngIf="loading" class="loading">
-    Carregando perfil...
-  </div>
+  <div *ngIf="loading" class="loading">Carregando perfil...</div>
 
   <div *ngIf="!loading && user" class="profile-card">
+    <!-- Foto -->
     <div class="profile-picture">
       <img [src]="authService.resolveMediaUrl(form.profilePictureUrl || '')" alt="Foto de perfil" />
       <div class="upload-controls">
@@ -22,13 +21,26 @@
       <input [(ngModel)]="form.fullName" type="text">
 
       <label>Username</label>
-      <input [(ngModel)]="form.username" type="text">
+      <input [(ngModel)]="form.username" type="text" disabled>
+
+      <label>Email</label>
+      <input [(ngModel)]="form.email" type="email" placeholder="exemplo@dominio.com">
 
       <label>Telefone</label>
-      <input [(ngModel)]="form.phoneNumber" type="text">
+      <input [(ngModel)]="form.phoneNumber" type="text" placeholder="+55 11 99999-9999">
+
+      <label>CEP</label>
+      <input [(ngModel)]="form.cep" type="text" maxlength="9" placeholder="00000-000"
+             (keydown.enter)="onCepLookup()" (keydown.tab)="onCepLookup()" (blur)="onCepLookup()">
 
       <label>Endereço</label>
-      <input [(ngModel)]="form.address" type="text">
+      <input [(ngModel)]="form.address" type="text" placeholder="Rua Exemplo, 123">
+
+      <label>Estado</label>
+      <input [(ngModel)]="form.state" type="text" placeholder="SP">
+
+      <label>País</label>
+      <input [(ngModel)]="form.country" type="text" placeholder="Brasil">
 
       <button class="btn primary" (click)="saveProfile()" [disabled]="saving">Salvar</button>
     </div>

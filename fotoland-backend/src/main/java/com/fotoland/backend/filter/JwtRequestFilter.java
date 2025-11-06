@@ -18,7 +18,6 @@ import java.io.IOException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
 
@@ -77,6 +76,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/upload")
                 || path.startsWith("/uploads/");
     }
-
-    // ... existing code ...
 }

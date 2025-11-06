@@ -16,7 +16,6 @@ import java.security.Principal;
 
 @Component
 public class JwtChannelInterceptor implements ChannelInterceptor {
-
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
 

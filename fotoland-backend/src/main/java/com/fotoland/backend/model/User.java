@@ -20,6 +20,15 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username; // Apelido
 
+    @Column(nullable = false, unique = true)
+    private String email; // Email único e obrigatório
+
+    private String state; // Estado
+
+    private String country; // País
+
+    private String zipCode; // CEP
+
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;

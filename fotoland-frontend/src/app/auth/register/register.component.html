@@ -17,23 +17,45 @@
     <form (ngSubmit)="onSubmit()" #regForm="ngForm">
       <div class="form-group">
         <label for="fullName">Full Name</label>
-        <input type="text" id="fullName" name="fullName" [(ngModel)]="user.fullName" required autocomplete="name">
+        <input type="text" id="fullName" name="fullName" [(ngModel)]="user.fullName" required autocomplete="name" placeholder="Ex: Maria Silva">
       </div>
       <div class="form-group">
         <label for="username">Nickname</label>
-        <input type="text" id="username" name="username" [(ngModel)]="user.username" required autocomplete="username">
+        <input type="text" id="username" name="username" [(ngModel)]="user.username" required minlength="3" autocomplete="username" placeholder="Ex: maria_silva">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" [(ngModel)]="user.email" required autocomplete="email" placeholder="exemplo@dominio.com">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" [(ngModel)]="user.password" autocomplete="new-password" required>
+        <div class="password-wrapper">
+          <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" [(ngModel)]="user.password" autocomplete="new-password" required minlength="8" placeholder="Mínimo 8 caracteres">
+          <button type="button" class="btn-outline" (click)="toggleShowPassword()">
+            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
       </div>
       <div class="form-group">
         <label for="phoneNumber">Phone Number</label>
-        <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="user.phoneNumber" autocomplete="tel">
+        <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="user.phoneNumber" autocomplete="tel" placeholder="+55 11 99999-9999">
+      </div>
+      <div class="form-group">
+        <label for="cep">CEP</label>
+        <input type="text" id="cep" name="cep" [(ngModel)]="user.cep" maxlength="9" placeholder="00000-000"
+               (keydown.enter)="onCepLookup()" (keydown.tab)="onCepLookup()" (blur)="onCepLookup()">
       </div>
       <div class="form-group">
         <label for="address">Address</label>
-        <input type="text" id="address" name="address" [(ngModel)]="user.address" autocomplete="street-address">
+        <input type="text" id="address" name="address" [(ngModel)]="user.address" autocomplete="street-address" placeholder="Rua Exemplo, 123">
+      </div>
+      <div class="form-group">
+        <label for="state">Estado</label>
+        <input type="text" id="state" name="state" [(ngModel)]="user.state" autocomplete="address-level1" placeholder="SP">
+      </div>
+      <div class="form-group">
+        <label for="country">País</label>
+        <input type="text" id="country" name="country" [(ngModel)]="user.country" autocomplete="country-name" placeholder="Brasil">
       </div>
       <div class="form-group">
         <label for="profilePicture">Profile Picture</label>
@@ -46,6 +68,4 @@
       </div>
       <button type="submit" [disabled]="regForm.invalid || isSubmitting">Register</button>
     </form>
-    <p class="login-link">Already have an account? <a routerLink="/login">Login here</a></p>
-  </div>
 </div>

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth/services/auth.service';
 import { User } from '../../../../api.models';
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
+import { CepService } from '../shared/services/cep.service'; // novo
 
 @Component({
   selector: 'app-profile',
@@ -17,20 +18,18 @@ export class ProfileComponent implements OnInit {
   loading = true;
   saving = false;
 
-  // Representação editável, inclui campos extras que não existem no tipo User
-  form: { fullName: string; username: string; phoneNumber?: string; address?: string; profilePictureUrl?: string } = {
-    fullName: '',
-    username: '',
-    phoneNumber: '',
-    address: '',
-    profilePictureUrl: ''
+  form: {
+    fullName: string; username: string; phoneNumber?: string; address?: string; profilePictureUrl?: string;
+    email?: string; state?: string; country?: string; cep?: string
+  } = {
+    fullName: '', username: '', phoneNumber: '', address: '', profilePictureUrl: '', email: '', state: '', country: '', cep: ''
   };
 
   selectedFile: File | null = null;
   selectedFileName = '';
   imagePreview: string | null = null;
 
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService, private cepService: CepService) {}
 
   ngOnInit(): void {
     this.authService.getMe().subscribe({
@@ -38,10 +37,13 @@ export class ProfileComponent implements OnInit {
         this.user = u;
         this.form.fullName = u.fullName ?? '';
         this.form.username = u.username ?? '';
-        // Copia campos extras se existirem
         this.form.phoneNumber = (u as any)?.phoneNumber ?? '';
         this.form.address = (u as any)?.address ?? '';
         this.form.profilePictureUrl = (u as any)?.profilePictureUrl ?? '';
+        this.form.email = (u as any)?.email ?? '';
+        this.form.state = (u as any)?.state ?? '';
+        this.form.country = (u as any)?.country ?? '';
+        this.form.cep = (u as any)?.zipCode ?? ''; // backend usa zipCode
         this.loading = false;
       },
       error: () => { this.loading = false; alert('Falha ao carregar perfil'); }
@@ -75,9 +77,31 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  onCepLookup(): void {
+    const cep = (this.form.cep || '').trim();
+    this.cepService.lookup(cep).subscribe({
+      next: (res: { address: string; state: string; country: string }) => {
+        this.form.address = res.address;
+        this.form.state = res.state;
+        this.form.country = res.country;
+      },
+      error: () => { alert('CEP inválido ou não encontrado.'); }
+    });
+  }
+
   saveProfile(): void {
     this.saving = true;
-    this.authService.updateMe(this.form).subscribe({
+    const payload = {
+      fullName: this.form.fullName,
+      phoneNumber: this.form.phoneNumber,
+      address: this.form.address,
+      profilePictureUrl: this.form.profilePictureUrl,
+      email: this.form.email,
+      state: this.form.state,
+      country: this.form.country,
+      zipCode: this.form.cep
+    };
+    this.authService.updateMe(payload).subscribe({
       next: (u) => {
         this.user = u;
         this.saving = false;
