@@ -12,8 +12,11 @@
 
   <div class="messages-container">
     <div *ngFor="let msg of messages" class="message">
-      <span class="username">{{ msg.username }}:</span>
-      <span class="text">{{ msg.text }}</span>
+      <img [src]="msg.profilePictureUrl || 'assets/default-avatar.png'" alt="Avatar" class="avatar">
+      <div class="message-content">
+        <span class="username">{{ msg.sender }}:</span>
+        <span class="text">{{ msg.content }}</span>
+      </div>
     </div>
     <div *ngIf="connecting" class="connecting">
       Conectando ao chat...

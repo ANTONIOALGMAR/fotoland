@@ -9,6 +9,7 @@ export interface ChatMsg {
   timestamp: number;
   id?: number;
   roomId?: number;
+  profilePictureUrl?: string;
 }
 
 @Injectable({ providedIn: 'root' })

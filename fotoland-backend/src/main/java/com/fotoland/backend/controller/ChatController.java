@@ -13,6 +13,8 @@ import com.fotoland.backend.repository.ChatRoomMemberRepository;
 import com.fotoland.backend.model.ChatMessageEntity;
 import com.fotoland.backend.model.ChatRoom;
 
+import com.fotoland.backend.repository.UserRepository;
+
 @Controller
 public class ChatController {
 
@@ -22,25 +24,35 @@ public class ChatController {
     private final ChatRoomRepository roomRepo;
     private final ChatRoomMemberRepository memberRepo;
     private final com.fotoland.backend.service.NotificationService notificationService;
+    private final UserRepository userRepository;
 
     public ChatController(SimpMessagingTemplate messagingTemplate, ChatRoomService chatRoomService,
                           ChatMessageRepository messageRepo, ChatRoomRepository roomRepo,
                           ChatRoomMemberRepository memberRepo,
-                          com.fotoland.backend.service.NotificationService notificationService) {
+                          com.fotoland.backend.service.NotificationService notificationService,
+                          UserRepository userRepository) {
         this.messagingTemplate = messagingTemplate;
         this.chatRoomService = chatRoomService;
         this.messageRepo = messageRepo;
         this.roomRepo = roomRepo;
         this.memberRepo = memberRepo;
         this.notificationService = notificationService;
+        this.userRepository = userRepository;
     }
 
     @MessageMapping("/chat.send")
     public void sendGlobal(ChatMessage incoming, Principal principal) {
+        String username = principal != null ? principal.getName() : incoming.getSender();
+        if (username == null) return;
+
         ChatMessage message = new ChatMessage();
-        message.setSender(principal != null ? principal.getName() : incoming.getSender());
+        message.setSender(username);
         message.setContent(incoming.getContent());
         message.setTimestamp(System.currentTimeMillis());
+
+        userRepository.findByUsername(username).ifPresent(user -> {
+            message.setProfilePictureUrl(user.getProfilePictureUrl());
+        });
 
         // Persistência global
         ChatMessageEntity entity = new ChatMessageEntity();
@@ -65,6 +77,10 @@ public class ChatController {
         message.setContent(incoming.getContent());
         message.setTimestamp(System.currentTimeMillis());
         message.setRoomId(incoming.getRoomId());
+
+        userRepository.findByUsername(username).ifPresent(user -> {
+            message.setProfilePictureUrl(user.getProfilePictureUrl());
+        });
 
         ChatRoom room = roomRepo.findById(incoming.getRoomId()).orElse(null);
         if (room != null) {

@@ -8,4 +8,5 @@ public class ChatMessage {
     private String content;
     private long timestamp;
     private Long roomId;
+    private String profilePictureUrl;
 }
