@@ -1,0 +1,46 @@
+.chat-invite-alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #28a745; /* Green for success/invitation */
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.alert-content p {
+  margin: 0;
+  font-size: 1.1em;
+}
+
+.alert-actions button {
+  background-color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  margin-left: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.alert-actions .accept-btn {
+  color: #28a745;
+}
+
+.alert-actions .accept-btn:hover {
+  background-color: #e6ffe6;
+}
+
+.alert-actions .decline-btn {
+  color: #dc3545; /* Red for decline */
+}
+
+.alert-actions .decline-btn:hover {
+  background-color: #ffe6e6;
+}

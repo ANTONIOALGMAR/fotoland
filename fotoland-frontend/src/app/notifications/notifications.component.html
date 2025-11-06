@@ -7,13 +7,13 @@
   <div *ngIf="error" class="error">{{ error }}</div>
 
   <ul class="list" *ngIf="!loading && !error">
-    <li class="item" *ngFor="let n of notifications" [class.read]="n.read">
-      <div class="message">{{ n.message }}</div>
+    <li class="item" *ngFor="let n of notifications" [class.read]="n.readAt !== null">
+      <div class="message">{{ getNotificationMessage(n) }}</div>
       <div class="meta">
         <span class="type">{{ n.type }}</span>
-        <span class="date">{{ n.createdAt }}</span>
+        <span class="date">{{ n.createdAt | date:'short' }}</span>
       </div>
-      <button class="btn" (click)="markAsRead(n)" [disabled]="n.read">Marcar como lida</button>
+      <button class="btn" (click)="markAsRead(n)" [disabled]="n.readAt !== null">Marcar como lida</button>
     </li>
   </ul>
 </div>

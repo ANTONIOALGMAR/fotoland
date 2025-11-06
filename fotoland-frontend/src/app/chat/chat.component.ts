@@ -23,7 +23,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.connecting = true;
     try {
-      await this.chat.connect((msg) => this.messages.push({ ...msg, username: msg.sender, text: msg.content }));
+      await this.chat.connect((msg) => this.messages.push(msg));
     } finally {
       this.connecting = false;
     }

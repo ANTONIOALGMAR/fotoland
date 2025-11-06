@@ -52,8 +52,16 @@ export interface Comment {
 
 export interface Notification {
   id: number;
-  type: 'FOLLOW' | 'COMMENT' | 'LIKE' | 'INVITE' | 'SYSTEM';
-  message: string;
-  createdAt: string; // or Date
-  read: boolean;
+  type: 'POST_COMMENT' | 'POST_LIKE' | 'COMMENT_LIKE' | 'CHAT_INVITE' | 'CHAT_MESSAGE';
+  payload: string; // JSON string
+  createdAt: string; // ISO 8601
+  readAt?: string; // ISO 8601
+}
+
+export interface Page<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
 }

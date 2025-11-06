@@ -1,11 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { BehaviorSubject, Observable, Subscription, Subject } from 'rxjs';
 import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
 import { AuthService } from '../../auth/services/auth.service';
+import { Notification as ApiNotification, Page } from '../../../../../api.models';
+import { tap } from 'rxjs/operators';
 
 export interface Notification {
   type: 'CHAT_INVITE' | 'CHAT_MESSAGE';
-  content: any; // Pode ser um roomId, sender, etc.
+  content: any;
 }
 
 @Injectable({
@@ -16,10 +19,12 @@ export class NotificationService implements OnDestroy {
   private notificationSubscription: StompSubscription | null = null;
   private chatInviteCountSubject = new BehaviorSubject<number>(0);
   private chatMessageCountSubject = new BehaviorSubject<number>(0);
+  private chatInviteSubject = new Subject<any>(); // Para emitir convites de chat
   private authSubscription: Subscription;
 
   chatInviteCount$: Observable<number> = this.chatInviteCountSubject.asObservable();
   chatMessageCount$: Observable<number> = this.chatMessageCountSubject.asObservable();
+  chatInvite$: Observable<any> = this.chatInviteSubject.asObservable(); // Observable para convites de chat
 
   private readonly BASE_URL_OVERRIDE = (typeof window !== 'undefined' ? localStorage.getItem('backend_base_url') : null);
   private readonly BASE_URL = (
@@ -30,7 +35,7 @@ export class NotificationService implements OnDestroy {
           : 'https://fotoland-backend.onrender.com')
   ).replace(/:+$/, '');
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private http: HttpClient) {
     this.authSubscription = this.authService.isAuthenticated$.subscribe(isAuthenticated => {
       if (isAuthenticated) {
         this.connect();
@@ -38,6 +43,23 @@ export class NotificationService implements OnDestroy {
         this.disconnect();
       }
     });
+  }
+
+  getNotifications(status: 'ALL' | 'UNREAD' = 'ALL'): Observable<Page<ApiNotification>> {
+    const params = new HttpParams().set('status', status);
+    return this.http.get<Page<ApiNotification>>(`${this.BASE_URL}/api/notifications`, { params });
+  }
+
+  markAsRead(id: number): Observable<void> {
+    return this.http.post<void>(`${this.BASE_URL}/api/notifications/${id}/read`, {}).pipe(
+      tap(() => {
+        // Opcional: Atualizar o estado localmente se necessário
+      })
+    );
+  }
+
+  markAllAsRead(): Observable<void> {
+    return this.http.post<void>(`${this.BASE_URL}/api/notifications/read-all`, {});
   }
 
   ngOnDestroy(): void {
@@ -100,6 +122,7 @@ export class NotificationService implements OnDestroy {
     switch (notification.type) {
       case 'CHAT_INVITE':
         this.chatInviteCountSubject.next(this.chatInviteCountSubject.getValue() + 1);
+        this.chatInviteSubject.next(notification.content); // Emitir o conteúdo do convite
         break;
       case 'CHAT_MESSAGE':
         this.chatMessageCountSubject.next(this.chatMessageCountSubject.getValue() + 1);
@@ -122,3 +145,4 @@ export class NotificationService implements OnDestroy {
     this.chatMessageCountSubject.next(0);
   }
 }
+

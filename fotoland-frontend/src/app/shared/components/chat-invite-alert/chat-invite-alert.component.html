@@ -1,0 +1,9 @@
+<div class="chat-invite-alert" *ngIf="invite">
+  <div class="alert-content">
+    <p>Você recebeu um convite de chat de <strong>{{ invite.sender }}</strong> para a sala <strong>{{ invite.roomName }}</strong>.</p>
+    <div class="alert-actions">
+      <button class="accept-btn" (click)="onAccept()">Aceitar</button>
+      <button class="decline-btn" (click)="onDecline()">Recusar</button>
+    </div>
+  </div>
+</div>

@@ -17,7 +17,9 @@ export interface ChatMsg {
 @Injectable({ providedIn: 'root' })
 export class ChatService {
   private client: Client | null = null;
-  private subscription: StompSubscription | null = null;
+  private globalSubscription: StompSubscription | null = null;
+  private globalOnMessageCallback: ((msg: ChatMsg) => void) | null = null;
+  private subscription: StompSubscription | null = null; // Adicionado para gerenciar a subscrição da sala
 
   private readonly BASE_URL_OVERRIDE = (typeof window !== 'undefined' ? localStorage.getItem('backend_base_url') : null);
   private readonly BASE_URL = (
@@ -29,7 +31,15 @@ export class ChatService {
   ).replace(/:+$/, '');
 
   connect(onMessage: (msg: ChatMsg) => void): Promise<void> {
+    this.globalOnMessageCallback = onMessage;
+
     return new Promise((resolve, reject) => {
+      if (this.client && this.client.connected) {
+        // Já conectado, apenas atualiza o callback e resolve
+        resolve();
+        return;
+      }
+
       const token = localStorage.getItem('jwt_token') || '';
 
       // Escolhe o esquema ws/wss baseado no protocolo atual
@@ -45,9 +55,11 @@ export class ChatService {
       });
 
       this.client.onConnect = () => {
-        this.subscription = this.client!.subscribe('/topic/global', (message: IMessage) => {
+        this.globalSubscription = this.client!.subscribe('/topic/global', (message: IMessage) => {
           try {
-            onMessage(JSON.parse(message.body));
+            if (this.globalOnMessageCallback) {
+              this.globalOnMessageCallback(JSON.parse(message.body));
+            }
           } catch {
             console.warn('Invalid chat message payload:', message.body);
           }
@@ -65,17 +77,29 @@ export class ChatService {
   }
 
   disconnect(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-      this.subscription = null;
+    if (this.globalSubscription) {
+      this.globalSubscription.unsubscribe();
+      this.globalSubscription = null;
     }
-    this.client?.deactivate();
-    this.client = null;
+    if (this.client) {
+      this.client.deactivate();
+      this.client = null;
+    }
+    this.globalOnMessageCallback = null;
   }
 
   connectToRoom(roomId: number, onMessage: (msg: ChatMsg) => void): Promise<void> {
     if (!this.client || !this.client.connected) {
-      return this.connect(() => {}); // garante conexão
+      // Se não estiver conectado, tenta conectar primeiro (sem callback global)
+      return this.connect(() => {}).then(() => this._connectToRoom(roomId, onMessage));
+    }
+    return this._connectToRoom(roomId, onMessage);
+  }
+
+  private _connectToRoom(roomId: number, onMessage: (msg: ChatMsg) => void): Promise<void> {
+    // Desinscreve de qualquer subscrição de sala anterior para evitar duplicação
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
     this.subscription = this.client!.subscribe(`/topic/room.${roomId}`, (message: IMessage) => {
       try {
