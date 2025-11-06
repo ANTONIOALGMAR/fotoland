@@ -10,7 +10,7 @@ import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
   standalone: true,
   imports: [RouterLink, NavHeaderComponent],
   templateUrl: './landing-page.component.html',
-  styleUrl: './landing-page.component.css'
+  styleUrls: ['./landing-page.component.css']
 })
 export class LandingPageComponent implements OnInit {
   projectDescription = "Conecte-se com amigos e reviva memórias através de álbuns de fotos e vídeos. Cada post é uma viagem ao passado, conectando você aos momentos mais especiais.";

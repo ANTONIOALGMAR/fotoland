@@ -21,7 +21,8 @@ export class AuthGuard implements CanActivate {
     return this.authService.getMe().pipe(
       map(() => true),
       catchError(() => {
-        this.authService.logout();
+        // Evitar navegação ativa dentro do guard; apenas limpar token e retornar UrlTree
+        localStorage.removeItem('jwt_token');
         return of(this.router.createUrlTree(['/login']));
       })
     );

@@ -10,7 +10,7 @@ import { Album, Post, User, Comment, Notification } from '../../../../../api.mod
 })
 export class AuthService {
 
-  private readonly BASE_URL_OVERRIDE = (typeof window !== 'undefined' && isDevMode() ? localStorage.getItem('backend_base_url') : null);
+  private readonly BASE_URL_OVERRIDE = (typeof window !== 'undefined' ? localStorage.getItem('backend_base_url') : null);
 
   private readonly BASE_URL = (
     this.BASE_URL_OVERRIDE

@@ -12,7 +12,7 @@ import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
   standalone: true,
   imports: [CommonModule, RouterLink, NavHeaderComponent],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   user: User | null = null;
