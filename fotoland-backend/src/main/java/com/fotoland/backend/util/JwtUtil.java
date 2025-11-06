@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret:}")
     private String SECRET_KEY;
 
     public String extractUsername(String token) {
@@ -62,6 +62,9 @@ public class JwtUtil {
     }
 
     private Key getSignKey() {
+        if (SECRET_KEY == null || SECRET_KEY.isBlank()) {
+            throw new IllegalStateException("Missing jwt.secret (env JWT_SECRET). Provide >= 256-bit secret.");
+        }
         byte[] keyBytes;
         try {
             keyBytes = Decoders.BASE64.decode(SECRET_KEY);

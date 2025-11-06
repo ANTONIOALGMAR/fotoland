@@ -14,14 +14,20 @@ public class S3Config {
     @Value("${cloud.aws.region.static}")
     private String awsRegion;
 
-    @Value("${cloud.aws.s3.endpoint}")
+    @Value("${cloud.aws.s3.endpoint:}")
     private String s3Endpoint;
 
     @Bean
     public S3Client s3Client() {
-        return S3Client.builder()
-                .region(Region.of(awsRegion))
-                .endpointOverride(URI.create(s3Endpoint))
-                .build();
+        if (s3Endpoint != null && !s3Endpoint.isBlank()) {
+            return S3Client.builder()
+                    .region(Region.of(awsRegion))
+                    .endpointOverride(URI.create(s3Endpoint))
+                    .build();
+        } else {
+            return S3Client.builder()
+                    .region(Region.of(awsRegion))
+                    .build();
+        }
     }
 }
