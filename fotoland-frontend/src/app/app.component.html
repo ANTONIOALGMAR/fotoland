@@ -68,7 +68,7 @@
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.chat }">
           <a routerLink="/chat" class="nav-link">Chat Coletivo</a>
-          <a routerLink="/private-chat" class="nav-link">Chat Privado</a>
+          <a routerLink="/private-chat" class="nav-link">Chat Privado <span *ngIf="chatInviteCount > 0" class="badge">{{ chatInviteCount }}</span></a>
         </div>
       </div>
 
@@ -98,7 +98,7 @@
       <!-- Seção: Notificações -->
       <div class="accordion-section">
         <button class="accordion-header" (click)="toggleSection('notifications')">
-          Notificações
+          Notificações <span *ngIf="chatMessageCount > 0" class="badge">{{ chatMessageCount }}</span>
           <span class="chevron" [ngClass]="{ 'open': sections.notifications }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.notifications }">

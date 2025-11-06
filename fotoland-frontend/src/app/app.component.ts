@@ -3,6 +3,7 @@ import { AuthService } from './auth/services/auth.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { NotificationService } from './shared/services/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +14,12 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'fotoland-frontend';
   isAuthenticated: boolean = false;
   private routerSubscription: Subscription = new Subscription();
+  private notificationSubscriptions: Subscription = new Subscription();
 
-  constructor(private authService: AuthService, private router: Router) {}
+  chatInviteCount: number = 0;
+  chatMessageCount: number = 0;
+
+  constructor(private authService: AuthService, private router: Router, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     // Verificar autenticação inicial
@@ -26,10 +31,18 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.checkAuthentication();
       });
+
+    this.notificationSubscriptions.add(this.notificationService.chatInviteCount$.subscribe(count => {
+      this.chatInviteCount = count;
+    }));
+    this.notificationSubscriptions.add(this.notificationService.chatMessageCount$.subscribe(count => {
+      this.chatMessageCount = count;
+    }));
   }
 
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();
+    this.notificationSubscriptions.unsubscribe();
   }
 
   private checkAuthentication(): void {
