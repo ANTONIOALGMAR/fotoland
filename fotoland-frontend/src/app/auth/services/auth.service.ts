@@ -1,6 +1,6 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
+import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Album, Post, User, Comment, Notification } from '../../../../../api.models';
@@ -27,7 +27,12 @@ export class AuthService {
   private readonly postApiUrl = `${this.BASE_URL}/api/posts`;
   private readonly commentsUrl = `${this.BASE_URL}/api/comments`;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  private _isAuthenticated = new BehaviorSubject<boolean>(false);
+  isAuthenticated$ = this._isAuthenticated.asObservable();
+
+  constructor(private http: HttpClient, private router: Router) {
+    this._isAuthenticated.next(!!this.getToken());
+  }
 
   // 📸 Upload de imagem de perfil
   uploadProfilePicture(file: File): Observable<{ fileUrl: string }> {
@@ -53,10 +58,19 @@ export class AuthService {
   }
 
   login(credentials: any): Observable<{ jwt: string }> {
-    return this.http.post<{ jwt: string }>(`${this.apiUrl}/login`, credentials);
+    return this.http.post<{ jwt: string }>(`${this.apiUrl}/login`, credentials).pipe(
+      map(response => {
+        this.setToken(response.jwt);
+        return response;
+      })
+    );
   }
 
-  // 🔑 Token e autenticação
+  private setToken(token: string): void {
+    localStorage.setItem('jwt_token', token);
+    this._isAuthenticated.next(true);
+  }
+
   getToken(): string | null {
       const raw = localStorage.getItem('jwt_token');
       if (!raw) return null;
@@ -67,7 +81,24 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('jwt_token');
+    this._isAuthenticated.next(false);
     this.router.navigate(['/login']);
+  }
+
+  getUsernameFromToken(): string {
+    const token = this.getToken();
+    if (!token) return 'me';
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return 'me';
+      // Handle URL-safe base64
+      const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const padded = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, '=');
+      const payload = JSON.parse(atob(padded));
+      return payload?.username || payload?.sub || 'me';
+    } catch {
+      return 'me';
+    }
   }
 
   getMe(): Observable<User> {

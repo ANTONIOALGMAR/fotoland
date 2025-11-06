@@ -12,9 +12,10 @@ import { NotificationService } from './shared/services/notification.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'fotoland-frontend';
-  isAuthenticated: boolean = false;
+  isAuthenticated: boolean = false; // Será atualizado via observable
   private routerSubscription: Subscription = new Subscription();
   private notificationSubscriptions: Subscription = new Subscription();
+  private authStatusSubscription: Subscription = new Subscription();
 
   chatInviteCount: number = 0;
   chatMessageCount: number = 0;
@@ -22,14 +23,21 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private authService: AuthService, private router: Router, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
-    // Verificar autenticação inicial
-    this.checkAuthentication();
+    // Escutar mudanças de autenticação do AuthService
+    this.authStatusSubscription = this.authService.isAuthenticated$.subscribe(status => {
+      this.isAuthenticated = status;
+      // Se não estiver autenticado, garantir que a sidebar esteja fechada
+      if (!this.isAuthenticated) {
+        this.isSidebarOpen = false;
+      }
+    });
     
-    // Escutar mudanças de rota para verificar autenticação
+    // Escutar mudanças de rota para verificar autenticação (se necessário, mas agora o authService já gerencia)
     this.routerSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        this.checkAuthentication();
+        // O estado de autenticação já é gerenciado pelo authService.isAuthenticated$
+        // this.checkAuthentication(); // Não é mais necessário chamar aqui
       });
 
     this.notificationSubscriptions.add(this.notificationService.chatInviteCount$.subscribe(count => {
@@ -43,16 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();
     this.notificationSubscriptions.unsubscribe();
-  }
-
-  private checkAuthentication(): void {
-    const token = this.authService.getToken();
-    this.isAuthenticated = !!token && token.trim() !== '';
-    
-    // Se não estiver autenticado, garantir que a sidebar esteja fechada
-    if (!this.isAuthenticated) {
-      this.isSidebarOpen = false;
-    }
+    this.authStatusSubscription.unsubscribe();
   }
 
   isSidebarOpen: boolean = true;
@@ -69,7 +68,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onLogout(): void {
     this.authService.logout();
-    this.checkAuthentication(); // Forçar verificação após logout
+    // O estado de autenticação será atualizado via authStatusSubscription
+    // this.checkAuthentication(); // Não é mais necessário chamar aqui
   }
 
   toggleSidebar(): void {
