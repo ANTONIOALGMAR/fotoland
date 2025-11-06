@@ -36,8 +36,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.routerSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        // O estado de autenticação já é gerenciado pelo authService.isAuthenticated$
-        // this.checkAuthentication(); // Não é mais necessário chamar aqui
+        // Fechar a sidebar automaticamente ao navegar para uma nova rota
+        if (this.isSidebarOpen) {
+          this.isSidebarOpen = false;
+        }
       });
 
     this.notificationSubscriptions.add(this.notificationService.chatInviteCount$.subscribe(count => {
