@@ -50,6 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/albums/**", "/api/posts/**", "/api/comments/**").authenticated()
                 .requestMatchers("/api/user/**").authenticated()
                 .requestMatchers("/api/chat/**").authenticated()
+                .requestMatchers("/ws/**").permitAll() // <-- ADICIONE ISTO
                 .requestMatchers("/ws-native/**").permitAll()
                 .anyRequest().authenticated()
             )

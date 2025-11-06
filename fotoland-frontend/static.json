@@ -1,0 +1,13 @@
+{
+  "public": "dist/fotoland-frontend",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": {
+    "/**": {
+      "Cache-Control": "public, max-age=600"
+    }
+  },
+  "routes": [
+    { "src": "/.*", "dest": "/index.html" }
+  ]
+}
