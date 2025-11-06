@@ -9,4 +9,24 @@
     (cancel)="cancelar()"
     (back)="voltar()"
   ></app-nav-header>
+
+  <div class="messages-container">
+    <div *ngFor="let msg of messages" class="message">
+      <span class="username">{{ msg.username }}:</span>
+      <span class="text">{{ msg.text }}</span>
+    </div>
+    <div *ngIf="connecting" class="connecting">
+      Conectando ao chat...
+    </div>
+  </div>
+
+  <div class="input-container">
+    <input
+      type="text"
+      [(ngModel)]="newMessage"
+      (keyup.enter)="send()"
+      placeholder="Digite sua mensagem..."
+    />
+    <button (click)="send()">Enviar</button>
+  </div>
 </div>
