@@ -10,6 +10,8 @@ export interface ChatMsg {
   id?: number;
   roomId?: number;
   profilePictureUrl?: string;
+  username?: string; // alias opcional para compatibilidade de template
+  text?: string;     // alias opcional para compatibilidade de template
 }
 
 @Injectable({ providedIn: 'root' })
