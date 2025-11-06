@@ -63,16 +63,17 @@ public class SecurityConfig {
         return request -> {
             CorsConfiguration configuration = new CorsConfiguration();
 
-            // Use padrões para cobrir subdomínios do Render e localhost
-            configuration.setAllowedOriginPatterns(List.of(
-                "https://fotoland.onrender.com",
+            // Para testes, permitindo todas as origens. Em produção, restrinja.
+            configuration.setAllowedOrigins(List.of(
                 "https://fotoland-frontend.onrender.com",
-                "https://*.onrender.com",
-                "http://localhost:*"
+                "https://fotoland-backend.onrender.com", // Adicionado para garantir que o backend possa se comunicar consigo mesmo se necessário
+                "http://localhost:4200", // Porta padrão do Angular CLI
+                "http://localhost:8080", // Porta padrão do backend
+                "*" // Permitir todas as origens para depuração. REMOVER EM PRODUÇÃO!
             ));
 
             configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-            configuration.setAllowedHeaders(List.of("Content-Type", "Authorization")); // explícito para preflight
+            configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
             configuration.setExposedHeaders(List.of("Authorization"));
             configuration.setAllowCredentials(true);
             configuration.setMaxAge(3600L);
