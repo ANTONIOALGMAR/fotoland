@@ -20,8 +20,8 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username; // Apelido
 
-    @Column(nullable = false, unique = true)
-    private String email; // Email único e obrigatório
+    @Column(unique = true)
+    private String email; // Email único
 
     private String state; // Estado
 
