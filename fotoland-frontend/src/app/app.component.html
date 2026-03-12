@@ -18,7 +18,7 @@
       <!-- Seção: Álbuns (somente autenticado) -->
       <div class="accordion-section">
         <button class="accordion-header" (click)="toggleSection('album')">
-          Álbuns
+          {{ 'NAV.ALBUMS' | translate }}
           <span class="chevron" [ngClass]="{ 'open': sections.album }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.album }">
@@ -30,7 +30,7 @@
       <!-- Seção: Posts (somente autenticado) -->
       <div class="accordion-section">
         <button class="accordion-header" (click)="toggleSection('post')">
-          Posts
+          {{ 'NAV.POSTS' | translate }}
           <span class="chevron" [ngClass]="{ 'open': sections.post }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.post }">
@@ -41,7 +41,7 @@
       <!-- Seção: Feed (sempre visível) -->
       <div class="accordion-section">
         <button class="accordion-header" (click)="toggleSection('feed')">
-          Feed
+          {{ 'NAV.FEED' | translate }}
           <span class="chevron" [ngClass]="{ 'open': sections.feed }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.feed }">
@@ -52,7 +52,7 @@
       <!-- Seção: Comentários (placeholder) -->
       <div class="accordion-section">
         <button class="accordion-header" (click)="toggleSection('comment')">
-          Comentários
+          {{ 'NAV.COMMENTS' | translate }}
           <span class="chevron" [ngClass]="{ 'open': sections.comment }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.comment }">
@@ -63,7 +63,7 @@
       <!-- Seção: Chat -->
       <div class="accordion-section">
         <button class="accordion-header" (click)="toggleSection('chat')">
-          Chat
+          {{ 'NAV.CHAT' | translate }}
           <span class="chevron" [ngClass]="{ 'open': sections.chat }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.chat }">
@@ -75,30 +75,30 @@
       <!-- Seção: Conta -->
       <div class="accordion-section">
         <button class="accordion-header" (click)="toggleSection('account')">
-          Conta
+          {{ 'NAV.ACCOUNT' | translate }}
           <span class="chevron" [ngClass]="{ 'open': sections.account }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.account }">
-          <a routerLink="/profile" class="nav-link">Perfil</a>
-          <a routerLink="/settings" class="nav-link">Configurações</a>
+          <a routerLink="/profile" class="nav-link">{{ 'NAV.PROFILE' | translate }}</a>
+          <a routerLink="/settings" class="nav-link">{{ 'NAV.SETTINGS' | translate }}</a>
         </div>
       </div>
 
       <!-- Seção: Descobrir -->
       <div class="accordion-section">
         <button class="accordion-header" (click)="toggleSection('discover')">
-          Descobrir
+          {{ 'NAV.DISCOVER' | translate }}
           <span class="chevron" [ngClass]="{ 'open': sections.discover }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.discover }">
-          <a routerLink="/explore" class="nav-link">Explorar/Buscar</a>
+          <a routerLink="/explore" class="nav-link">{{ 'NAV.EXPLORE' | translate }}</a>
         </div>
       </div>
 
       <!-- Seção: Notificações -->
       <div class="accordion-section">
         <button class="accordion-header" (click)="toggleSection('notifications')">
-          Notificações <span *ngIf="chatMessageCount > 0" class="badge">{{ chatMessageCount }}</span>
+          {{ 'NAV.NOTIFICATIONS' | translate }} <span *ngIf="chatMessageCount > 0" class="badge">{{ chatMessageCount }}</span>
           <span class="chevron" [ngClass]="{ 'open': sections.notifications }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.notifications }">
@@ -107,7 +107,7 @@
       </div>
 
       <!-- Logout quando autenticado -->
-      <button class="logout-btn" (click)="onLogout()">Logout</button>
+      <button class="logout-btn" (click)="onLogout()">{{ 'NAV.LOGOUT' | translate }}</button>
     </nav>
   </aside>
 

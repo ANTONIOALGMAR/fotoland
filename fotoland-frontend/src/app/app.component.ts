@@ -4,6 +4,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { NotificationService } from './shared/services/notification.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,17 @@ export class AppComponent implements OnInit, OnDestroy {
   chatInviteCount: number = 0;
   chatMessageCount: number = 0;
 
-  constructor(private authService: AuthService, private router: Router, private notificationService: NotificationService) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private notificationService: NotificationService,
+    private translate: TranslateService
+  ) {
+    const savedLang = localStorage.getItem('selectedLang') || 'pt';
+    this.translate.addLangs(['pt', 'en']);
+    this.translate.setDefaultLang('pt');
+    this.translate.use(savedLang);
+  }
 
   ngOnInit(): void {
     // Escutar mudanças de autenticação do AuthService

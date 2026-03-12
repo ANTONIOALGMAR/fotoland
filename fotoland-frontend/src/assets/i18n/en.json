@@ -1,0 +1,53 @@
+{
+  "NAV": {
+    "HOME": "Home",
+    "FEED": "Feed",
+    "PROFILE": "Profile",
+    "SETTINGS": "Settings",
+    "LOGOUT": "Logout",
+    "EXPLORE": "Explore",
+    "NOTIFICATIONS": "Notifications",
+    "CHAT": "Chat",
+    "ALBUMS": "Albums",
+    "POSTS": "Posts",
+    "COMMENTS": "Comments",
+    "ACCOUNT": "Account",
+    "DISCOVER": "Discover"
+  },
+  "COMMON": {
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "DELETE": "Delete",
+    "EDIT": "Edit",
+    "FOLLOW": "Follow",
+    "FOLLOWING": "Following",
+    "FOLLOWERS": "Followers",
+    "LOADING": "Loading...",
+    "SEND": "Send",
+    "BACK": "Back"
+  },
+  "FEED": {
+    "TITLE": "Global Feed",
+    "NO_ALBUMS": "No albums found in the feed. Be the first to create one!",
+    "SEARCH_POSTS": "Search Posts",
+    "SEARCH_CAPTION": "Text (caption)",
+    "SEARCH_AUTHOR": "Author (username)",
+    "SEARCH_TYPE": "Type",
+    "SEARCH_BUTTON": "Search",
+    "PHOTO": "Photo",
+    "VIDEO": "Video"
+  },
+  "AUTH": {
+    "LOGIN_TITLE": "Login to Fotoland",
+    "REGISTER_TITLE": "Create Account",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "FULL_NAME": "Full Name",
+    "EMAIL": "Email",
+    "PHONE": "Phone",
+    "REGISTER_BUTTON": "Register",
+    "LOGIN_BUTTON": "Login",
+    "NO_ACCOUNT": "Don't have an account?",
+    "HAVE_ACCOUNT": "Already have an account?"
+  }
+}

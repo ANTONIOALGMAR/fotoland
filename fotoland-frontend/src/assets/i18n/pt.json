@@ -1,0 +1,53 @@
+{
+  "NAV": {
+    "HOME": "Início",
+    "FEED": "Feed",
+    "PROFILE": "Perfil",
+    "SETTINGS": "Configurações",
+    "LOGOUT": "Sair",
+    "EXPLORE": "Explorar",
+    "NOTIFICATIONS": "Notificações",
+    "CHAT": "Conversas",
+    "ALBUMS": "Álbuns",
+    "POSTS": "Posts",
+    "COMMENTS": "Comentários",
+    "ACCOUNT": "Conta",
+    "DISCOVER": "Descobrir"
+  },
+  "COMMON": {
+    "SAVE": "Salvar",
+    "CANCEL": "Cancelar",
+    "DELETE": "Excluir",
+    "EDIT": "Editar",
+    "FOLLOW": "Seguir",
+    "FOLLOWING": "Seguindo",
+    "FOLLOWERS": "Seguidores",
+    "LOADING": "Carregando...",
+    "SEND": "Enviar",
+    "BACK": "Voltar"
+  },
+  "FEED": {
+    "TITLE": "Feed Global",
+    "NO_ALBUMS": "Nenhum álbum encontrado no feed. Seja o primeiro a criar um!",
+    "SEARCH_POSTS": "Buscar Posts",
+    "SEARCH_CAPTION": "Texto (legenda)",
+    "SEARCH_AUTHOR": "Autor (username)",
+    "SEARCH_TYPE": "Tipo",
+    "SEARCH_BUTTON": "Buscar",
+    "PHOTO": "Foto",
+    "VIDEO": "Vídeo"
+  },
+  "AUTH": {
+    "LOGIN_TITLE": "Entrar no Fotoland",
+    "REGISTER_TITLE": "Criar Conta",
+    "USERNAME": "Usuário",
+    "PASSWORD": "Senha",
+    "FULL_NAME": "Nome Completo",
+    "EMAIL": "E-mail",
+    "PHONE": "Telefone",
+    "REGISTER_BUTTON": "Registrar",
+    "LOGIN_BUTTON": "Entrar",
+    "NO_ACCOUNT": "Não tem uma conta?",
+    "HAVE_ACCOUNT": "Já tem uma conta?"
+  }
+}

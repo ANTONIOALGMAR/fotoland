@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../services/notification.service';
 import { RouterLink } from '@angular/router';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-nav-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   template: `
     <div class="flex gap-2 mb-3 items-center">
       <h2 *ngIf="title" class="font-semibold mr-4">{{ title }}</h2>
@@ -14,6 +15,13 @@ import { RouterLink } from '@angular/router';
       <button *ngIf="showChatNav && showGroupNav" (click)="navigateGroup.emit()" class="bg-indigo-600 text-white px-3 py-1 rounded">Ir para coletivo</button>
       <button *ngIf="showCancel" (click)="cancel.emit()" [disabled]="disableCancel" class="bg-gray-500 text-white px-3 py-1 rounded disabled:opacity-50">Cancelar</button>
       <button *ngIf="showBack" (click)="back.emit()" class="bg-gray-700 text-white px-3 py-1 rounded">Voltar</button>
+
+      <!-- Language Selector -->
+      <div class="flex items-center space-x-2 ml-4">
+        <button (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" class="text-sm text-gray-600 hover:text-blue-600">PT</button>
+        <span class="text-gray-300">|</span>
+        <button (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" class="text-sm text-gray-600 hover:text-blue-600">EN</button>
+      </div>
 
       <a routerLink="/notifications" class="relative ml-auto p-2 text-gray-600 hover:text-gray-900">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -41,8 +49,11 @@ export class NavHeaderComponent implements OnInit {
   totalNotifications: number = 0;
   chatInviteCount: number = 0;
   chatMessageCount: number = 0;
+  currentLang: string = 'pt';
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService, private translate: TranslateService) {
+    this.currentLang = translate.currentLang || translate.defaultLang;
+  }
 
   ngOnInit(): void {
     this.notificationService.chatInviteCount$.subscribe(count => {
@@ -54,6 +65,12 @@ export class NavHeaderComponent implements OnInit {
       this.chatMessageCount = count;
       this.updateTotalNotifications();
     });
+  }
+
+  changeLang(lang: string) {
+    this.translate.use(lang);
+    this.currentLang = lang;
+    localStorage.setItem('selectedLang', lang);
   }
 
   updateTotalNotifications(): void {
