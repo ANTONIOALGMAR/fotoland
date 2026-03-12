@@ -19,11 +19,13 @@ export class NotificationService implements OnDestroy {
   private notificationSubscription: StompSubscription | null = null;
   private chatInviteCountSubject = new BehaviorSubject<number>(0);
   private chatMessageCountSubject = new BehaviorSubject<number>(0);
+  private generalNotificationCountSubject = new BehaviorSubject<number>(0); // New for followers/likes
   private chatInviteSubject = new Subject<any>(); // Para emitir convites de chat
   private authSubscription: Subscription;
 
   chatInviteCount$: Observable<number> = this.chatInviteCountSubject.asObservable();
   chatMessageCount$: Observable<number> = this.chatMessageCountSubject.asObservable();
+  generalNotificationCount$: Observable<number> = this.generalNotificationCountSubject.asObservable();
   chatInvite$: Observable<any> = this.chatInviteSubject.asObservable(); // Observable para convites de chat
 
   private readonly BASE_URL_OVERRIDE = (typeof window !== 'undefined' ? localStorage.getItem('backend_base_url') : null);
@@ -118,7 +120,7 @@ export class NotificationService implements OnDestroy {
     this.resetCounts();
   }
 
-  private handleNotification(notification: Notification): void {
+  private handleNotification(notification: any): void {
     switch (notification.type) {
       case 'CHAT_INVITE':
         this.chatInviteCountSubject.next(this.chatInviteCountSubject.getValue() + 1);
@@ -126,6 +128,11 @@ export class NotificationService implements OnDestroy {
         break;
       case 'CHAT_MESSAGE':
         this.chatMessageCountSubject.next(this.chatMessageCountSubject.getValue() + 1);
+        break;
+      case 'FOLLOW':
+      case 'POST_LIKE':
+      case 'POST_COMMENT':
+        this.generalNotificationCountSubject.next(this.generalNotificationCountSubject.getValue() + 1);
         break;
       default:
         console.warn('Unknown notification type:', notification.type);
