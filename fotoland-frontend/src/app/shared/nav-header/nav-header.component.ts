@@ -20,27 +20,27 @@ import { Subscription } from 'rxjs';
 
         <div class="flex items-center space-x-1" *ngIf="isAuthenticated">
           <!-- Ícone de Mensagens -->
-          <a routerLink="/private-chat" class="relative p-2 text-gray-500 hover:text-blue-600 transition-all" title="Mensagens">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6">
+          <a routerLink="/private-chat" class="relative p-1.5 text-gray-500 hover:text-blue-600 transition-all" title="Mensagens">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3.091-3.091c-.333-.03-.662-.065-.99-.103l-4.578-.512a2.25 2.25 0 01-1.98-2.253V10.608c0-.969.616-1.813 1.5-2.097a17.523 17.523 0 0110.5 0z" />
             </svg>
-            <span *ngIf="chatMessageCount > 0" class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[9px] font-bold text-white ring-1 ring-white">{{ chatMessageCount }}</span>
+            <span *ngIf="chatMessageCount > 0" class="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-600 text-[8px] font-bold text-white ring-1 ring-white">{{ chatMessageCount }}</span>
           </a>
 
           <!-- Ícone de Convites -->
-          <a routerLink="/notifications" class="relative p-2 text-gray-500 hover:text-indigo-600 transition-all" title="Convites">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6">
+          <a routerLink="/notifications" class="relative p-1.5 text-gray-500 hover:text-indigo-600 transition-all" title="Convites">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
             </svg>
-            <span *ngIf="chatInviteCount > 0" class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-600 text-[9px] font-bold text-white ring-1 ring-white">{{ chatInviteCount }}</span>
+            <span *ngIf="chatInviteCount > 0" class="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-indigo-600 text-[8px] font-bold text-white ring-1 ring-white">{{ chatInviteCount }}</span>
           </a>
 
           <!-- Ícone Geral -->
-          <a routerLink="/notifications" class="relative p-2 text-gray-500 hover:text-red-600 transition-all" title="Notificações">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6">
+          <a routerLink="/notifications" class="relative p-1.5 text-gray-500 hover:text-red-600 transition-all" title="Notificações">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.248 24.248 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
             </svg>
-            <span *ngIf="generalNotificationCount > 0" class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[9px] font-bold text-white ring-1 ring-white">{{ generalNotificationCount }}</span>
+            <span *ngIf="generalNotificationCount > 0" class="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-600 text-[8px] font-bold text-white ring-1 ring-white">{{ generalNotificationCount }}</span>
           </a>
         </div>
       </div>
