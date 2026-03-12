@@ -79,9 +79,14 @@ export class RegisterComponent {
     if (this.isSubmitting) return;
     this.isSubmitting = true;
 
+    // Converte 'cep' para 'zipCode' antes de enviar ao backend
+    const userPayload: any = { ...this.user };
+    userPayload.zipCode = this.user.cep;
+    delete userPayload.cep;
+
     const afterUploadAndRegister = () => {
       // Primeiro registra o usuário
-      this.authService.register(this.user).subscribe({
+      this.authService.register(userPayload).subscribe({
         next: () => {
           // Em seguida faz login automático com as credenciais informadas
           this.authService.login({
