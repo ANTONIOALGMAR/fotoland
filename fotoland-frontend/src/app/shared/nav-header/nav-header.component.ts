@@ -1,15 +1,17 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../services/notification.service';
 import { RouterLink } from '@angular/router';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '../../auth/services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-nav-header',
   standalone: true,
   imports: [CommonModule, RouterLink, TranslateModule],
   template: `
-    <div class="flex gap-2 mb-3 items-center">
+    <div class="flex gap-2 mb-3 items-center" [ngClass]="{'pl-14': shouldPad}">
       <h2 *ngIf="title" class="font-semibold mr-4">{{ title }}</h2>
       <button *ngIf="showChatNav && showPrivateNav" (click)="navigatePrivate.emit()" class="bg-blue-600 text-white px-3 py-1 rounded">Ir para privado</button>
       <button *ngIf="showChatNav && showGroupNav" (click)="navigateGroup.emit()" class="bg-indigo-600 text-white px-3 py-1 rounded">Ir para coletivo</button>
@@ -52,7 +54,7 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
     </div>
   `
 })
-export class NavHeaderComponent implements OnInit {
+export class NavHeaderComponent implements OnInit, OnDestroy {
   @Input() title = '';
   @Input() disableCancel = false;
   @Input() showChatNav = false;
@@ -71,12 +73,28 @@ export class NavHeaderComponent implements OnInit {
   chatMessageCount: number = 0;
   generalNotificationCount: number = 0;
   currentLang: string = 'pt';
+  
+  shouldPad: boolean = false;
+  private authSubscription: Subscription = new Subscription();
 
-  constructor(private notificationService: NotificationService, private translate: TranslateService) {
+  constructor(
+    private notificationService: NotificationService, 
+    private translate: TranslateService,
+    private authService: AuthService
+  ) {
     this.currentLang = translate.currentLang || translate.defaultLang;
   }
 
   ngOnInit(): void {
+    // Monitorar autenticação para decidir se deve aplicar padding para o botão hambúrguer
+    // O botão hambúrguer aparece apenas quando autenticado e sidebar fechada.
+    // Como o NavHeader não sabe o estado da sidebar diretamente do AppComponent, 
+    // vamos assumir que se estiver autenticado, ele precisa dar espaço (pl-14) 
+    // a menos que estejamos em uma tela de largura total.
+    this.authSubscription = this.authService.isAuthenticated$.subscribe(status => {
+      this.shouldPad = status;
+    });
+
     this.notificationService.chatInviteCount$.subscribe(count => {
       this.chatInviteCount = count;
       this.updateTotalNotifications();
@@ -91,6 +109,10 @@ export class NavHeaderComponent implements OnInit {
       this.generalNotificationCount = count;
       this.updateTotalNotifications();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.authSubscription.unsubscribe();
   }
 
   updateTotalNotifications(): void {
