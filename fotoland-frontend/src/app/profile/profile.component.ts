@@ -5,11 +5,12 @@ import { AuthService } from '../auth/services/auth.service';
 import { User } from '../../../../api.models';
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
 import { CepService } from '../shared/services/cep.service'; // novo
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavHeaderComponent],
+  imports: [CommonModule, FormsModule, NavHeaderComponent, TranslateModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
@@ -21,6 +22,8 @@ export class ProfileComponent implements OnInit {
   // Stats
   followersCount = 0;
   followingCount = 0;
+  
+  selectedLanguage: string = 'pt';
 
   form: {
     fullName: string; username: string; phoneNumber?: string; address?: string; profilePictureUrl?: string;
@@ -33,9 +36,10 @@ export class ProfileComponent implements OnInit {
   selectedFileName = '';
   imagePreview: string | null = null;
 
-  constructor(public authService: AuthService, private cepService: CepService) {}
+  constructor(public authService: AuthService, private cepService: CepService, private translate: TranslateService) {}
 
   ngOnInit(): void {
+    this.selectedLanguage = this.translate.currentLang || this.translate.defaultLang || 'pt';
     this.authService.getMe().subscribe({
       next: (u) => {
         this.user = u;
@@ -53,6 +57,12 @@ export class ProfileComponent implements OnInit {
       },
       error: () => { this.loading = false; alert('Falha ao carregar perfil'); }
     });
+  }
+
+  changeLanguage(lang: string): void {
+    this.translate.use(lang);
+    this.selectedLanguage = lang;
+    localStorage.setItem('selectedLang', lang);
   }
 
   loadFollowStats(username: string): void {

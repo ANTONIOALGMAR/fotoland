@@ -12,7 +12,16 @@
     "POSTS": "Posts",
     "COMMENTS": "Comments",
     "ACCOUNT": "Account",
-    "DISCOVER": "Discover"
+    "DISCOVER": "Discover",
+    "MY_ALBUMS": "My Albums",
+    "CREATE_ALBUM": "Create Album",
+    "CREATE_POST": "Create Post",
+    "VIEW_FEED": "View Feed",
+    "VIEW_COMMENTS": "View Comments",
+    "GROUP_CHAT": "Group Chat",
+    "PRIVATE_CHAT": "Private Chat",
+    "MY_NOTIFICATIONS": "My Notifications",
+    "SEARCH_DISCOVER": "Explore/Search"
   },
   "COMMON": {
     "SAVE": "Save",
@@ -24,7 +33,23 @@
     "FOLLOWERS": "Followers",
     "LOADING": "Loading...",
     "SEND": "Send",
-    "BACK": "Back"
+    "BACK": "Back",
+    "LANGUAGE": "Language"
+  },
+  "PROFILE": {
+    "TITLE": "User Profile",
+    "FULL_NAME": "Full Name",
+    "USERNAME": "Username",
+    "EMAIL": "Email",
+    "PHONE": "Phone",
+    "CEP": "CEP",
+    "ADDRESS": "Address",
+    "STATE": "State",
+    "COUNTRY": "Country",
+    "CHOOSE_IMAGE": "Choose Image",
+    "UPLOAD": "Upload",
+    "SAVE_PROFILE": "Save Profile",
+    "SELECT_LANG": "Select your Language"
   },
   "FEED": {
     "TITLE": "Global Feed",

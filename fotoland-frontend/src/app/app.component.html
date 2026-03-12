@@ -22,8 +22,8 @@
           <span class="chevron" [ngClass]="{ 'open': sections.album }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.album }">
-          <a routerLink="/home" class="nav-link">Meus Álbuns</a>
-          <a routerLink="/create-album" class="nav-link">Criar Álbum</a>
+          <a routerLink="/home" class="nav-link">{{ 'NAV.MY_ALBUMS' | translate }}</a>
+          <a routerLink="/create-album" class="nav-link">{{ 'NAV.CREATE_ALBUM' | translate }}</a>
         </div>
       </div>
 
@@ -34,7 +34,7 @@
           <span class="chevron" [ngClass]="{ 'open': sections.post }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.post }">
-          <a routerLink="/create-post" class="nav-link">Criar Post</a>
+          <a routerLink="/create-post" class="nav-link">{{ 'NAV.CREATE_POST' | translate }}</a>
         </div>
       </div>
 
@@ -45,7 +45,7 @@
           <span class="chevron" [ngClass]="{ 'open': sections.feed }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.feed }">
-          <a routerLink="/feed" class="nav-link">Ver Feed</a>
+          <a routerLink="/feed" class="nav-link">{{ 'NAV.VIEW_FEED' | translate }}</a>
         </div>
       </div>
 
@@ -56,7 +56,7 @@
           <span class="chevron" [ngClass]="{ 'open': sections.comment }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.comment }">
-          <a routerLink="/feed" class="nav-link">Ver comentários (no Feed)</a>
+          <a routerLink="/feed" class="nav-link">{{ 'NAV.VIEW_COMMENTS' | translate }}</a>
         </div>
       </div>
 
@@ -67,8 +67,8 @@
           <span class="chevron" [ngClass]="{ 'open': sections.chat }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.chat }">
-          <a routerLink="/chat" class="nav-link">Chat Coletivo</a>
-          <a routerLink="/private-chat" class="nav-link">Chat Privado <span *ngIf="chatInviteCount > 0" class="badge">{{ chatInviteCount }}</span></a>
+          <a routerLink="/chat" class="nav-link">{{ 'NAV.GROUP_CHAT' | translate }}</a>
+          <a routerLink="/private-chat" class="nav-link">{{ 'NAV.PRIVATE_CHAT' | translate }} <span *ngIf="chatInviteCount > 0" class="badge">{{ chatInviteCount }}</span></a>
         </div>
       </div>
 
@@ -91,7 +91,7 @@
           <span class="chevron" [ngClass]="{ 'open': sections.discover }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.discover }">
-          <a routerLink="/explore" class="nav-link">{{ 'NAV.EXPLORE' | translate }}</a>
+          <a routerLink="/explore" class="nav-link">{{ 'NAV.SEARCH_DISCOVER' | translate }}</a>
         </div>
       </div>
 
@@ -102,7 +102,7 @@
           <span class="chevron" [ngClass]="{ 'open': sections.notifications }">⌄</span>
         </button>
         <div class="accordion-content" [ngClass]="{ 'open': sections.notifications }">
-          <a routerLink="/notifications" class="nav-link">Minhas Notificações</a>
+          <a routerLink="/notifications" class="nav-link">{{ 'NAV.MY_NOTIFICATIONS' | translate }}</a>
         </div>
       </div>
 

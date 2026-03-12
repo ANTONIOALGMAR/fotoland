@@ -22,40 +22,55 @@
 
       <div class="upload-controls">
         <input type="file" id="profilePicture" (change)="onFileSelected($event)" hidden #profilePictureInput>
-        <button class="btn secondary" (click)="profilePictureInput.click()">Escolher imagem</button>
+        <button class="btn secondary" (click)="profilePictureInput.click()">{{ 'PROFILE.CHOOSE_IMAGE' | translate }}</button>
         <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
         <img *ngIf="imagePreview" [src]="imagePreview" class="image-preview">
-        <button class="btn primary" (click)="uploadProfilePicture()" [disabled]="!selectedFile || saving">Enviar</button>
+        <button class="btn primary" (click)="uploadProfilePicture()" [disabled]="!selectedFile || saving">{{ 'PROFILE.UPLOAD' | translate }}</button>
       </div>
     </div>
 
     <div class="profile-form">
-      <label>Nome completo</label>
+      <label>{{ 'PROFILE.FULL_NAME' | translate }}</label>
       <input [(ngModel)]="form.fullName" type="text">
 
-      <label>Username</label>
+      <label>{{ 'PROFILE.USERNAME' | translate }}</label>
       <input [(ngModel)]="form.username" type="text" disabled>
 
-      <label>Email</label>
+      <label>{{ 'PROFILE.EMAIL' | translate }}</label>
       <input [(ngModel)]="form.email" type="email" placeholder="exemplo@dominio.com">
 
-      <label>Telefone</label>
+      <label>{{ 'PROFILE.PHONE' | translate }}</label>
       <input [(ngModel)]="form.phoneNumber" type="text" placeholder="+55 11 99999-9999">
 
-      <label>CEP</label>
+      <label>{{ 'PROFILE.CEP' | translate }}</label>
       <input [(ngModel)]="form.cep" type="text" maxlength="9" placeholder="00000-000"
              (keydown.enter)="onCepLookup()" (keydown.tab)="onCepLookup()" (blur)="onCepLookup()">
 
-      <label>Endereço</label>
+      <label>{{ 'PROFILE.ADDRESS' | translate }}</label>
       <input [(ngModel)]="form.address" type="text" placeholder="Rua Exemplo, 123">
 
-      <label>Estado</label>
+      <label>{{ 'PROFILE.STATE' | translate }}</label>
       <input [(ngModel)]="form.state" type="text" placeholder="SP">
 
-      <label>País</label>
+      <label>{{ 'PROFILE.COUNTRY' | translate }}</label>
       <input [(ngModel)]="form.country" type="text" placeholder="Brasil">
 
-      <button class="btn primary" (click)="saveProfile()" [disabled]="saving">Salvar</button>
+      <!-- Escolha de Idioma -->
+      <div class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <label class="block font-bold mb-2 text-gray-700">{{ 'PROFILE.SELECT_LANG' | translate }}</label>
+        <div class="flex gap-4">
+          <label class="flex items-center space-x-2 cursor-pointer">
+            <input type="radio" name="lang" value="pt" [(ngModel)]="selectedLanguage" (change)="changeLanguage('pt')" class="w-4 h-4 text-blue-600">
+            <span>Português (Brasil)</span>
+          </label>
+          <label class="flex items-center space-x-2 cursor-pointer">
+            <input type="radio" name="lang" value="en" [(ngModel)]="selectedLanguage" (change)="changeLanguage('en')" class="w-4 h-4 text-blue-600">
+            <span>English (US)</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="btn primary mt-4" (click)="saveProfile()" [disabled]="saving">{{ 'PROFILE.SAVE_PROFILE' | translate }}</button>
     </div>
   </div>
 </div>
