@@ -82,7 +82,7 @@ export class NavHeaderComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private authService: AuthService
   ) {
-    this.currentLang = translate.currentLang || translate.defaultLang;
+    this.currentLang = translate.currentLang || translate.defaultLang || 'pt';
   }
 
   ngOnInit(): void {
