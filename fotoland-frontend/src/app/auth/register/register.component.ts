@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CepService } from '../../shared/services/cep.service'; // novo
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   user = {
     fullName: '',
     username: '',
@@ -28,8 +29,24 @@ export class RegisterComponent {
   imagePreview: string | ArrayBuffer | null = null;
   isSubmitting = false;
   showPassword = false;
+  currentLang: string = 'pt';
 
-  constructor(private router: Router, private authService: AuthService, private cepService: CepService) {}
+  constructor(
+    private router: Router, 
+    private authService: AuthService, 
+    private cepService: CepService,
+    private translate: TranslateService
+  ) {}
+
+  ngOnInit(): void {
+    this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'pt';
+  }
+
+  changeLang(lang: string) {
+    this.translate.use(lang);
+    this.currentLang = lang;
+    localStorage.setItem('selectedLang', lang);
+  }
 
   irParaPrivado(): void { this.router.navigate(['/private-chat']); }
   irParaColetivo(): void { this.router.navigate(['/chat']); }

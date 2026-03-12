@@ -1,19 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 import { NavHeaderComponent } from '../../shared/nav-header/nav-header.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink, CommonModule, NavHeaderComponent],
+  imports: [FormsModule, RouterLink, CommonModule, NavHeaderComponent, TranslateModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   // Objeto para armazenar as credenciais informadas pelo usuário no formulário
   credentials = {
     username: '',
@@ -21,9 +22,25 @@ export class LoginComponent {
   };
   loading: boolean = false;
   errorMessage: string | null = null;
+  currentLang: string = 'pt';
 
   // Injeta o roteador e o serviço de autenticação no construtor
-  constructor(private router: Router, private authService: AuthService, private location: Location) {}
+  constructor(
+    private router: Router, 
+    private authService: AuthService, 
+    private location: Location,
+    private translate: TranslateService
+  ) {}
+
+  ngOnInit(): void {
+    this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'pt';
+  }
+
+  changeLang(lang: string) {
+    this.translate.use(lang);
+    this.currentLang = lang;
+    localStorage.setItem('selectedLang', lang);
+  }
 
   // Método chamado quando o formulário é submetido
   onSubmit(): void {

@@ -5,30 +5,40 @@
   <div class="slide" style="background-image: url('assets/futuristic-background3.jpg');"></div>
 </div>
 
+<!-- Seletor de Idioma no Login -->
+<div class="fixed top-4 right-4 z-50 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30 flex gap-2">
+  <button (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" class="text-xs text-white hover:text-blue-200">PT</button>
+  <span class="text-white/30 text-xs">|</span>
+  <button (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" class="text-xs text-white hover:text-blue-200">EN</button>
+</div>
+
 <div class="login-container">
   <div class="login-form">
-    <h2>Login</h2>
+    <h2>{{ 'AUTH.LOGIN_TITLE' | translate }}</h2>
     <form (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="username">Nickname</label>
+        <label for="username">{{ 'AUTH.USERNAME' | translate }}</label>
         <input type="text" id="username" name="username" [(ngModel)]="credentials.username" required>
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">{{ 'AUTH.PASSWORD' | translate }}</label>
         <input type="password" id="password" name="password" [(ngModel)]="credentials.password" autocomplete="current-password" required>
       </div>
 
       <button type="submit" [disabled]="loading">
-        {{ loading ? 'Entrando...' : 'Login' }}
+        {{ loading ? ('COMMON.LOADING' | translate) : ('AUTH.LOGIN_BUTTON' | translate) }}
       </button>
 
       <div class="loading-indicator" *ngIf="loading">
         <span class="spinner"></span>
-        <span class="loading-text">Autenticando...</span>
+        <span class="loading-text">{{ 'COMMON.LOADING' | translate }}</span>
       </div>
 
       <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
     </form>
-    <p class="register-link">Don't have an account? <a routerLink="/register">Register here</a></p>
+    <p class="register-link">
+      {{ 'AUTH.NO_ACCOUNT' | translate }} 
+      <a routerLink="/register">{{ 'AUTH.REGISTER_BUTTON' | translate }}</a>
+    </p>
   </div>
 </div>

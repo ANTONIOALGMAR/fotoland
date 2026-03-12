@@ -1,5 +1,5 @@
 <app-nav-header
-  [title]="'Registro'"
+  [title]="'AUTH.REGISTER_TITLE' | translate"
   (navigatePrivate)="irParaPrivado()"
   (navigateGroup)="irParaColetivo()"
   (cancel)="cancelar()"
@@ -11,33 +11,40 @@
   <div class="slide" style="background-image: url('assets/futuristic-background3.jpg');"></div>
 </div>
 
+<!-- Seletor de Idioma no Registro -->
+<div class="fixed top-4 right-4 z-50 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30 flex gap-2">
+  <button type="button" (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" class="text-xs text-white hover:text-blue-200">PT</button>
+  <span class="text-white/30 text-xs">|</span>
+  <button type="button" (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" class="text-xs text-white hover:text-blue-200">EN</button>
+</div>
+
 <div class="register-container">
   <div class="register-form">
-    <h2>Create Account</h2>
+    <h2>{{ 'AUTH.REGISTER_TITLE' | translate }}</h2>
     <form (ngSubmit)="onSubmit()" #regForm="ngForm">
       <div class="form-group">
-        <label for="fullName">Full Name</label>
-        <input type="text" id="fullName" name="fullName" [(ngModel)]="user.fullName" required autocomplete="name" placeholder="Ex: Maria Silva">
+        <label for="fullName">{{ 'AUTH.FULL_NAME' | translate }}</label>
+        <input type="text" id="fullName" name="fullName" [(ngModel)]="user.fullName" required autocomplete="name" [placeholder]="'AUTH.FULL_NAME' | translate">
       </div>
       <div class="form-group">
-        <label for="username">Nickname</label>
-        <input type="text" id="username" name="username" [(ngModel)]="user.username" required minlength="3" autocomplete="username" placeholder="Ex: maria_silva">
+        <label for="username">{{ 'AUTH.USERNAME' | translate }}</label>
+        <input type="text" id="username" name="username" [(ngModel)]="user.username" required minlength="3" autocomplete="username" [placeholder]="'AUTH.USERNAME' | translate">
       </div>
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">{{ 'AUTH.EMAIL' | translate }}</label>
         <input type="email" id="email" name="email" [(ngModel)]="user.email" required autocomplete="email" placeholder="exemplo@dominio.com">
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">{{ 'AUTH.PASSWORD' | translate }}</label>
         <div class="password-wrapper">
           <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" [(ngModel)]="user.password" autocomplete="new-password" required minlength="8" placeholder="Mínimo 8 caracteres">
           <button type="button" class="btn-outline" (click)="toggleShowPassword()">
-            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+            {{ showPassword ? ('AUTH.HIDE' | translate) : ('AUTH.SHOW' | translate) }}
           </button>
         </div>
       </div>
       <div class="form-group">
-        <label for="phoneNumber">Phone Number</label>
+        <label for="phoneNumber">{{ 'AUTH.PHONE' | translate }}</label>
         <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="user.phoneNumber" autocomplete="tel" placeholder="+55 11 99999-9999">
       </div>
       <div class="form-group">
@@ -46,26 +53,31 @@
                (keydown.enter)="onCepLookup()" (keydown.tab)="onCepLookup()" (blur)="onCepLookup()">
       </div>
       <div class="form-group">
-        <label for="address">Address</label>
-        <input type="text" id="address" name="address" [(ngModel)]="user.address" autocomplete="street-address" placeholder="Rua Exemplo, 123">
+        <label for="address">{{ 'PROFILE.ADDRESS' | translate }}</label>
+        <input type="text" id="address" name="address" [(ngModel)]="user.address" autocomplete="street-address" [placeholder]="'PROFILE.ADDRESS' | translate">
       </div>
       <div class="form-group">
-        <label for="state">Estado</label>
+        <label for="state">{{ 'PROFILE.STATE' | translate }}</label>
         <input type="text" id="state" name="state" [(ngModel)]="user.state" autocomplete="address-level1" placeholder="SP">
       </div>
       <div class="form-group">
-        <label for="country">País</label>
-        <input type="text" id="country" name="country" [(ngModel)]="user.country" autocomplete="country-name" placeholder="Brasil">
+        <label for="country">{{ 'PROFILE.COUNTRY' | translate }}</label>
+        <input type="text" id="country" name="country" [(ngModel)]="user.country" autocomplete="country-name" [placeholder]="'PROFILE.COUNTRY' | translate">
       </div>
       <div class="form-group">
-        <label for="profilePicture">Profile Picture</label>
+        <label for="profilePicture">{{ 'PROFILE.CHOOSE_IMAGE' | translate }}</label>
         <input type="file" id="profilePicture" (change)="onFileSelected($event)" hidden #profilePictureInput>
-        <button type="button" class="btn-outline" (click)="profilePictureInput.click()">Choose File</button>
+        <button type="button" class="btn-outline" (click)="profilePictureInput.click()">{{ 'PROFILE.CHOOSE_IMAGE' | translate }}</button>
         <div *ngIf="selectedFileName" class="file-info">
           <span>{{ selectedFileName }}</span>
           <img *ngIf="imagePreview" [src]="imagePreview" class="image-preview">
         </div>
       </div>
-      <button type="submit" [disabled]="regForm.invalid || isSubmitting">Register</button>
+      <button type="submit" [disabled]="regForm.invalid || isSubmitting">{{ 'AUTH.REGISTER_BUTTON' | translate }}</button>
     </form>
+    <p class="login-link">
+      {{ 'AUTH.HAVE_ACCOUNT' | translate }} 
+      <a routerLink="/login">{{ 'AUTH.LOGIN_BUTTON' | translate }}</a>
+    </p>
+  </div>
 </div>

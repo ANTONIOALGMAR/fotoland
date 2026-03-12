@@ -73,6 +73,8 @@
     "REGISTER_BUTTON": "Registrar",
     "LOGIN_BUTTON": "Entrar",
     "NO_ACCOUNT": "Não tem uma conta?",
-    "HAVE_ACCOUNT": "Já tem uma conta?"
+    "HAVE_ACCOUNT": "Já tem uma conta?",
+    "HIDE": "Ocultar",
+    "SHOW": "Mostrar"
   }
 }
