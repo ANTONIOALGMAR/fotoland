@@ -88,7 +88,7 @@ Fotoland é uma plataforma social moderna para compartilhamento de fotos e víde
 ## 📈 Roadmap de Evolução
 
 - [x] **Sistema de Curtidas:** Adicionar "Like" aos posts.
-- [ ] **Seguidores:** Implementar sistema de "Seguir/Seguidores".
+- [x] **Seguidores:** Implementar sistema de "Seguir/Seguidores".
 - [ ] **Melhorias de Performance:** Otimização de carregamento de imagens.
 - [ ] **PWA:** Tornar a plataforma instalável em dispositivos móveis.
 - [ ] **Internacionalização (i18n):** Suporte a múltiplos idiomas.
