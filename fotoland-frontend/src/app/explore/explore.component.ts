@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth/services/auth.service';
 import { Post } from '../../../../api.models';
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-explore',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavHeaderComponent],
+  imports: [CommonModule, FormsModule, NavHeaderComponent, TranslateModule],
   templateUrl: './explore.component.html',
   styleUrls: ['./explore.component.css']
 })

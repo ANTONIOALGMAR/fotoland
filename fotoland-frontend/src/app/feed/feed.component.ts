@@ -6,11 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Location } from '@angular/common';
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, NavHeaderComponent],
+  imports: [CommonModule, RouterLink, FormsModule, NavHeaderComponent, TranslateModule],
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.css']
 })

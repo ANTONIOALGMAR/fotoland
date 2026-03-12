@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
 import { Notification as ApiNotification, Page } from '../../../../api.models';
 import { NotificationService } from '../shared/services/notification.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, NavHeaderComponent],
+  imports: [CommonModule, NavHeaderComponent, TranslateModule],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css']
 })
