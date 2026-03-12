@@ -193,13 +193,13 @@ export class CreatePostComponent implements OnInit {
   irParaPrivado(): void { this.router.navigate(['/private-chat']); }
   irParaColetivo(): void { this.router.navigate(['/chat']); }
   cancelar(): void {
-    this.post = { mediaUrl: '', caption: '', type: PostType.PHOTO };
+    this.post = { mediaUrl: '', caption: '', type: PostType.PHOTO, medias: [] };
     this.selectedAlbumId = null;
-    this.selectedFile = null;
-    this.selectedFileName = '';
-    this.mediaPreview = null;
+    this.selectedFiles = [];
+    this.mediaPreviews = [];
     this.isEditMode = false;
     this.postId = null;
+    this.isSubmitting = false;
   }
   voltar(): void { this.location.back(); }
 }
