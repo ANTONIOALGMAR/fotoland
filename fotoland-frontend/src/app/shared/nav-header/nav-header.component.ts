@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
       
       <!-- Linha Superior: Título e Notificações -->
       <div class="flex items-center justify-between w-full">
+        <!-- Título principal ou Boas-vindas -->
         <h2 *ngIf="title" class="font-bold text-gray-800 text-lg lg:text-xl truncate max-w-[150px] sm:max-w-none">{{ title }}</h2>
         <h2 *ngIf="!title && !isAuthenticated" class="font-bold text-blue-600 italic text-sm sm:text-lg">Bem-vindo ao Fotoland</h2>
 
@@ -47,15 +48,18 @@ import { Subscription } from 'rxjs';
 
       <!-- Linha Inferior: Botões de Ação e Idioma -->
       <div class="flex items-center justify-start gap-2 w-full overflow-x-auto pb-1 no-scrollbar">
-        <div class="flex gap-1" *ngIf="isAuthenticated">
-          <button *ngIf="showChatNav && showPrivateNav" (click)="navigatePrivate.emit()" class="bg-blue-600 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Privado</button>
-          <button *ngIf="showChatNav && showGroupNav" (click)="navigateGroup.emit()" class="bg-indigo-600 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Coletivo</button>
-        </div>
+        <!-- Botões de ação mostrados apenas após login -->
+        <ng-container *ngIf="isAuthenticated">
+          <div class="flex gap-1">
+            <button *ngIf="showChatNav && showPrivateNav" (click)="navigatePrivate.emit()" class="bg-blue-600 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Privado</button>
+            <button *ngIf="showChatNav && showGroupNav" (click)="navigateGroup.emit()" class="bg-indigo-600 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Coletivo</button>
+          </div>
 
-        <button *ngIf="showCancel" (click)="cancel.emit()" [disabled]="disableCancel" class="bg-white text-gray-600 px-2 py-1.5 rounded-lg border border-gray-300 disabled:opacity-50 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Cancelar</button>
-        <button *ngIf="showBack" (click)="back.emit()" class="bg-gray-800 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Voltar</button>
+          <button *ngIf="showCancel" (click)="cancel.emit()" [disabled]="disableCancel" class="bg-white text-gray-600 px-2 py-1.5 rounded-lg border border-gray-300 disabled:opacity-50 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Cancelar</button>
+          <button *ngIf="showBack" (click)="back.emit()" class="bg-gray-800 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Voltar</button>
+        </ng-container>
 
-        <!-- Language Selector (Compacto) -->
+        <!-- Language Selector (Sempre disponível) -->
         <div class="flex items-center bg-gray-100 px-2 py-1.5 rounded-lg border border-gray-200 ml-auto">
           <button (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" [class.text-blue-600]="currentLang === 'pt'" class="text-[10px] text-gray-500 px-1">PT</button>
           <span class="text-gray-300 text-[10px]">|</span>

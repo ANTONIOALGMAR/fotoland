@@ -1,13 +1,13 @@
 <div class="app-layout">
-  <!-- Botão Hamburguer para abrir/fechar sidebar (apenas quando autenticado e sidebar fechada) -->
-  <button class="hamburger" (click)="toggleSidebar()" aria-label="Alternar menu" *ngIf="isAuthenticated && !isSidebarOpen">
+  <!-- Botão Hamburguer para abrir/fechar sidebar -->
+  <button class="hamburger" (click)="toggleSidebar()" aria-label="Alternar menu" *ngIf="!isSidebarOpen">
     <span></span>
     <span></span>
     <span></span>
   </button>
 
-  <!-- Sidebar (apenas quando autenticado e aberta) -->
-  <aside class="sidebar" *ngIf="isAuthenticated && isSidebarOpen">
+  <!-- Sidebar -->
+  <aside class="sidebar" *ngIf="isSidebarOpen">
     <div class="sidebar-header">
       <span>Fotoland</span>
       <button class="collapse-btn" (click)="toggleSidebar()" aria-label="Recolher menu" title="Recolher menu">
@@ -15,8 +15,20 @@
       </button>
     </div>
     <nav class="nav-links">
+      <!-- Seção: Acesso (somente quando NÃO logado) -->
+      <div class="accordion-section" *ngIf="!isAuthenticated">
+        <button class="accordion-header" (click)="toggleSection('account')">
+          Acesso
+          <span class="chevron" [ngClass]="{ 'open': sections.account }">⌄</span>
+        </button>
+        <div class="accordion-content" [ngClass]="{ 'open': sections.account }">
+          <a routerLink="/login" class="nav-link">Entrar (Login)</a>
+          <a routerLink="/register" class="nav-link">Criar Conta</a>
+        </div>
+      </div>
+
       <!-- Seção: Álbuns (somente autenticado) -->
-      <div class="accordion-section">
+      <div class="accordion-section" *ngIf="isAuthenticated">
         <button class="accordion-header" (click)="toggleSection('album')">
           {{ 'NAV.ALBUMS' | translate }}
           <span class="chevron" [ngClass]="{ 'open': sections.album }">⌄</span>
@@ -28,7 +40,7 @@
       </div>
 
       <!-- Seção: Posts (somente autenticado) -->
-      <div class="accordion-section">
+      <div class="accordion-section" *ngIf="isAuthenticated">
         <button class="accordion-header" (click)="toggleSection('post')">
           {{ 'NAV.POSTS' | translate }}
           <span class="chevron" [ngClass]="{ 'open': sections.post }">⌄</span>
@@ -49,19 +61,8 @@
         </div>
       </div>
 
-      <!-- Seção: Comentários (placeholder) -->
-      <div class="accordion-section">
-        <button class="accordion-header" (click)="toggleSection('comment')">
-          {{ 'NAV.COMMENTS' | translate }}
-          <span class="chevron" [ngClass]="{ 'open': sections.comment }">⌄</span>
-        </button>
-        <div class="accordion-content" [ngClass]="{ 'open': sections.comment }">
-          <a routerLink="/feed" class="nav-link">{{ 'NAV.VIEW_COMMENTS' | translate }}</a>
-        </div>
-      </div>
-
-      <!-- Seção: Chat -->
-      <div class="accordion-section">
+      <!-- Seção: Chat (somente autenticado) -->
+      <div class="accordion-section" *ngIf="isAuthenticated">
         <button class="accordion-header" (click)="toggleSection('chat')">
           {{ 'NAV.CHAT' | translate }}
           <span class="chevron" [ngClass]="{ 'open': sections.chat }">⌄</span>
@@ -72,8 +73,8 @@
         </div>
       </div>
 
-      <!-- Seção: Conta -->
-      <div class="accordion-section">
+      <!-- Seção: Conta (somente autenticado) -->
+      <div class="accordion-section" *ngIf="isAuthenticated">
         <button class="accordion-header" (click)="toggleSection('account')">
           {{ 'NAV.ACCOUNT' | translate }}
           <span class="chevron" [ngClass]="{ 'open': sections.account }">⌄</span>
@@ -84,7 +85,7 @@
         </div>
       </div>
 
-      <!-- Seção: Descobrir -->
+      <!-- Seção: Descobrir (sempre visível) -->
       <div class="accordion-section">
         <button class="accordion-header" (click)="toggleSection('discover')">
           {{ 'NAV.DISCOVER' | translate }}
@@ -95,8 +96,8 @@
         </div>
       </div>
 
-      <!-- Seção: Notificações -->
-      <div class="accordion-section">
+      <!-- Seção: Notificações (somente autenticado) -->
+      <div class="accordion-section" *ngIf="isAuthenticated">
         <button class="accordion-header" (click)="toggleSection('notifications')">
           {{ 'NAV.NOTIFICATIONS' | translate }} <span *ngIf="chatMessageCount > 0" class="badge">{{ chatMessageCount }}</span>
           <span class="chevron" [ngClass]="{ 'open': sections.notifications }">⌄</span>
@@ -107,11 +108,11 @@
       </div>
 
       <!-- Logout quando autenticado -->
-      <button class="logout-btn" (click)="onLogout()">{{ 'NAV.LOGOUT' | translate }}</button>
+      <button class="logout-btn" (click)="onLogout()" *ngIf="isAuthenticated">{{ 'NAV.LOGOUT' | translate }}</button>
     </nav>
   </aside>
 
-  <main class="content" [ngClass]="{ 'expanded': !isSidebarOpen || !isAuthenticated }">
+  <main class="content" [ngClass]="{ 'expanded': !isSidebarOpen }">
     <div class="content-wrapper">
       <router-outlet></router-outlet>
     </div>
