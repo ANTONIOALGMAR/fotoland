@@ -30,6 +30,8 @@ export interface Post {
   mediaUrl: string;
   type: PostType;
   createdAt: string; // or Date
+  likeCount?: number;
+  likedByCurrentUser?: boolean;
 }
 
 export interface Album {

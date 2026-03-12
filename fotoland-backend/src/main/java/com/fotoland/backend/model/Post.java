@@ -29,6 +29,12 @@ public class Post {
     @JsonBackReference // Handle bidirectional relationship
     private Album album;
 
+    @Transient
+    private long likeCount;
+
+    @Transient
+    private boolean likedByCurrentUser;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -82,5 +88,21 @@ public class Post {
 
     public void setAlbum(Album album) {
         this.album = album;
+    }
+
+    public long getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public boolean isLikedByCurrentUser() {
+        return likedByCurrentUser;
+    }
+
+    public void setLikedByCurrentUser(boolean likedByCurrentUser) {
+        this.likedByCurrentUser = likedByCurrentUser;
     }
 }

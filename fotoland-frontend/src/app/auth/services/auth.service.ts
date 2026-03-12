@@ -172,6 +172,19 @@ export class AuthService {
     return this.http.get<Post>(`${this.postApiUrl}/${postId}`);
   }
 
+  // ❤️ Likes
+  likePost(postId: number): Observable<{ likeCount: number }> {
+    return this.http.post<{ likeCount: number }>(`${this.postApiUrl}/${postId}/like`, {});
+  }
+
+  unlikePost(postId: number): Observable<{ likeCount: number }> {
+    return this.http.delete<{ likeCount: number }>(`${this.postApiUrl}/${postId}/like`);
+  }
+
+  getPostLikesCount(postId: number): Observable<{ likeCount: number }> {
+    return this.http.get<{ likeCount: number }>(`${this.postApiUrl}/${postId}/likes/count`);
+  }
+
   // 💬 Comments
   getCommentsByPostId(postId: number): Observable<Comment[]> {
     return this.http.get<Comment[]>(`${this.commentsUrl}/post/${postId}`);
@@ -286,5 +299,22 @@ export class AuthService {
     return this.http.put<void>(`${this.BASE_URL}/api/notifications/${id}/read`, {}).pipe(
       catchError((error) => throwError(() => error))
     );
+  }
+
+  // 👥 Followers
+  follow(username: string): Observable<void> {
+    return this.http.post<void>(`${this.BASE_URL}/api/users/${username}/follow`, {});
+  }
+
+  unfollow(username: string): Observable<void> {
+    return this.http.delete<void>(`${this.BASE_URL}/api/users/${username}/unfollow`);
+  }
+
+  isFollowing(username: string): Observable<{ isFollowing: boolean }> {
+    return this.http.get<{ isFollowing: boolean }>(`${this.BASE_URL}/api/users/${username}/is-following`);
+  }
+
+  getFollowStats(username: string): Observable<{ followersCount: number, followingCount: number }> {
+    return this.http.get<{ followersCount: number, followingCount: number }>(`${this.BASE_URL}/api/users/${username}/follow-stats`);
   }
 }

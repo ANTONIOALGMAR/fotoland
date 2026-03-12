@@ -1,81 +1,108 @@
-# Fotoland
+# 📸 Fotoland
 
-## Mudanças recentes
-- Proteção de acesso: todas as telas (exceto `login` e `register`) exigem autenticação via `AuthGuard`. Rota raiz (`/`) protegida.
-- UnauthGuard: impede acesso a `login` e `register` quando já autenticado.
-- Sidebar oculta antes do login: exibida somente quando `isAuthenticated` é `true`.
-- Cabeçalho padronizado: botões “Ir para privado/coletivo” somente nas telas de chat.
-- Tela de login limpa: sem “Cancelar” e “Voltar”.
-- Segurança pública: `backend_base_url` só pode ser alterado via `localStorage` em ambiente de desenvolvimento; logs sensíveis removidos em produção.
+![Angular](https://img.shields.io/badge/Angular-17.0.0-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.0-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.18-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4479A1?style=for-the-badge&logo=postgresql&logoColor=white)
+![AWS S3](https://img.shields.io/badge/AWS_S3-FF9900?style=for-the-badge&logo=amazons3&logoColor=white)
 
-## Boas práticas de segurança em repositório público
-- Nunca comitar credenciais ou tokens. Use variáveis de ambiente na plataforma de deploy.
-- `AuthGuard` verifica token; `AuthInterceptor` injeta `Authorization: Bearer <token>`.
-- Renovação/encerramento de sessão: `logout()` remove token e redireciona para `login`.
-- CORS e domínio: backend disponível por `https://fotoland-backend.onrender.com`. Alterações de `backend_base_url` são permitidas apenas em dev.
-- Logs: evite `console.log` em produção para endpoints sensíveis ou detalhes de erro do usuário.
-- Build: use `ng build --configuration production` para minificar e desabilitar dev mode.
+Fotoland é uma plataforma social moderna para compartilhamento de fotos e vídeos, construída com uma arquitetura robusta e escalável.
 
-## Configuração de backend
-- Local:
-  ```bash
-  ./mvnw -f fotoland-backend spring-boot:run
-  ```
-- Docker:
-  ```bash
-  docker-compose -f fotoland-backend/docker-compose.yml up
-  ```
-- Hospedado:
-  - `localStorage.setItem('backend_base_url', 'https://fotoland-backend.onrender.com')` (apenas em dev).
-  - `localStorage.removeItem('backend_base_url')` para voltar ao local.
+---
 
-## Desenvolvimento
-```bash
-npm --prefix fotoland-frontend run build
+## 🚀 Funcionalidades Principais
 
-## Novas Telas (Fase 1)
+### 🔐 Segurança & Autenticação
+- **Proteção de Rotas:** Acesso restrito a usuários autenticados via `AuthGuard`.
+- **JWT (JSON Web Token):** Autenticação segura com injeção de token via `AuthInterceptor`.
+- **Gestão de Sessão:** Logout seguro com limpeza de tokens e redirecionamento.
 
-- Perfil (`/profile`): visualizar/editar nome, username, telefone, endereço e foto.
-- Configurações (`/settings`): alterar senha e gerenciar preferências básicas (UI).
-- Ambas as rotas são protegidas por `AuthGuard`.
+### 📱 Experiência do Usuário (UI/UX)
+- **Design Responsivo:** Interface moderna utilizando Tailwind CSS.
+- **Feed Global:** Visualize álbuns e posts de todos os usuários.
+- **Perfis Personalizáveis:** Edite suas informações, username e foto de perfil.
+- **Notificações em Tempo Real:** Acompanhe interações e atualizações.
 
-### Sidebar
-- Adicionada seção “Conta” com links para Perfil e Configurações.
-- Sidebar continua oculta para usuários não autenticados.
+### 💬 Comunicação & Interação
+- **Chat em Tempo Real:** Comunicação privada e coletiva via WebSockets (StompJS/SockJS).
+- **Sistema de Comentários:** Interaja diretamente nos posts dos usuários.
+- **Explorar:** Busca avançada de posts por legenda, tipo (foto/vídeo) e autor.
+
+---
+
+## 🛠️ Stack Tecnológica
+
+### Frontend
+- **Framework:** Angular 17
+- **Estilização:** Tailwind CSS
+- **Comunicação Real-time:** StompJS & SockJS
+- **Estado & Rotas:** Angular Router & RxJS
 
 ### Backend
-- Os seguintes endpoints são utilizados pelo frontend:
-  - `GET /api/user/me` — dados do usuário atual.
-  - `PUT /api/user/me` — atualização de perfil.
-  - `POST /api/user/me/change-password` — troca de senha.
-  - `POST /api/upload` — upload de arquivos (foto de perfil).
+- **Framework:** Spring Boot 3.3.0
+- **Linguagem:** Java 17
+- **Banco de Dados:** PostgreSQL (Produção) / H2 (Desenvolvimento)
+- **Segurança:** Spring Security & JWT
+- **Armazenamento de Mídia:** AWS S3
 
-> Nota: se seu backend ainda não expõe `PUT /api/user/me` e `POST /api/user/me/change-password`, ajuste os endpoints em `auth.service.ts` ou implemente-os no backend.
+---
 
-## Execução
+## ⚙️ Configuração do Ambiente
 
-- Frontend:
-  ```bash
-  npm --prefix fotoland-frontend run start
-  ```
+### Pré-requisitos
+- Node.js (>= 18.18.0)
+- Java 17
+- Maven
+- Docker (Opcional)
 
-## Fase 2 — Explorar e Notificações
+### Backend
+1. Navegue até o diretório do backend:
+   ```bash
+   cd fotoland-backend
+   ```
+2. Execute localmente:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+3. Ou utilize Docker:
+   ```bash
+   docker-compose up
+   ```
 
-- Explorar (`/explore`): busca de posts por texto, tipo e autor usando `searchPosts`.
-- Notificações (`/notifications`): listar notificações do usuário e marcar como lidas.
-- Ambas protegidas por `AuthGuard`. Links adicionados na sidebar (Descobrir, Notificações).
+### Frontend
+1. Navegue até o diretório do frontend:
+   ```bash
+   cd fotoland-frontend
+   ```
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm start
+   ```
 
-### Endpoints backend esperados
-- `GET /api/search/posts` — já utilizado pelo frontend.
-- `GET /api/notifications/mine` — lista do usuário logado.
-- `PUT /api/notifications/{id}/read` — marcar como lida.
+---
 
-> Caso seu backend use caminhos diferentes, ajuste em `auth.service.ts`.
+## 📈 Roadmap de Evolução
 
-## Build/Run
-```bash
-npm --prefix fotoland-frontend run build
-```
-```bash
-npm --prefix fotoland-frontend run start
-```
+- [x] **Sistema de Curtidas:** Adicionar "Like" aos posts.
+- [ ] **Seguidores:** Implementar sistema de "Seguir/Seguidores".
+- [ ] **Melhorias de Performance:** Otimização de carregamento de imagens.
+- [ ] **PWA:** Tornar a plataforma instalável em dispositivos móveis.
+- [ ] **Internacionalização (i18n):** Suporte a múltiplos idiomas.
+
+---
+
+## 🤝 Contribuindo
+
+1. Faça um Fork do projeto.
+2. Crie uma Branch para sua feature (`git checkout -b feature/NovaFeature`).
+3. Commit suas mudanças (`git commit -m 'Adicionando nova feature'`).
+4. Push para a Branch (`git push origin feature/NovaFeature`).
+5. Abra um Pull Request.
+
+---
+
+Desenvolvido por [Antonio Algmar](https://github.com/ANTONIOALGMAR) 🚀

@@ -39,7 +39,14 @@
         <h3 class="text-xl font-semibold">{{ album.title }}</h3>
         <span class="px-2 py-1 bg-blue-200 text-blue-800 text-xs font-medium rounded-full">{{ album.type }}</span>
       </div>
-      <p class="text-sm text-gray-600 mb-1">By: {{ album.author.fullName }} ({{ album.author.username }})</p>
+      <div class="flex justify-between items-center mb-1">
+        <p class="text-sm text-gray-600">By: {{ album.author.fullName }} ({{ album.author.username }})</p>
+        <button *ngIf="album.author.username !== currentUserUsername" (click)="toggleFollow(album.author.username)" 
+          class="text-xs font-bold px-3 py-1 rounded-full border transition-all"
+          [ngClass]="followingMap[album.author.username] ? 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-red-50 hover:text-red-600 hover:border-red-200' : 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700'">
+          {{ followingMap[album.author.username] ? 'Seguindo' : 'Seguir' }}
+        </button>
+      </div>
       <p class="text-gray-700 mb-2">{{ album.description }}</p>
       <p *ngIf="album.location" class="text-xs text-gray-500">Location: {{ album.location }}</p>
       <p *ngIf="album.eventName" class="text-xs text-gray-500">Event: {{ album.eventName }}</p>
@@ -58,6 +65,16 @@
           <div class="text-sm">
             <p class="text-gray-800 mb-1">{{ post.caption }}</p>
             <p class="text-xs text-gray-500">{{ post.createdAt | date:'medium' }}</p>
+
+            <!-- Ações de Curtir -->
+            <div class="mt-2 flex items-center space-x-4">
+              <button (click)="toggleLike(post)" class="flex items-center space-x-1 group">
+                <svg [class.text-red-500]="post.likedByCurrentUser" [class.fill-current]="post.likedByCurrentUser" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 group-hover:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <span [class.text-red-600]="post.likedByCurrentUser" class="text-gray-600 font-medium">{{ post.likeCount || 0 }}</span>
+              </button>
+            </div>
 
             <!-- Ações do autor -->
             <div class="mt-2 flex space-x-2" *ngIf="canEditPost(post)">

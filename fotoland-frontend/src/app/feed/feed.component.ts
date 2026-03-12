@@ -19,7 +19,11 @@ export class FeedComponent implements OnInit {
   loading: boolean = true;
   error: string | null = null;
   currentUserId: number | null = null; // To store the ID of the currently logged-in user
+  currentUserUsername: string | null = null;
   
+  // Follow-related
+  followingMap: { [username: string]: boolean } = {};
+
   // Comment-related properties
   commentsByPostId: { [postId: number]: any[] } = {};
   newCommentText: { [postId: number]: string } = {};
@@ -29,15 +33,16 @@ export class FeedComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router, private sanitizer: DomSanitizer, private location: Location) { }
 
   ngOnInit(): void {
-    this.loadAllAlbums();
     this.authService.getMe().subscribe({
       next: (user) => {
         this.currentUserId = user.id;
+        this.currentUserUsername = user.username;
         this.isAdmin = (user as any)?.role === 'ADMIN';
+        this.loadAllAlbums(); // Load albums after getting user info to check follow status
       },
       error: (err: any) => {
         console.error('Error fetching current user:', err);
-        // Handle error, e.g., redirect to login if token is invalid
+        this.loadAllAlbums();
       }
     });
   }
@@ -49,7 +54,17 @@ export class FeedComponent implements OnInit {
       next: (response) => {
         this.albums = response;
         this.loading = false;
-        console.log('All albums for feed:', this.albums);
+        
+        // Check follow status for each unique author in the feed
+        const authors = [...new Set(this.albums.map(a => a.author.username))];
+        authors.forEach(username => {
+          if (username !== this.currentUserUsername) {
+            this.authService.isFollowing(username).subscribe({
+              next: (res) => this.followingMap[username] = res.isFollowing,
+              error: () => {}
+            });
+          }
+        });
       },
       error: (err: any) => {
         console.error('Error fetching all albums:', err);
@@ -57,6 +72,25 @@ export class FeedComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  toggleFollow(username: string): void {
+    if (!this.isAuthenticated) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (this.followingMap[username]) {
+      this.authService.unfollow(username).subscribe({
+        next: () => this.followingMap[username] = false,
+        error: (err) => console.error('Error unfollowing:', err)
+      });
+    } else {
+      this.authService.follow(username).subscribe({
+        next: () => this.followingMap[username] = true,
+        error: (err) => console.error('Error following:', err)
+      });
+    }
   }
 
   isYouTubeVideo(url: string): boolean {
@@ -169,6 +203,33 @@ export class FeedComponent implements OnInit {
           console.error('Error deleting comment:', err);
           alert('Failed to delete comment. Please try again.');
         }
+      });
+    }
+  }
+
+  // ❤️ Like methods
+  toggleLike(post: any): void {
+    if (!this.isAuthenticated) {
+      alert('Please login to like posts.');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (post.likedByCurrentUser) {
+      this.authService.unlikePost(post.id).subscribe({
+        next: (res) => {
+          post.likeCount = res.likeCount;
+          post.likedByCurrentUser = false;
+        },
+        error: (err: any) => console.error('Error unliking post:', err)
+      });
+    } else {
+      this.authService.likePost(post.id).subscribe({
+        next: (res) => {
+          post.likeCount = res.likeCount;
+          post.likedByCurrentUser = true;
+        },
+        error: (err: any) => console.error('Error liking post:', err)
       });
     }
   }

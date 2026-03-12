@@ -22,20 +22,45 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Post>> getAllPosts(Pageable pageable) {
+    public ResponseEntity<Page<Post>> getAllPosts(Pageable pageable, Authentication authentication) {
         Page<Post> posts = postService.getAllPosts(pageable);
+        String username = (authentication != null) ? authentication.getName() : null;
+        
+        posts.forEach(post -> {
+            post.setLikeCount(likeService.getPostLikes(post.getId()));
+            if (username != null) {
+                post.setLikedByCurrentUser(likeService.isLikedByPostIdAndUsername(post.getId(), username));
+            }
+        });
+        
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
     @GetMapping("/album/{albumId}")
-    public ResponseEntity<Page<Post>> getPostsByAlbumId(@PathVariable Long albumId, Pageable pageable) {
+    public ResponseEntity<Page<Post>> getPostsByAlbumId(@PathVariable Long albumId, Pageable pageable, Authentication authentication) {
         Page<Post> posts = postService.getPostsByAlbumId(albumId, pageable);
+        String username = (authentication != null) ? authentication.getName() : null;
+        
+        posts.forEach(post -> {
+            post.setLikeCount(likeService.getPostLikes(post.getId()));
+            if (username != null) {
+                post.setLikedByCurrentUser(likeService.isLikedByPostIdAndUsername(post.getId(), username));
+            }
+        });
+        
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
+    public ResponseEntity<Post> getPostById(@PathVariable Long id, Authentication authentication) {
         Post post = postService.getPostById(id);
+        String username = (authentication != null) ? authentication.getName() : null;
+        
+        post.setLikeCount(likeService.getPostLikes(post.getId()));
+        if (username != null) {
+            post.setLikedByCurrentUser(likeService.isLikedByPostIdAndUsername(post.getId(), username));
+        }
+        
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 

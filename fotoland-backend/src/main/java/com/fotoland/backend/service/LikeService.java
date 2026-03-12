@@ -49,6 +49,11 @@ public class LikeService {
         return postLikeRepository.countByPostId(postId);
     }
 
+    public boolean isLikedByPostIdAndUsername(Long postId, String username) {
+        User user = userService.findByUsername(username);
+        return postLikeRepository.existsByPostIdAndUserId(postId, user.getId());
+    }
+
     // Comment likes
     public long likeComment(Long commentId, String username) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("Comment not found"));

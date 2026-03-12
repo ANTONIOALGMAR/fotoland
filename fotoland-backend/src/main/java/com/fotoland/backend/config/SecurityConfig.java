@@ -63,17 +63,16 @@ public class SecurityConfig {
         return request -> {
             CorsConfiguration configuration = new CorsConfiguration();
 
-            // Para testes, permitindo todas as origens. Em produção, restrinja.
+            // Origens permitidas explicitamente (necessário quando allowCredentials é true)
             configuration.setAllowedOrigins(List.of(
                 "https://fotoland-frontend.onrender.com",
-                "https://fotoland-backend.onrender.com", // Adicionado para garantir que o backend possa se comunicar consigo mesmo se necessário
-                "http://localhost:4200", // Porta padrão do Angular CLI
-                "http://localhost:8080", // Porta padrão do backend
-                "*" // Permitir todas as origens para depuração. REMOVER EM PRODUÇÃO!
+                "https://fotoland-frontend.vercel.app", // Uma opção comum caso use Vercel
+                "http://localhost:4200",
+                "http://localhost:8080"
             ));
 
             configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-            configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+            configuration.setAllowedHeaders(List.of("Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"));
             configuration.setExposedHeaders(List.of("Authorization"));
             configuration.setAllowCredentials(true);
             configuration.setMaxAge(3600L);
