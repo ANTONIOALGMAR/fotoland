@@ -106,10 +106,11 @@ export class CreatePostComponent implements OnInit {
   onFilesSelected(event: any): void {
     const files: FileList = event.target.files;
     if (files.length > 0) {
-      this.selectedFiles = Array.from(files);
-      this.mediaPreviews = [];
+      // Adicionar novos arquivos aos já selecionados (acumulativo)
+      const newFiles = Array.from(files);
+      this.selectedFiles = [...this.selectedFiles, ...newFiles];
       
-      this.selectedFiles.forEach(file => {
+      newFiles.forEach(file => {
         const reader = new FileReader();
         reader.onload = () => {
           this.mediaPreviews.push(reader.result as string);
@@ -117,6 +118,11 @@ export class CreatePostComponent implements OnInit {
         reader.readAsDataURL(file);
       });
     }
+  }
+
+  removeFile(index: number): void {
+    this.selectedFiles.splice(index, 1);
+    this.mediaPreviews.splice(index, 1);
   }
 
   async onSubmit(): Promise<void> {
@@ -130,11 +136,14 @@ export class CreatePostComponent implements OnInit {
 
     try {
       if (this.selectedFiles.length > 0) {
+        console.log(`Starting upload of ${this.selectedFiles.length} files...`);
         const uploadPromises = this.selectedFiles.map(file => 
           this.authService.uploadProfilePicture(file).toPromise()
         );
         
         const results = await Promise.all(uploadPromises);
+        console.log('All files uploaded. Mapping to medias array...', results);
+
         this.post.medias = results.map(res => ({
           mediaUrl: res!.fileUrl,
           type: this.post.type
@@ -144,10 +153,12 @@ export class CreatePostComponent implements OnInit {
         this.post.mediaUrl = this.post.medias[0].mediaUrl;
       }
 
+      console.log('Sending post payload to backend:', this.post);
+
       if (this.isEditMode) {
         this.updatePost();
       } else {
-        if (this.post.medias.length === 0) {
+        if (!this.post.medias || this.post.medias.length === 0) {
           alert('Please select at least one media file.');
           this.isSubmitting = false;
           return;

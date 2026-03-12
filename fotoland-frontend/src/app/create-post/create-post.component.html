@@ -31,13 +31,24 @@
       </div>
 
       <div class="form-group">
-        <label for="mediaFile">Media Files (Multiple)</label>
-        <input type="file" id="mediaFile" (change)="onFilesSelected($event)" hidden #mediaFileInput multiple>
-        <button type="button" class="btn-outline" (click)="mediaFileInput.click()">Choose Media Files</button>
-        <div class="previews-grid flex flex-wrap gap-3 mt-3">
-          <div *ngFor="let preview of mediaPreviews" class="preview-item">
-            <img *ngIf="post.type === 'PHOTO'" [src]="preview" class="w-24 h-24 object-cover rounded-lg border-2 border-white shadow-md">
-            <video *ngIf="post.type === 'VIDEO'" [src]="preview" class="w-24 h-24 object-cover rounded-lg border-2 border-white shadow-md"></video>
+        <label for="mediaFile" class="block text-sm font-medium text-gray-700 mb-1">Mídias (Selecione uma ou mais)</label>
+        <input type="file" id="mediaFile" (change)="onFilesSelected($event)" hidden #mediaFileInput multiple="multiple" accept="image/*,video/*">
+        <button type="button" class="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-600 hover:border-blue-500 hover:text-blue-500 transition-all bg-gray-50" (click)="mediaFileInput.click()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          <span class="font-semibold">Escolher Fotos ou Vídeos</span>
+        </button>
+        
+        <div class="previews-grid grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mt-4" *ngIf="mediaPreviews.length > 0">
+          <div *ngFor="let preview of mediaPreviews; let i = index" class="relative group">
+            <img *ngIf="post.type === 'PHOTO'" [src]="preview" class="w-full aspect-square object-cover rounded-lg shadow-sm border border-gray-200">
+            <video *ngIf="post.type === 'VIDEO'" [src]="preview" class="w-full aspect-square object-cover rounded-lg shadow-sm border border-gray-200"></video>
+            <button (click)="removeFile(i)" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
