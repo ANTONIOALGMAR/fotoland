@@ -24,6 +24,12 @@ export interface User {
   cep?: string;
 }
 
+export interface PostMedia {
+  id: number;
+  mediaUrl: string;
+  type: PostType;
+}
+
 export interface Post {
   id: number;
   caption: string;
@@ -32,6 +38,7 @@ export interface Post {
   createdAt: string; // or Date
   likeCount?: number;
   likedByCurrentUser?: boolean;
+  medias?: PostMedia[];
 }
 
 export interface Album {

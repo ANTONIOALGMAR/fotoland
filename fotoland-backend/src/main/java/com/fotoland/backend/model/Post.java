@@ -1,8 +1,10 @@
 package com.fotoland.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(indexes = {
@@ -20,6 +22,10 @@ public class Post {
 
     @Enumerated(EnumType.STRING)
     private PostType type = PostType.PHOTO; // Default to PHOTO
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<PostMedia> medias = new ArrayList<>();
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -88,6 +94,14 @@ public class Post {
 
     public void setAlbum(Album album) {
         this.album = album;
+    }
+
+    public List<PostMedia> getMedias() {
+        return medias;
+    }
+
+    public void setMedias(List<PostMedia> medias) {
+        this.medias = medias;
     }
 
     public long getLikeCount() {

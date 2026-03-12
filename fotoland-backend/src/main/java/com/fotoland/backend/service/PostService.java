@@ -28,6 +28,12 @@ public class PostService {
             throw new AccessDeniedException("User does not have permission to post in this album");
         }
         post.setAlbum(album);
+        
+        // Link medias back to post
+        if (post.getMedias() != null) {
+            post.getMedias().forEach(m -> m.setPost(post));
+        }
+        
         return postRepository.save(post);
     }
 
@@ -56,7 +62,15 @@ public class PostService {
         existingPost.setCaption(updatedPost.getCaption());
         existingPost.setMediaUrl(updatedPost.getMediaUrl());
         existingPost.setType(updatedPost.getType());
-        // Note: Album and createdAt are not updated here as they are typically immutable for a post
+        
+        // Update medias
+        if (updatedPost.getMedias() != null) {
+            existingPost.getMedias().clear();
+            updatedPost.getMedias().forEach(m -> {
+                m.setPost(existingPost);
+                existingPost.getMedias().add(m);
+            });
+        }
 
         return postRepository.save(existingPost);
     }

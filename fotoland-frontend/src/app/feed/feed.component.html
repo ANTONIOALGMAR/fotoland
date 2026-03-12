@@ -88,11 +88,26 @@
       <div *ngIf="album.posts && album.posts.length > 0" class="mt-4 border-t pt-4">
         <div *ngFor="let post of album.posts" class="bg-gray-50 p-3 rounded-lg mb-3 last:mb-0">
           <div class="mb-2">
-            <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" [src]="resolveMediaUrl(post.mediaUrl)" alt="Photo Post" class="w-full h-auto rounded-md">
-            <div *ngIf="post.type === 'VIDEO' && post.mediaUrl" class="relative" style="padding-bottom: 56.25%; height: 0;">
-              <iframe *ngIf="isYouTubeVideo(post.mediaUrl); else genericVideo" [src]="getYouTubeEmbedUrl(post.mediaUrl)" frameborder="0" allowfullscreen class="absolute top-0 left-0 w-full h-full rounded-md"></iframe>
-              <ng-template #genericVideo>
-                <video [src]="resolveMediaUrl(post.mediaUrl)" controls class="w-full h-auto rounded-md"></video>
+            <!-- Grid de Mídias (Múltiplas Fotos) -->
+            <div class="grid gap-1" [ngClass]="{
+              'grid-cols-1': !post.medias || post.medias.length <= 1,
+              'grid-cols-2': post.medias && post.medias.length >= 2
+            }">
+              <ng-container *ngIf="post.medias && post.medias.length > 0; else singleMedia">
+                <div *ngFor="let m of post.medias" class="media-container relative">
+                  <img *ngIf="m.type === 'PHOTO' && m.mediaUrl" [src]="resolveMediaUrl(m.mediaUrl)" alt="Photo" class="w-full h-auto rounded-md object-cover">
+                  <video *ngIf="m.type === 'VIDEO' && m.mediaUrl" [src]="resolveMediaUrl(m.mediaUrl)" controls class="w-full h-auto rounded-md"></video>
+                </div>
+              </ng-container>
+              
+              <ng-template #singleMedia>
+                <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" [src]="resolveMediaUrl(post.mediaUrl)" alt="Photo Post" class="w-full h-auto rounded-md">
+                <div *ngIf="post.type === 'VIDEO' && post.mediaUrl" class="relative" style="padding-bottom: 56.25%; height: 0;">
+                  <iframe *ngIf="isYouTubeVideo(post.mediaUrl); else genericVideo" [src]="getYouTubeEmbedUrl(post.mediaUrl)" frameborder="0" allowfullscreen class="absolute top-0 left-0 w-full h-full rounded-md"></iframe>
+                  <ng-template #genericVideo>
+                    <video [src]="resolveMediaUrl(post.mediaUrl)" controls class="w-full h-auto rounded-md"></video>
+                  </ng-template>
+                </div>
               </ng-template>
             </div>
           </div>

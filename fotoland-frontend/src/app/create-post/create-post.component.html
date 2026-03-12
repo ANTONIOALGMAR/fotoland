@@ -31,13 +31,14 @@
       </div>
 
       <div class="form-group">
-        <label for="mediaFile">Media File</label>
-        <input type="file" id="mediaFile" (change)="onFileSelected($event)" hidden #mediaFileInput>
-        <button type="button" class="btn-outline" (click)="mediaFileInput.click()">Choose Media</button>
-        <div *ngIf="selectedFileName" class="file-info">
-          <span>{{ selectedFileName }}</span>
-          <img *ngIf="mediaPreview && post.type === PostType.PHOTO" [src]="mediaPreview" class="media-preview">
-          <video *ngIf="mediaPreview && post.type === PostType.VIDEO" [src]="mediaPreview" controls class="media-preview"></video>
+        <label for="mediaFile">Media Files (Multiple)</label>
+        <input type="file" id="mediaFile" (change)="onFilesSelected($event)" hidden #mediaFileInput multiple>
+        <button type="button" class="btn-outline" (click)="mediaFileInput.click()">Choose Media Files</button>
+        <div class="previews-grid flex flex-wrap gap-3 mt-3">
+          <div *ngFor="let preview of mediaPreviews" class="preview-item">
+            <img *ngIf="post.type === 'PHOTO'" [src]="preview" class="w-24 h-24 object-cover rounded-lg border-2 border-white shadow-md">
+            <video *ngIf="post.type === 'VIDEO'" [src]="preview" class="w-24 h-24 object-cover rounded-lg border-2 border-white shadow-md"></video>
+          </div>
         </div>
       </div>
 
