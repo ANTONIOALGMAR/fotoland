@@ -7,6 +7,19 @@
     <!-- Foto -->
     <div class="profile-picture">
       <img [src]="authService.resolveMediaUrl(form.profilePictureUrl || '')" alt="Foto de perfil" />
+      
+      <!-- Stats -->
+      <div class="flex space-x-8 justify-center my-4">
+        <div class="text-center">
+          <span class="block text-xl font-bold text-gray-800">{{ followersCount }}</span>
+          <span class="text-xs text-gray-500 uppercase tracking-wider">Seguidores</span>
+        </div>
+        <div class="text-center">
+          <span class="block text-xl font-bold text-gray-800">{{ followingCount }}</span>
+          <span class="text-xs text-gray-500 uppercase tracking-wider">Seguindo</span>
+        </div>
+      </div>
+
       <div class="upload-controls">
         <input type="file" id="profilePicture" (change)="onFileSelected($event)" hidden #profilePictureInput>
         <button class="btn secondary" (click)="profilePictureInput.click()">Escolher imagem</button>

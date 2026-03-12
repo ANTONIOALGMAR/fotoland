@@ -18,6 +18,10 @@ export class ProfileComponent implements OnInit {
   loading = true;
   saving = false;
 
+  // Stats
+  followersCount = 0;
+  followingCount = 0;
+
   form: {
     fullName: string; username: string; phoneNumber?: string; address?: string; profilePictureUrl?: string;
     email?: string; state?: string; country?: string; cep?: string
@@ -45,8 +49,19 @@ export class ProfileComponent implements OnInit {
         this.form.country = (u as any)?.country ?? '';
         this.form.cep = (u as any)?.zipCode ?? ''; // backend usa zipCode
         this.loading = false;
+        this.loadFollowStats(u.username);
       },
       error: () => { this.loading = false; alert('Falha ao carregar perfil'); }
+    });
+  }
+
+  loadFollowStats(username: string): void {
+    this.authService.getFollowStats(username).subscribe({
+      next: (res) => {
+        this.followersCount = res.followersCount;
+        this.followingCount = res.followingCount;
+      },
+      error: (err) => console.error('Erro ao buscar stats:', err)
     });
   }
 
