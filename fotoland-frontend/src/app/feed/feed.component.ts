@@ -241,6 +241,11 @@ export class FeedComponent implements OnInit {
   };
 
   onSearch(): void {
+    if (!this.search.q && !this.search.type && !this.search.author) {
+      this.loadAllAlbums();
+      return;
+    }
+
     this.loading = true;
     this.error = null;
     this.authService.searchPosts({
@@ -248,11 +253,23 @@ export class FeedComponent implements OnInit {
       type: (this.search.type as 'PHOTO' | 'VIDEO') || undefined,
       author: this.search.author || undefined,
       page: 0,
-      size: 20
+      size: 50
     }).subscribe({
       next: (posts) => {
         this.loading = false;
-        // ... atualize um array de posts no componente conforme sua UI ...
+        // Transformar posts em um formato que o feed entenda (agrupados por um álbum fake ou direto)
+        if (posts.length > 0) {
+          this.albums = [{
+            id: 0,
+            title: 'Resultados da Busca',
+            description: `Encontrados ${posts.length} posts`,
+            author: { fullName: 'Sistema', username: 'search' },
+            posts: posts,
+            type: 'GENERAL'
+          }];
+        } else {
+          this.albums = [];
+        }
       },
       error: (err: any) => {
         this.loading = false;
