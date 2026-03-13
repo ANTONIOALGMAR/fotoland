@@ -107,6 +107,22 @@
         </div>
       </div>
 
+      <!-- Seção: Seguidores Online (somente autenticado) -->
+      <div class="accordion-section" *ngIf="isAuthenticated && onlineFollowers.length > 0">
+        <div class="px-4 py-2 border-t mt-4">
+          <h3 class="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-2">Seguidores Online</h3>
+          <div class="flex flex-col gap-2">
+            <div *ngFor="let follower of onlineFollowers" class="flex items-center gap-2">
+              <div class="relative">
+                <img [src]="authService.resolveMediaUrl(follower.profilePictureUrl || '')" class="w-6 h-6 rounded-full object-cover border border-blue-100">
+                <span class="absolute bottom-0 right-0 w-2 h-2 bg-green-500 border-2 border-white rounded-full"></span>
+              </div>
+              <span class="text-xs font-medium text-gray-700 truncate">@{{ follower.username }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Logout quando autenticado -->
       <button class="logout-btn" (click)="onLogout()" *ngIf="isAuthenticated">{{ 'NAV.LOGOUT' | translate }}</button>
     </nav>

@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from './auth/services/auth.service';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Subscription, interval, of } from 'rxjs';
+import { filter, startWith, switchMap, catchError } from 'rxjs/operators';
 import { NotificationService } from './shared/services/notification.service';
 import { TranslateService } from '@ngx-translate/core';
+import { User } from '../../../api.models';
 
 @Component({
   selector: 'app-root',
@@ -13,17 +14,33 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'fotoland-frontend';
-  isAuthenticated: boolean = false; // Será atualizado via observable
+  isAuthenticated: boolean = false;
+  isSidebarOpen: boolean = false;
+  
   private routerSubscription: Subscription = new Subscription();
   private notificationSubscriptions: Subscription = new Subscription();
   private authStatusSubscription: Subscription = new Subscription();
+  private onlineSubscription: Subscription = new Subscription();
 
   chatInviteCount: number = 0;
   chatMessageCount: number = 0;
   currentInvite: any = null;
+  
+  onlineFollowers: User[] = [];
+
+  sections = {
+    album: true,
+    post: true,
+    feed: true,
+    comment: true,
+    chat: true,
+    account: true,
+    discover: true,
+    notifications: true
+  };
 
   constructor(
-    private authService: AuthService, 
+    public authService: AuthService, 
     private router: Router, 
     private notificationService: NotificationService,
     private translate: TranslateService
@@ -35,16 +52,17 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Escutar mudanças de autenticação do AuthService
     this.authStatusSubscription = this.authService.isAuthenticated$.subscribe(status => {
       this.isAuthenticated = status;
-      // Se não estiver autenticado, garantir que a sidebar esteja fechada
       if (!this.isAuthenticated) {
         this.isSidebarOpen = false;
+        this.onlineSubscription.unsubscribe();
+        this.onlineFollowers = [];
+      } else {
+        this.startOnlineTracking();
       }
     });
     
-    // Escutar mudanças de rota para verificar autenticação
     this.routerSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -60,10 +78,35 @@ export class AppComponent implements OnInit, OnDestroy {
       this.chatMessageCount = count;
     }));
 
-    // Escutar convites em tempo real
     this.notificationSubscriptions.add(this.notificationService.chatInvite$.subscribe(invite => {
       this.currentInvite = invite;
     }));
+  }
+
+  startOnlineTracking(): void {
+    this.onlineSubscription.unsubscribe();
+    this.onlineSubscription = interval(30000).pipe(
+      startWith(0),
+      switchMap(() => {
+        if (this.isAuthenticated) {
+          return this.authService.getOnlineFollowers().pipe(
+            catchError(() => of([]))
+          );
+        }
+        return of([]);
+      })
+    ).subscribe({
+      next: (users) => this.onlineFollowers = users,
+      error: (err) => console.error('Error tracking online followers:', err)
+    });
+  }
+
+  toggleSidebar(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  toggleSection(section: keyof typeof this.sections): void {
+    this.sections[section] = !this.sections[section];
   }
 
   acceptInvite(invite: any): void {
@@ -81,35 +124,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.currentInvite = null;
   }
 
+  onLogout(): void {
+    this.authService.logout();
+  }
+
   ngOnDestroy(): void {
     this.routerSubscription.unsubscribe();
     this.notificationSubscriptions.unsubscribe();
     this.authStatusSubscription.unsubscribe();
-  }
-
-  isSidebarOpen: boolean = true;
-  sections = {
-    album: true,
-    post: true,
-    feed: true,
-    comment: false,
-    chat: false,
-    account: true,
-    discover: true,
-    notifications: true
-  };
-
-  onLogout(): void {
-    this.authService.logout();
-    // O estado de autenticação será atualizado via authStatusSubscription
-    // this.checkAuthentication(); // Não é mais necessário chamar aqui
-  }
-
-  toggleSidebar(): void {
-    this.isSidebarOpen = !this.isSidebarOpen;
-  }
-
-  toggleSection(section: 'album' | 'post' | 'feed' | 'comment' | 'chat' | 'account' | 'discover' | 'notifications'): void {
-    this.sections[section] = !this.sections[section];
+    this.onlineSubscription.unsubscribe();
   }
 }

@@ -17,14 +17,39 @@ import com.fotoland.backend.dto.UserResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fotoland.backend.service.UserStatusService;
+import com.fotoland.backend.repository.FollowRepository;
+import com.fotoland.backend.model.Follow;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
+    private final UserStatusService userStatusService;
+    private final FollowRepository followRepository;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserStatusService userStatusService, FollowRepository followRepository) {
         this.userService = userService;
+        this.userStatusService = userStatusService;
+        this.followRepository = followRepository;
+    }
+
+    @GetMapping("/online-followers")
+    public ResponseEntity<List<UserResponse>> getOnlineFollowers(Authentication authentication) {
+        if (authentication == null) return ResponseEntity.status(401).build();
+        User currentUser = userService.findByUsername(authentication.getName());
+        
+        // Pessoas que o usuário logado segue
+        List<Follow> following = followRepository.findByFollowerId(currentUser.getId());
+        
+        List<UserResponse> online = following.stream()
+                .map(Follow::getFollowing)
+                .filter(u -> userStatusService.isOnline(u.username))
+                .map(UserResponse::from)
+                .collect(Collectors.toList());
+                
+        return ResponseEntity.ok(online);
     }
 
     @GetMapping("/search")

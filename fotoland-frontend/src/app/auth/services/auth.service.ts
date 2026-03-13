@@ -318,6 +318,10 @@ export class AuthService {
     return this.http.get<User[]>(`${this.userApiUrl}/search`, { params: { q: query } });
   }
 
+  getOnlineFollowers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.userApiUrl}/online-followers`);
+  }
+
   getFollowStats(username: string): Observable<{ followersCount: number, followingCount: number }> {
     return this.http.get<{ followersCount: number, followingCount: number }>(`${this.BASE_URL}/api/users/${username}/follow-stats`);
   }
