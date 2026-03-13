@@ -120,19 +120,33 @@ export class NotificationService implements OnDestroy {
     this.resetCounts();
   }
 
+  private readonly NOTIFICATION_SOUND_URL = 'https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3'; // Som de 'Pop' elegante
+
+  private playNotificationSound(): void {
+    try {
+      const audio = new Audio(this.NOTIFICATION_SOUND_URL);
+      audio.play().catch(e => console.warn('Audio playback blocked by browser:', e));
+    } catch (err) {
+      console.error('Failed to play notification sound:', err);
+    }
+  }
+
   private handleNotification(notification: any): void {
     switch (notification.type) {
       case 'CHAT_INVITE':
         this.chatInviteCountSubject.next(this.chatInviteCountSubject.getValue() + 1);
         this.chatInviteSubject.next(notification.content); // Emitir o conteúdo do convite
+        this.playNotificationSound();
         break;
       case 'CHAT_MESSAGE':
         this.chatMessageCountSubject.next(this.chatMessageCountSubject.getValue() + 1);
+        this.playNotificationSound();
         break;
       case 'FOLLOW':
       case 'POST_LIKE':
       case 'POST_COMMENT':
         this.generalNotificationCountSubject.next(this.generalNotificationCountSubject.getValue() + 1);
+        this.playNotificationSound();
         break;
       default:
         console.warn('Unknown notification type:', notification.type);
