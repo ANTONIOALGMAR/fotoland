@@ -45,7 +45,7 @@ public class UserController {
         
         List<UserResponse> online = following.stream()
                 .map(Follow::getFollowing)
-                .filter(u -> userStatusService.isOnline(u.username))
+                .filter(u -> userStatusService.isOnline(u.getUsername()))
                 .map(UserResponse::from)
                 .collect(Collectors.toList());
                 
