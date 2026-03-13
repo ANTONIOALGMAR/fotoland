@@ -53,7 +53,7 @@
           <img [src]="authService.resolveMediaUrl(u.profilePictureUrl || '')" class="w-12 h-12 rounded-full object-cover border">
           <div>
             <p class="font-bold text-gray-800">{{ u.fullName }}</p>
-            <p class="text-xs text-gray-500"><span>@</span>{{ u.username }}</p>
+            <p class="text-xs text-gray-500"><span>&#64;</span>{{ u.username }}</p>
           </div>
         </div>
         <button (click)="toggleFollow(u.username)" 
