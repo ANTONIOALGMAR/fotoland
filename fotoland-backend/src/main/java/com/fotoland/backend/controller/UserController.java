@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.fotoland.backend.dto.UserResponse;
 
+import org.springframework.web.bind.annotation.*;
+import com.fotoland.backend.dto.UserResponse;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -20,6 +25,15 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<UserResponse>> searchUsers(@RequestParam String q) {
+        List<User> users = userService.searchUsers(q);
+        List<UserResponse> responses = users.stream()
+                .map(UserResponse::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/me")

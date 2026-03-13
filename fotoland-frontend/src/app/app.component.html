@@ -122,4 +122,11 @@
       <p>Desenvolvido por Antonio Algmar. Todos os direitos reservados.</p>
     </footer>
   </main>
+
+  <!-- Alerta de Convite de Chat Global -->
+  <app-chat-invite-alert 
+    [invite]="currentInvite" 
+    (accept)="acceptInvite($event)" 
+    (decline)="declineInvite()">
+  </app-chat-invite-alert>
 </div>

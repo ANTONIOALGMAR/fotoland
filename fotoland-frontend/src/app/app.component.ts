@@ -20,6 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   chatInviteCount: number = 0;
   chatMessageCount: number = 0;
+  currentInvite: any = null;
 
   constructor(
     private authService: AuthService, 
@@ -43,11 +44,10 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
     
-    // Escutar mudanças de rota para verificar autenticação (se necessário, mas agora o authService já gerencia)
+    // Escutar mudanças de rota para verificar autenticação
     this.routerSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        // Fechar a sidebar automaticamente ao navegar para uma nova rota
         if (this.isSidebarOpen) {
           this.isSidebarOpen = false;
         }
@@ -59,6 +59,26 @@ export class AppComponent implements OnInit, OnDestroy {
     this.notificationSubscriptions.add(this.notificationService.chatMessageCount$.subscribe(count => {
       this.chatMessageCount = count;
     }));
+
+    // Escutar convites em tempo real
+    this.notificationSubscriptions.add(this.notificationService.chatInvite$.subscribe(invite => {
+      this.currentInvite = invite;
+    }));
+  }
+
+  acceptInvite(invite: any): void {
+    this.authService.acceptInvite(invite.id).subscribe({
+      next: () => {
+        this.currentInvite = null;
+        this.notificationService.resetChatInviteCount();
+        this.router.navigate(['/private-chat']);
+      },
+      error: (err) => console.error('Error accepting invite:', err)
+    });
+  }
+
+  declineInvite(): void {
+    this.currentInvite = null;
   }
 
   ngOnDestroy(): void {

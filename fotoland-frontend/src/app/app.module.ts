@@ -9,6 +9,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AuthInterceptor } from './auth/services/auth.interceptor';
 import { NavHeaderComponent } from './shared/nav-header/nav-header.component';
+import { ChatInviteAlertComponent } from './shared/components/chat-invite-alert/chat-invite-alert.component';
 
 // i18n
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -31,6 +32,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     LoginComponent,
     HomeComponent,
     NavHeaderComponent,
+    ChatInviteAlertComponent,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
