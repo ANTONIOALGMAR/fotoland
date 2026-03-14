@@ -19,7 +19,7 @@ export class ExploreComponent {
   results: Post[] = [];
   
   // Abas e Busca de Usuários
-  activeTab: 'posts' | 'users' = 'posts';
+  activeTab: 'posts' | 'users' | 'catalog' = 'posts';
   userResults: User[] = [];
   userQuery: string = '';
   followingMap: { [username: string]: boolean } = {};
@@ -33,6 +33,7 @@ export class ExploreComponent {
   constructor(public authService: AuthService) {}
 
   onSearch(): void {
+    this.activeTab = 'posts';
     this.loading = true;
     this.error = null;
     this.authService.searchPosts({
@@ -56,26 +57,48 @@ export class ExploreComponent {
 
   onSearchUsers(): void {
     if (!this.userQuery.trim()) return;
+    this.activeTab = 'users';
     this.loading = true;
     this.error = null;
     this.authService.searchUsers(this.userQuery).subscribe({
       next: (data) => {
         this.userResults = data;
         this.loading = false;
-        
-        // Verificar quem o usuário logado já segue nos resultados
-        this.userResults.forEach(u => {
-          this.authService.isFollowing(u.username).subscribe({
-            next: (res) => this.followingMap[u.username] = res.isFollowing,
-            error: () => {}
-          });
-        });
+        this.checkFollowingStatus();
       },
       error: (err) => {
         console.error(err);
         this.error = 'Erro ao buscar usuários.';
         this.loading = false;
       }
+    });
+  }
+
+  onLoadCatalog(): void {
+    this.activeTab = 'catalog';
+    this.loading = true;
+    this.error = null;
+    this.authService.getAllUsers().subscribe({
+      next: (data) => {
+        this.userResults = data;
+        this.loading = false;
+        this.checkFollowingStatus();
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'Erro ao carregar catálogo.';
+        this.loading = false;
+      }
+    });
+  }
+
+  private checkFollowingStatus(): void {
+    // Verificar quem o usuário logado já segue nos resultados
+    this.userResults.forEach(u => {
+      this.authService.isFollowing(u.username).subscribe({
+        next: (res) => this.followingMap[u.username] = res.isFollowing,
+        error: () => {}
+      });
     });
   }
 

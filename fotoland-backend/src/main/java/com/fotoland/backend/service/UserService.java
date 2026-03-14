@@ -22,6 +22,10 @@ public class UserService {
         return userRepository.findByUsernameContainingIgnoreCaseOrFullNameContainingIgnoreCase(query, query);
     }
 
+    public List<User> findAllSorted() {
+        return userRepository.findAllByOrderByFullNameAsc();
+    }
+
     public User registerNewUser(User user) {
         if (user.getUsername() == null || user.getUsername().isBlank()) {
             throw new IllegalArgumentException("Username is required");

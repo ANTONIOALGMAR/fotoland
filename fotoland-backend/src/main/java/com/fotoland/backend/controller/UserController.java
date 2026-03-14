@@ -61,6 +61,15 @@ public class UserController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<UserResponse>> getAllUsersSorted() {
+        List<User> users = userService.findAllSorted();
+        List<UserResponse> responses = users.stream()
+                .map(UserResponse::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responses);
+    }
+
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getMyProfile(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {

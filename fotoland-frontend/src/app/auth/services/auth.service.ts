@@ -318,6 +318,10 @@ export class AuthService {
     return this.http.get<User[]>(`${this.userApiUrl}/search`, { params: { q: query } });
   }
 
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.userApiUrl}/all`);
+  }
+
   getOnlineFollowers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.userApiUrl}/online-followers`);
   }
