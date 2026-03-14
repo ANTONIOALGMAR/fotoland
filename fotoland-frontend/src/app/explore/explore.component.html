@@ -50,20 +50,23 @@
     </div>
 
     <!-- Lista de Usuários (Busca e Catálogo) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" *ngIf="activeTab === 'users' || activeTab === 'catalog'">
-      <div class="user-card flex items-center justify-between p-4 bg-white border rounded-xl shadow-sm" *ngFor="let u of userResults">
-        <div class="flex items-center gap-3">
-          <img [src]="authService.resolveMediaUrl(u.profilePictureUrl || '')" class="w-12 h-12 rounded-full object-cover border">
-          <div>
-            <p class="font-bold text-gray-800">{{ u.fullName }}</p>
-            <p class="text-xs text-gray-500"><span>&#64;</span>{{ u.username }}</p>
+    <div class="user-results-grid" *ngIf="activeTab === 'users' || activeTab === 'catalog'">
+      <div class="user-card-custom" *ngFor="let u of userResults">
+        <div class="user-info-wrapper">
+          <img [src]="authService.resolveMediaUrl(u.profilePictureUrl || '')" class="user-avatar" alt="avatar">
+          <div class="user-details">
+            <p class="user-name" [title]="u.fullName">{{ u.fullName }}</p>
+            <p class="user-nick"><span>&#64;</span>{{ u.username }}</p>
           </div>
         </div>
-        <button (click)="toggleFollow(u.username)" 
-          class="text-xs font-bold px-4 py-2 rounded-full border transition-all"
-          [ngClass]="followingMap[u.username] ? 'bg-gray-100 text-gray-800 border-gray-300' : 'bg-blue-600 text-white border-blue-600'">
-          {{ followingMap[u.username] ? 'Seguindo' : 'Seguir' }}
-        </button>
+        
+        <div class="follow-btn-wrapper">
+          <button (click)="toggleFollow(u.username)" 
+            class="follow-btn-custom transition-all"
+            [ngClass]="followingMap[u.username] ? 'follow-btn-outline' : 'follow-btn-blue'">
+            {{ followingMap[u.username] ? ('COMMON.FOLLOWING' | translate) : ('COMMON.FOLLOW' | translate) }}
+          </button>
+        </div>
       </div>
       <p class="col-span-full text-center text-gray-500 italic py-10" *ngIf="userResults.length === 0 && activeTab === 'users' && userQuery">Nenhum usuário encontrado.</p>
       <p class="col-span-full text-center text-gray-500 italic py-10" *ngIf="userResults.length === 0 && activeTab === 'catalog'">O catálogo está vazio.</p>
