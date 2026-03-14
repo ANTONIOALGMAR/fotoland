@@ -98,7 +98,7 @@ public class ChatController {
                 String target = m.getUser().getUsername();
                 if (!target.equals(username)) {
                     notificationService.notifyUser(target, com.fotoland.backend.model.Notification.Type.CHAT_MESSAGE,
-                        java.util.Map.of("roomId", room.getId(), "sender", username));
+                        java.util.Map.of("roomId", room.getId(), "senderUsername", username, "chatRoomName", room.getName()));
                 }
             }
         }

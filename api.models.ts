@@ -61,7 +61,7 @@ export interface Comment {
 
 export interface Notification {
   id: number;
-  type: 'POST_COMMENT' | 'POST_LIKE' | 'COMMENT_LIKE' | 'CHAT_INVITE' | 'CHAT_MESSAGE';
+  type: 'POST_COMMENT' | 'POST_LIKE' | 'COMMENT_LIKE' | 'CHAT_INVITE' | 'CHAT_MESSAGE' | 'FOLLOW';
   payload: string; // JSON string
   createdAt: string; // ISO 8601
   readAt?: string; // ISO 8601

@@ -46,7 +46,7 @@ public class ChatRoomController {
         ChatInvite invite = chatRoomService.invite(roomId, body.username, inviter);
     
         notificationService.notifyUser(body.username, com.fotoland.backend.model.Notification.Type.CHAT_INVITE,
-            java.util.Map.of("roomId", roomId, "invitedBy", inviter, "inviteId", invite.getId()));
+            java.util.Map.of("roomId", roomId, "senderUsername", inviter, "inviteId", invite.getId()));
     
         return ResponseEntity.ok(invite);
     }

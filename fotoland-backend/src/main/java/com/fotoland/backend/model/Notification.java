@@ -12,7 +12,8 @@ public class Notification {
         POST_LIKE,
         COMMENT_LIKE,
         CHAT_INVITE,
-        CHAT_MESSAGE
+        CHAT_MESSAGE,
+        FOLLOW
     }
 
     @Id

@@ -23,6 +23,21 @@
     "MY_NOTIFICATIONS": "My Notifications",
     "SEARCH_DISCOVER": "Explore/Search"
   },
+  "NOTIFICATIONS": {
+    "TITLE": "Notifications",
+    "CLEAR_ALL": "Clear all",
+    "EMPTY": "You don't have any notifications at the moment.",
+    "MARK_READ": "Mark as read",
+    "DELETE_CONFIRM": "Are you sure you want to delete this notification?",
+    "DELETE_ALL_CONFIRM": "Are you sure you want to delete all notifications?",
+    "MSG_CHAT_INVITE": "You received a chat invite from {{username}}.",
+    "MSG_CHAT_MESSAGE": "New message from {{username}} in chat {{room}}.",
+    "MSG_POST_COMMENT": "{{username}} commented on your post: \"{{content}}\"",
+    "MSG_POST_LIKE": "{{username}} liked your post.",
+    "MSG_FOLLOW": "{{username}} started following you.",
+    "MSG_COMMENT_LIKE": "{{username}} liked your comment: \"{{content}}\"",
+    "MSG_UNKNOWN": "New notification: {{type}}"
+  },
   "COMMON": {
     "SAVE": "Save",
     "CANCEL": "Cancel",

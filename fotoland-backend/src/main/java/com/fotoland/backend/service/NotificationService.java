@@ -34,10 +34,10 @@ public class NotificationService {
         n.setCreatedAt(Instant.now());
         Notification saved = notificationRepository.save(n);
 
-        messagingTemplate.convertAndSend("/topic/user." + username, Map.of(
+        messagingTemplate.convertAndSendToUser(username, "/queue/notifications", Map.of(
                 "id", saved.getId(),
                 "type", saved.getType().name(),
-                "payload", payload,
+                "payload", saved.getPayload(),
                 "createdAt", saved.getCreatedAt().toEpochMilli()
         ));
 
@@ -46,7 +46,8 @@ public class NotificationService {
 
     private String toJson(Map<String, Object> payload) {
         try {
-            // implementação simples; pode trocar por Jackson se preferir
+            // Using a simple JSON builder for the database payload to keep it lightweight
+            // But for the WebSocket we'll let Spring handle it with Map.of
             StringBuilder sb = new StringBuilder("{");
             boolean first = true;
             for (Map.Entry<String, Object> e : payload.entrySet()) {

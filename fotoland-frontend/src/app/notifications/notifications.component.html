@@ -1,19 +1,33 @@
 <div class="notifications-page">
   <app-nav-header [showChatNav]="false" [showCancel]="false" [showBack]="true"></app-nav-header>
 
-  <h2>Notificações</h2>
+  <div class="header-actions">
+    <h2>{{ 'NOTIFICATIONS.TITLE' | translate }}</h2>
+    <button *ngIf="notifications.length > 0" class="btn btn-danger" (click)="deleteAll()">{{ 'NOTIFICATIONS.CLEAR_ALL' | translate }}</button>
+  </div>
 
-  <div *ngIf="loading" class="loading">Carregando...</div>
+  <div *ngIf="loading" class="loading">{{ 'COMMON.LOADING' | translate }}</div>
   <div *ngIf="error" class="error">{{ error }}</div>
 
-  <ul class="list" *ngIf="!loading && !error">
+  <div *ngIf="!loading && !error && notifications.length === 0" class="empty">
+    {{ 'NOTIFICATIONS.EMPTY' | translate }}
+  </div>
+
+  <ul class="list" *ngIf="!loading && !error && notifications.length > 0">
     <li class="item" *ngFor="let n of notifications" [class.read]="n.readAt !== null">
-      <div class="message">{{ getNotificationMessage(n) }}</div>
+      <div class="message">
+        <ng-container *ngIf="getNotificationMessage(n) as msg">
+          {{ msg.key | translate:msg.params }}
+        </ng-container>
+      </div>
       <div class="meta">
         <span class="type">{{ n.type }}</span>
         <span class="date">{{ n.createdAt | date:'short' }}</span>
       </div>
-      <button class="btn" (click)="markAsRead(n)" [disabled]="n.readAt !== null">Marcar como lida</button>
+      <div class="actions">
+        <button class="btn" (click)="markAsRead(n)" [disabled]="n.readAt !== null">{{ 'NOTIFICATIONS.MARK_READ' | translate }}</button>
+        <button class="btn btn-outline-danger" (click)="delete(n.id)">{{ 'COMMON.DELETE' | translate }}</button>
+      </div>
     </li>
   </ul>
 </div>

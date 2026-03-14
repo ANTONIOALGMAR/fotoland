@@ -1,7 +1,6 @@
 package com.fotoland.backend.service;
 
-import com.fotoland.backend.model.Follow;
-import com.fotoland.backend.model.User;
+import com.fotoland.backend.model.*;
 import com.fotoland.backend.repository.FollowRepository;
 import com.fotoland.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -14,10 +13,12 @@ public class FollowService {
 
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
-    public FollowService(FollowRepository followRepository, UserRepository userRepository) {
+    public FollowService(FollowRepository followRepository, UserRepository userRepository, NotificationService notificationService) {
         this.followRepository = followRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -36,6 +37,10 @@ public class FollowService {
             follow.setFollower(follower);
             follow.setFollowing(following);
             followRepository.save(follow);
+
+            // Notify followed user
+            notificationService.notifyUser(followingUsername, Notification.Type.FOLLOW,
+                    java.util.Map.of("followerUsername", followerUsername));
         }
     }
 

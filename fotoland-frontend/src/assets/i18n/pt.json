@@ -23,6 +23,21 @@
     "MY_NOTIFICATIONS": "Minhas Notificações",
     "SEARCH_DISCOVER": "Explorar/Buscar"
   },
+  "NOTIFICATIONS": {
+    "TITLE": "Notificações",
+    "CLEAR_ALL": "Limpar tudo",
+    "EMPTY": "Você não possui notificações no momento.",
+    "MARK_READ": "Marcar como lida",
+    "DELETE_CONFIRM": "Tem certeza que deseja excluir esta notificação?",
+    "DELETE_ALL_CONFIRM": "Tem certeza que deseja excluir todas as notificações?",
+    "MSG_CHAT_INVITE": "Você recebeu um convite de chat de {{username}}.",
+    "MSG_CHAT_MESSAGE": "Nova mensagem de {{username}} no chat {{room}}.",
+    "MSG_POST_COMMENT": "{{username}} comentou na sua publicação: \"{{content}}\"",
+    "MSG_POST_LIKE": "{{username}} curtiu sua publicação.",
+    "MSG_FOLLOW": "{{username}} começou a seguir você.",
+    "MSG_COMMENT_LIKE": "{{username}} curtiu seu comentário: \"{{content}}\"",
+    "MSG_UNKNOWN": "Nova notificação: {{type}}"
+  },
   "COMMON": {
     "SAVE": "Salvar",
     "CANCEL": "Cancelar",

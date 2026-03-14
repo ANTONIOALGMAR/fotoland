@@ -1,10 +1,7 @@
 package com.fotoland.backend.service;
 
-import com.fotoland.backend.model.Comment;
-import com.fotoland.backend.model.Post;
-import com.fotoland.backend.model.User;
-import com.fotoland.backend.repository.CommentRepository;
-import com.fotoland.backend.repository.PostRepository;
+import com.fotoland.backend.model.*;
+import com.fotoland.backend.repository.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +12,13 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
 
-    public CommentService(CommentRepository commentRepository, PostRepository postRepository, UserService userService) {
+    public CommentService(CommentRepository commentRepository, PostRepository postRepository, UserService userService, NotificationService notificationService) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     public List<Comment> getCommentsByPostId(Long postId) {
@@ -33,7 +32,15 @@ public class CommentService {
         comment.setPost(post);
         comment.setAuthor(user);
         comment.setText(text);
-        return commentRepository.save(comment);
+        Comment saved = commentRepository.save(comment);
+
+        // Notify post author
+        if (!post.getAlbum().getAuthor().getUsername().equals(username)) {
+            notificationService.notifyUser(post.getAlbum().getAuthor().getUsername(), Notification.Type.POST_COMMENT,
+                    java.util.Map.of("commenterUsername", username, "commentContent", text, "postId", postId));
+        }
+
+        return saved;
     }
 
     public Comment updateComment(Long id, String text, String username) {

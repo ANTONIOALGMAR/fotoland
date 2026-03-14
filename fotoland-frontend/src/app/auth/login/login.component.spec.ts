@@ -1,14 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { of } from 'rxjs';
 
 import { LoginComponent } from './login.component';
+import { AuthService } from '../services/auth.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['login']);
+    (authServiceSpy as any).isAuthenticated$ = of(false);
+
     await TestBed.configureTestingModule({
-      imports: [LoginComponent]
+      imports: [LoginComponent, NoopAnimationsModule],
+      providers: [
+        { provide: AuthService, useValue: authServiceSpy },
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ]
     })
     .compileComponents();
     

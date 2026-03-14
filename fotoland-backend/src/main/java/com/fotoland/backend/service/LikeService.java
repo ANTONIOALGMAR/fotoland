@@ -12,17 +12,20 @@ public class LikeService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     public LikeService(PostLikeRepository postLikeRepository,
                        CommentLikeRepository commentLikeRepository,
                        PostRepository postRepository,
                        CommentRepository commentRepository,
-                       UserService userService) {
+                       UserService userService,
+                       NotificationService notificationService) {
         this.postLikeRepository = postLikeRepository;
         this.commentLikeRepository = commentLikeRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     // Post likes
@@ -35,6 +38,12 @@ public class LikeService {
             like.setPost(post);
             like.setUser(user);
             postLikeRepository.save(like);
+
+            // Notify owner
+            if (!post.getAlbum().getAuthor().getUsername().equals(username)) {
+                notificationService.notifyUser(post.getAlbum().getAuthor().getUsername(), Notification.Type.POST_LIKE,
+                        java.util.Map.of("likerUsername", username, "postId", postId));
+            }
         }
         return postLikeRepository.countByPostId(postId);
     }
@@ -64,6 +73,12 @@ public class LikeService {
             like.setComment(comment);
             like.setUser(user);
             commentLikeRepository.save(like);
+
+            // Notify owner
+            if (!comment.getAuthor().getUsername().equals(username)) {
+                notificationService.notifyUser(comment.getAuthor().getUsername(), Notification.Type.COMMENT_LIKE,
+                        java.util.Map.of("likerUsername", username, "commentId", commentId, "commentContent", comment.getText()));
+            }
         }
         return commentLikeRepository.countByCommentId(commentId);
     }

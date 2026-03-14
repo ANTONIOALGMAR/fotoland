@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -46,11 +47,28 @@ public class NotificationController {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     @PostMapping("/read-all")
     public ResponseEntity<Void> markAllRead(Authentication auth) {
         Page<Notification> unread = notificationRepository.findByUser_UsernameAndReadAtIsNull(auth.getName(), Pageable.ofSize(200));
         unread.forEach(n -> n.setReadAt(Instant.now()));
         notificationRepository.saveAll(unread.getContent());
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id, Authentication auth) {
+        Notification n = notificationRepository.findById(id).orElse(null);
+        if (n == null) return ResponseEntity.notFound().build();
+        if (!n.getUser().getUsername().equals(auth.getName())) return ResponseEntity.status(403).build();
+        notificationRepository.delete(n);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Transactional
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAll(Authentication auth) {
+        notificationRepository.deleteByUser_Username(auth.getName());
+        return ResponseEntity.noContent().build();
     }
 }

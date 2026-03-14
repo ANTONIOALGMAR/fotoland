@@ -64,6 +64,14 @@ export class NotificationService implements OnDestroy {
     return this.http.post<void>(`${this.BASE_URL}/api/notifications/read-all`, {});
   }
 
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.BASE_URL}/api/notifications/${id}`);
+  }
+
+  deleteAll(): Observable<void> {
+    return this.http.delete<void>(`${this.BASE_URL}/api/notifications/all`);
+  }
+
   ngOnDestroy(): void {
     this.disconnect();
     this.authSubscription.unsubscribe();
@@ -90,7 +98,7 @@ export class NotificationService implements OnDestroy {
       console.log('Connected to Notification WebSocket');
       const username = this.authService.getUsernameFromToken();
       if (username) {
-        this.notificationSubscription = this.client!.subscribe(`/user/${username}/queue/notifications`, (message: IMessage) => {
+        this.notificationSubscription = this.client!.subscribe(`/user/queue/notifications`, (message: IMessage) => {
           try {
             const notification: Notification = JSON.parse(message.body);
             this.handleNotification(notification);
@@ -145,6 +153,7 @@ export class NotificationService implements OnDestroy {
       case 'FOLLOW':
       case 'POST_LIKE':
       case 'POST_COMMENT':
+      case 'COMMENT_LIKE':
         this.generalNotificationCountSubject.next(this.generalNotificationCountSubject.getValue() + 1);
         this.playNotificationSound();
         break;
@@ -161,9 +170,14 @@ export class NotificationService implements OnDestroy {
     this.chatMessageCountSubject.next(0);
   }
 
+  resetGeneralNotificationCount(): void {
+    this.generalNotificationCountSubject.next(0);
+  }
+
   private resetCounts(): void {
     this.chatInviteCountSubject.next(0);
     this.chatMessageCountSubject.next(0);
+    this.generalNotificationCountSubject.next(0);
   }
 }
 
