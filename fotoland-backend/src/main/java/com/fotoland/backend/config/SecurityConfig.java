@@ -43,15 +43,13 @@ public class SecurityConfig {
                 .requestMatchers("/uploads/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
-                .requestMatchers("/api/upload", "/api/upload/**").permitAll()
                 .requestMatchers("/api/search/**").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/albums").permitAll()
-                .requestMatchers("/api/albums/**", "/api/posts/**", "/api/comments/**").authenticated()
+                .requestMatchers("/api/upload/**", "/api/albums/**", "/api/posts/**", "/api/comments/**").authenticated()
                 .requestMatchers("/api/user/**").authenticated()
                 .requestMatchers("/api/chat/**").authenticated()
-                .requestMatchers("/ws/**").permitAll() // <-- ADICIONE ISTO
-                .requestMatchers("/ws-native/**").permitAll()
+                .requestMatchers("/ws/**", "/ws-native/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
@@ -63,10 +61,9 @@ public class SecurityConfig {
         return request -> {
             CorsConfiguration configuration = new CorsConfiguration();
 
-            // Origens permitidas explicitamente (necessário quando allowCredentials é true)
             configuration.setAllowedOrigins(List.of(
                 "https://fotoland-frontend.onrender.com",
-                "https://fotoland-frontend.vercel.app", // Uma opção comum caso use Vercel
+                "https://fotoland-frontend.vercel.app",
                 "http://localhost:4200",
                 "http://localhost:8080"
             ));
@@ -83,9 +80,8 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // Reduzindo a força do BCrypt para melhorar a performance do login.
-        // O padrão é 10. Valores entre 10 e 12 são recomendados para produção, mas 4 é aceitável para desenvolvimento/testes.
-        return new BCryptPasswordEncoder(4);
+        // Aumentando a força do BCrypt para 10 (padrão recomendado para produção).
+        return new BCryptPasswordEncoder(10);
     }
 
     @Bean

@@ -2,12 +2,14 @@ package com.fotoland.backend.controller;
 
 import com.fotoland.backend.dto.AuthenticationRequest;
 import com.fotoland.backend.dto.AuthenticationResponse;
+import com.fotoland.backend.dto.RegisterRequest;
 import com.fotoland.backend.model.User;
 import com.fotoland.backend.service.UserDetailsServiceImpl;
 import com.fotoland.backend.service.UserService;
 import com.fotoland.backend.util.JwtUtil;
-import com.fotoland.backend.service.EmailService; // novo
-import com.fotoland.backend.service.SmsService;   // novo
+import com.fotoland.backend.service.EmailService;
+import com.fotoland.backend.service.SmsService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,19 +20,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = {
-    "https://fotoland.onrender.com",
-    "https://fotoland-frontend.onrender.com",
-    "http://localhost:4200"
-})
 public class AuthController {
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
-    private final EmailService emailService; // novo
-    private final SmsService smsService;     // novo
+    private final EmailService emailService;
+    private final SmsService smsService;
 
     public AuthController(UserService userService, AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil, EmailService emailService, SmsService smsService) {
         this.userService = userService;
@@ -42,8 +39,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
+            User user = new User();
+            user.setUsername(registerRequest.getUsername());
+            user.setEmail(registerRequest.getEmail());
+            user.setPassword(registerRequest.getPassword());
+            user.setFullName(registerRequest.getFullName());
+            user.setPhoneNumber(registerRequest.getPhoneNumber());
+
             User registeredUser = userService.registerNewUser(user);
             emailService.send(registeredUser.getEmail(), "Bem-vindo ao Fotoland", "Sua conta foi criada com sucesso!");
             if (registeredUser.getPhoneNumber() != null && !registeredUser.getPhoneNumber().isBlank()) {
@@ -56,7 +60,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())

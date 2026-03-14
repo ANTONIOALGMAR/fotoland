@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.fotoland.backend.dto.UserResponse;
-
+import com.fotoland.backend.dto.UserSummaryDTO;
+import com.fotoland.backend.dto.UpdateProfileRequest;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-import com.fotoland.backend.dto.UserResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,42 +37,40 @@ public class UserController {
     }
 
     @GetMapping("/online-followers")
-    public ResponseEntity<List<UserResponse>> getOnlineFollowers(Authentication authentication) {
+    public ResponseEntity<List<UserSummaryDTO>> getOnlineFollowers(Authentication authentication) {
         if (authentication == null) return ResponseEntity.status(401).build();
         User currentUser = userService.findByUsername(authentication.getName());
         
-        // Pessoas que o usuário logado segue
         List<Follow> following = followRepository.findByFollowerId(currentUser.getId());
         
-        List<UserResponse> online = following.stream()
+        List<UserSummaryDTO> online = following.stream()
                 .map(Follow::getFollowing)
                 .filter(u -> userStatusService.isOnline(u.getUsername()))
-                .map(UserResponse::from)
+                .map(u -> UserSummaryDTO.from(u, true))
                 .collect(Collectors.toList());
                 
         return ResponseEntity.ok(online);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<UserResponse>> searchUsers(@RequestParam String q) {
-        // Sanitização básica para evitar caracteres de controle de busca LIKE
+    public ResponseEntity<List<UserSummaryDTO>> searchUsers(@RequestParam String q) {
         String sanitizedQuery = q.replaceAll("[%_]", "").trim();
         if (sanitizedQuery.isEmpty()) {
             return ResponseEntity.ok(List.of());
         }
         
         List<User> users = userService.searchUsers(sanitizedQuery);
-        List<UserResponse> responses = users.stream()
-                .map(UserResponse::from)
+        List<UserSummaryDTO> responses = users.stream()
+                .map(u -> UserSummaryDTO.from(u, userStatusService.isOnline(u.getUsername())))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<UserResponse>> getAllUsersSorted() {
+    public ResponseEntity<List<UserSummaryDTO>> getAllUsersSorted() {
         List<User> users = userService.findAllSorted();
-        List<UserResponse> responses = users.stream()
-                .map(UserResponse::from)
+        List<UserSummaryDTO> responses = users.stream()
+                .map(u -> UserSummaryDTO.from(u, userStatusService.isOnline(u.getUsername())))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(responses);
     }
@@ -79,21 +78,29 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getMyProfile(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(401).build(); // Unauthorized
+            return ResponseEntity.status(401).build();
         }
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-        User user = userService.findByUsername(username);
+        User user = userService.findByUsername(authentication.getName());
         return ResponseEntity.ok(UserResponse.from(user));
     }
 
     @PutMapping("/me")
-    public ResponseEntity<UserResponse> updateMyProfile(@RequestBody User payload, Authentication authentication) {
+    public ResponseEntity<UserResponse> updateMyProfile(@Valid @RequestBody UpdateProfileRequest payload, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(401).build();
         }
-        String username = authentication.getName();
-        User updated = userService.updateProfile(username, payload);
+        
+        User incoming = new User();
+        incoming.setEmail(payload.getEmail());
+        incoming.setFullName(payload.getFullName());
+        incoming.setPhoneNumber(payload.getPhoneNumber());
+        incoming.setAddress(payload.getAddress());
+        incoming.setProfilePictureUrl(payload.getProfilePictureUrl());
+        incoming.setState(payload.getState());
+        incoming.setCountry(payload.getCountry());
+        incoming.setZipCode(payload.getZipCode());
+
+        User updated = userService.updateProfile(authentication.getName(), incoming);
         return ResponseEntity.ok(UserResponse.from(updated));
     }
 }
