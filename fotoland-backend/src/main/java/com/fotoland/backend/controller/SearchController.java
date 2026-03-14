@@ -32,8 +32,11 @@ public class SearchController {
         Specification<Post> spec = Specification.where(null);
 
         if (q != null && !q.isBlank()) {
-            String like = "%" + q.toLowerCase().trim() + "%";
-            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("caption")), like));
+            String sanitizedQ = q.replaceAll("[%_]", "").trim();
+            if (!sanitizedQ.isEmpty()) {
+                String like = "%" + sanitizedQ.toLowerCase() + "%";
+                spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("caption")), like));
+            }
         }
         if (type != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("type"), type));
@@ -42,10 +45,13 @@ public class SearchController {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("album").get("id"), albumId));
         }
         if (author != null && !author.isBlank()) {
-            String authorLike = "%" + author.trim().toLowerCase() + "%";
-            spec = spec.and((root, query, cb) ->
-                cb.like(cb.lower(root.get("album").get("author").get("username")), authorLike)
-            );
+            String sanitizedAuthor = author.replaceAll("[%_]", "").trim();
+            if (!sanitizedAuthor.isEmpty()) {
+                String authorLike = "%" + sanitizedAuthor.toLowerCase() + "%";
+                spec = spec.and((root, query, cb) ->
+                    cb.like(cb.lower(root.get("album").get("author").get("username")), authorLike)
+                );
+            }
         }
         try {
             if (createdFrom != null && !createdFrom.isBlank()) {

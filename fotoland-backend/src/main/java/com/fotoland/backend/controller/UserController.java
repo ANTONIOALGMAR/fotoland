@@ -54,7 +54,13 @@ public class UserController {
 
     @GetMapping("/search")
     public ResponseEntity<List<UserResponse>> searchUsers(@RequestParam String q) {
-        List<User> users = userService.searchUsers(q);
+        // Sanitização básica para evitar caracteres de controle de busca LIKE
+        String sanitizedQuery = q.replaceAll("[%_]", "").trim();
+        if (sanitizedQuery.isEmpty()) {
+            return ResponseEntity.ok(List.of());
+        }
+        
+        List<User> users = userService.searchUsers(sanitizedQuery);
         List<UserResponse> responses = users.stream()
                 .map(UserResponse::from)
                 .collect(Collectors.toList());
