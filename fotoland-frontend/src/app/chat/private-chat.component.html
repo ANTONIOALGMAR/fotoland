@@ -4,65 +4,78 @@
     [showChatNav]="true"
     [showPrivateNav]="false"
     [showGroupNav]="true"
-    [disableCancel]="connecting"
     (navigatePrivate)="irParaPrivado()"
     (navigateGroup)="irParaColetivo()"
     (cancel)="cancelar()"
     (back)="voltar()"
   ></app-nav-header>
 
-  <div class="room-actions">
-    <input [(ngModel)]="newRoomName" type="text" placeholder="Nome da sala" (keyup.enter)="createRoom()" class="border px-2 py-1 rounded mr-2" />
-    <button (click)="createRoom()" [disabled]="!newRoomName.trim()" class="bg-blue-600 text-white px-3 py-1 rounded disabled:opacity-50">Criar sala</button>
-  </div>
-
-  <div class="rooms-list mt-4">
-    <h3>Minhas salas</h3>
-    <div *ngIf="rooms.length === 0" class="text-sm text-gray-600">Você ainda não tem salas.</div>
-    <div *ngFor="let r of rooms" class="mt-2">
-      <button (click)="joinRoom(r.id)" class="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">{{ r.room.name }} (ID {{ r.id }})</button>
-    </div>
-  </div>
-
-  <div *ngIf="selectedRoomId" class="mt-6">
-    <h3>Sala atual: {{ selectedRoomName || selectedRoomId }}</h3>
-    <div class="invite mt-2">
-      <input [(ngModel)]="inviteUsername" type="text" placeholder="Convidar usuário (nickname)" (keyup.enter)="invite()" class="border px-2 py-1 rounded mr-2" />
-      <button (click)="invite()" [disabled]="!inviteUsername.trim()" class="bg-green-600 text-white px-3 py-1 rounded disabled:opacity-50">Convidar</button>
-    </div>
-
-    <div *ngIf="connecting" class="status mt-2 text-sm text-gray-600">Conectando à sala...</div>
-
-    <div class="messages mt-4 space-y-2">
-      <div *ngFor="let m of messages" class="message p-2 border rounded">
-        <div class="text-xs text-gray-600 flex justify-between">
-          <span class="sender">{{ m.sender || 'Anônimo' }}</span>
-          <span class="time">{{ m.timestamp | date:'shortTime' }}</span>
-        </div>
-
-        <div *ngIf="editingMessageId !== m.id">
-          <span class="content break-words">{{ m.content }}</span>
-        </div>
-
-        <div *ngIf="editingMessageId === m.id" class="mt-2">
-          <input [(ngModel)]="editContent" type="text" class="border px-2 py-1 rounded w-full" />
-          <div class="mt-2 flex gap-2">
-            <button (click)="saveEdit(m)" [disabled]="!editContent.trim()" class="bg-blue-600 text-white px-3 py-1 rounded disabled:opacity-50">Salvar</button>
-            <button (click)="cancelEdit()" class="bg-gray-400 text-white px-3 py-1 rounded">Cancelar</button>
-          </div>
-        </div>
-
-        <div class="mt-2 flex gap-2" *ngIf="canEdit(m) && editingMessageId !== m.id">
-          <button (click)="startEdit(m)" class="bg-yellow-500 text-white px-3 py-1 rounded">Editar</button>
-          <button (click)="delete(m)" class="bg-red-600 text-white px-3 py-1 rounded">Excluir</button>
+  <div class="chat-layout">
+    <!-- Sidebar de Salas -->
+    <aside class="rooms-sidebar">
+      <div class="create-room">
+        <input [(ngModel)]="newRoomName" placeholder="Nova sala...">
+        <button (click)="createRoom()">+</button>
+      </div>
+      <div class="rooms-list">
+        <div *ngFor="let r of rooms" 
+             (click)="joinRoom(r.id)" 
+             [class.active]="selectedRoomId === r.id"
+             class="room-item">
+          {{ r.room.name }}
         </div>
       </div>
-    </div>
+    </aside>
 
-    <div class="composer mt-4 flex gap-2">
-      <input [(ngModel)]="newMessage" type="text" placeholder="Digite uma mensagem..." (keyup.enter)="send()" class="border px-2 py-1 rounded flex-1" />
-      <button (click)="send()" [disabled]="connecting || !newMessage.trim()" class="bg-blue-700 text-white px-4 py-1 rounded disabled:opacity-50">Enviar</button>
-      <button (click)="cancelar()" class="bg-gray-500 text-white px-3 py-1 rounded">Cancelar</button>
-    </div>
+    <!-- Área de Mensagens -->
+    <main class="chat-main">
+      <div class="chat-header" *ngIf="selectedRoomName">
+        <h3>{{ selectedRoomName }}</h3>
+        <div class="invite-box">
+          <input [(ngModel)]="inviteUsername" placeholder="Nick do amigo...">
+          <button (click)="invite()">Convidar</button>
+        </div>
+      </div>
+
+      <div class="messages-container" #scrollMe>
+        <div *ngFor="let msg of messages" class="message" [ngClass]="{'own-message': msg.sender === currentUsername}">
+          <div class="message-body">
+            <div class="message-header">
+              <span class="username">{{ msg.sender }}</span>
+              <span class="timestamp">{{ msg.timestamp | date:'dd/MM/yy HH:mm' }}</span>
+            </div>
+
+            <div class="message-content">
+              <!-- Visualização -->
+              <ng-container *ngIf="editingMessageId !== msg.id">
+                <span class="text">{{ msg.content }}</span>
+              </ng-container>
+
+              <!-- Edição -->
+              <div *ngIf="editingMessageId === msg.id" class="edit-box">
+                <input type="text" [(ngModel)]="editContent" (keyup.enter)="saveEdit(msg)" (keyup.esc)="cancelEdit()">
+                <div class="edit-actions">
+                  <button (click)="saveEdit(msg)">Salvar</button>
+                  <button (click)="cancelEdit()">X</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ações CRUD -->
+            <div class="actions" *ngIf="canEdit(msg) && editingMessageId !== msg.id">
+              <button (click)="startEdit(msg)" class="edit-btn">✏️</button>
+              <button (click)="delete(msg)" class="delete-btn">🗑️</button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="connecting" class="connecting">Carregando mensagens...</div>
+        <div *ngIf="!selectedRoomId" class="no-room">Selecione uma sala para conversar.</div>
+      </div>
+
+      <div class="input-container" *ngIf="selectedRoomId">
+        <input [(ngModel)]="newMessage" (keyup.enter)="send()" placeholder="Sua mensagem...">
+        <button (click)="send()">Enviar</button>
+      </div>
+    </main>
   </div>
 </div>

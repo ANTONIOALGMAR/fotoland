@@ -60,7 +60,8 @@ public class ChatController {
         entity.setSenderUsername(message.getSender());
         entity.setContent(message.getContent());
         entity.setClientTimestamp(incoming.getTimestamp());
-        messageRepo.save(entity);
+        ChatMessageEntity saved = messageRepo.save(entity);
+        message.setId(saved.getId());
 
         messagingTemplate.convertAndSend("/topic/global", message);
     }
@@ -89,7 +90,8 @@ public class ChatController {
             entity.setSenderUsername(username);
             entity.setContent(incoming.getContent());
             entity.setClientTimestamp(incoming.getTimestamp());
-            messageRepo.save(entity);
+            ChatMessageEntity saved = messageRepo.save(entity);
+            message.setId(saved.getId());
 
             // Notificar demais membros da sala (exclui o remetente)
             for (var m : memberRepo.findByRoom_Id(room.getId())) {

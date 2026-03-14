@@ -73,6 +73,7 @@ public class ChatMessageController {
 
     private ChatMessage toDto(ChatMessageEntity e) {
         ChatMessage dto = new ChatMessage();
+        dto.setId(e.getId());
         dto.setSender(e.getSenderUsername());
         dto.setContent(e.getContent());
         dto.setTimestamp(e.getClientTimestamp() != null ? e.getClientTimestamp() : e.getCreatedAt().toEpochMilli());

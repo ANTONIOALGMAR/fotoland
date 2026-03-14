@@ -11,11 +11,35 @@
   ></app-nav-header>
 
   <div class="messages-container">
-    <div *ngFor="let msg of messages" class="message">
-      <img [src]="msg.profilePictureUrl || 'assets/default-avatar.png'" alt="Avatar" class="avatar">
-      <div class="message-content">
-        <span class="username">{{ msg.sender }}:</span>
-        <span class="text">{{ msg.content }}</span>
+    <div *ngFor="let msg of messages" class="message" [ngClass]="{'own-message': msg.sender === currentUsername}">
+      <img [src]="authService.resolveMediaUrl(msg.profilePictureUrl || '')" alt="Avatar" class="avatar">
+      <div class="message-body">
+        <div class="message-header">
+          <span class="username">{{ msg.sender }}</span>
+          <span class="timestamp">{{ msg.timestamp | date:'dd/MM/yy HH:mm' }}</span>
+        </div>
+        
+        <div class="message-content">
+          <!-- Modo Visualização -->
+          <ng-container *ngIf="editingMessageId !== msg.id">
+            <span class="text">{{ msg.content }}</span>
+          </ng-container>
+
+          <!-- Modo Edição -->
+          <div *ngIf="editingMessageId === msg.id" class="edit-box">
+            <input type="text" [(ngModel)]="editContent" (keyup.enter)="saveEdit(msg)" (keyup.esc)="cancelEdit()">
+            <div class="edit-actions">
+              <button (click)="saveEdit(msg)">Salvar</button>
+              <button (click)="cancelEdit()">X</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões CRUD (somente se for dono da msg) -->
+        <div class="actions" *ngIf="canEdit(msg) && editingMessageId !== msg.id">
+          <button (click)="startEdit(msg)" class="edit-btn" title="Editar">✏️</button>
+          <button (click)="delete(msg)" class="delete-btn" title="Excluir">🗑️</button>
+        </div>
       </div>
     </div>
     <div *ngIf="connecting" class="connecting">

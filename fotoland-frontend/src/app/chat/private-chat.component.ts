@@ -6,11 +6,12 @@ import { AuthService } from '../auth/services/auth.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-private-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavHeaderComponent],
+  imports: [CommonModule, FormsModule, NavHeaderComponent, TranslateModule],
   templateUrl: './private-chat.component.html',
   styleUrls: ['./private-chat.component.css']
 })
@@ -27,7 +28,7 @@ export class PrivateChatComponent implements OnInit, OnDestroy {
   editingMessageId: number | null = null;
   editContent: string = '';
 
-  constructor(private chat: ChatService, private auth: AuthService, private router: Router, private location: Location) {}
+  constructor(private chat: ChatService, public auth: AuthService, private router: Router, private location: Location) {}
 
   ngOnInit(): void {
     this.currentUsername = this.chat.getUsernameFromToken();
