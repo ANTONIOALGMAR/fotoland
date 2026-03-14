@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth/services/auth.service';
 import { Post, User } from '../../../../api.models';
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-explore',
@@ -13,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './explore.component.html',
   styleUrls: ['./explore.component.css']
 })
-export class ExploreComponent {
+export class ExploreComponent implements OnInit {
   loading = false;
   error: string | null = null;
   results: Post[] = [];
@@ -30,7 +31,16 @@ export class ExploreComponent {
     author: ''
   };
 
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService, private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    // Verificar se deve abrir o catálogo por padrão via parâmetro de URL
+    this.route.queryParams.subscribe(params => {
+      if (params['tab'] === 'catalog') {
+        this.onLoadCatalog();
+      }
+    });
+  }
 
   onSearch(): void {
     this.activeTab = 'posts';
