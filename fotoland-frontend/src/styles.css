@@ -2,4 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* You can add global styles to this file, and also import other style files */
+/* Fundo Global Amarelo Suave */
+body {
+  background-color: #fefce8; /* Um tom de amarelo palha/creme bem suave */
+  min-height: 100vh;
+}
+
+/* Garante que o layout principal também respeite o fundo */
+.app-layout {
+  background-color: #fefce8;
+}
+
+/* Ajuste fino para inputs e containers brancos se destacarem */
+.card, .bg-white {
+  background-color: #ffffff;
+}

@@ -11,41 +11,40 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [CommonModule, RouterLink, TranslateModule],
   template: `
-    <div class="flex flex-col gap-2 mb-4 w-full" [ngClass]="{'pl-14': shouldPad && !isMobile, 'pl-2': isMobile}">
+    <div class="flex flex-col gap-2 mb-4 w-full bg-emerald-50/90 backdrop-blur-md p-3 rounded-2xl border border-emerald-100 shadow-sm" [ngClass]="{'pl-14': shouldPad && !isMobile, 'pl-2': isMobile}">
       
       <!-- Linha Superior: Título e Notificações -->
       <div class="flex items-center justify-between w-full">
-        <!-- Título principal: Se não logado, sempre mostra Bem-vindo. Se logado, mostra o título da página. -->
-        <h2 *ngIf="!isAuthenticated" class="font-bold text-blue-600 italic text-sm sm:text-lg">Bem-vindo ao Fotoland</h2>
+        <h2 *ngIf="!isAuthenticated" class="font-bold text-emerald-700 italic text-sm sm:text-lg">Bem-vindo ao Fotoland</h2>
         <h2 *ngIf="isAuthenticated && title" class="font-bold text-gray-800 text-lg lg:text-xl truncate max-w-[150px] sm:max-w-none">{{ title }}</h2>
 
         <div class="flex items-center space-x-1" *ngIf="isAuthenticated">
-          <!-- Ícone de Mensagens -->
-          <a routerLink="/private-chat" class="relative p-1.5 text-gray-500 hover:text-blue-600 transition-all" title="Mensagens">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
+          <!-- Mensagens (Azul) -->
+          <a routerLink="/private-chat" class="relative p-1.5 text-blue-500 hover:bg-blue-50 rounded-full transition-all" title="Mensagens">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3.091-3.091c-.333-.03-.662-.065-.99-.103l-4.578-.512a2.25 2.25 0 01-1.98-2.253V10.608c0-.969.616-1.813 1.5-2.097a17.523 17.523 0 0110.5 0z" />
             </svg>
             <span *ngIf="chatMessageCount > 0" class="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-600 text-[8px] font-bold text-white ring-1 ring-white">{{ chatMessageCount }}</span>
           </a>
 
-          <!-- Ícone de Convites -->
-          <a routerLink="/notifications" class="relative p-1.5 text-gray-500 hover:text-indigo-600 transition-all" title="Convites">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
+          <!-- Convites (Índigo) -->
+          <a routerLink="/notifications" class="relative p-1.5 text-indigo-500 hover:bg-indigo-50 rounded-full transition-all" title="Convites">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
             </svg>
-            <span *ngIf="chatInviteCount > 0" class="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-indigo-600 text-[8px] font-bold text-white ring-1 ring-white">{{ chatInviteCount }}</span>
+            <span *ngIf="chatInviteCount > 0" class="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-600 text-[8px] font-bold text-white ring-1 ring-white">{{ chatInviteCount }}</span>
           </a>
 
-          <!-- Ícone de Catálogo (Pessoas) -->
-          <a [routerLink]="['/explore']" [queryParams]="{tab: 'catalog'}" class="relative p-1.5 text-gray-500 hover:text-green-600 transition-all" title="Catálogo de Membros">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
+          <!-- Catálogo (Verde Esmeralda) -->
+          <a [routerLink]="['/explore']" [queryParams]="{tab: 'catalog'}" class="relative p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-full transition-all" title="Catálogo de Membros">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.25 0 11-5.25 0 2.625 2.25 0 015.25 0z" />
             </svg>
           </a>
 
-          <!-- Ícone Geral -->
-          <a routerLink="/notifications" class="relative p-1.5 text-gray-500 hover:text-red-600 transition-all" title="Notificações">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
+          <!-- Notificações (Laranja/Vermelho) -->
+          <a routerLink="/notifications" class="relative p-1.5 text-orange-500 hover:bg-orange-50 rounded-full transition-all" title="Notificações">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.248 24.248 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
             </svg>
             <span *ngIf="generalNotificationCount > 0" class="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-600 text-[8px] font-bold text-white ring-1 ring-white">{{ generalNotificationCount }}</span>
@@ -55,22 +54,21 @@ import { Subscription } from 'rxjs';
 
       <!-- Linha Inferior: Botões de Ação e Idioma -->
       <div class="flex items-center justify-start gap-2 w-full overflow-x-auto pb-1 no-scrollbar">
-        <!-- Botões de ação mostrados APENAS se estiver logado -->
         <ng-container *ngIf="isAuthenticated">
           <div class="flex gap-1">
-            <button *ngIf="showChatNav && showPrivateNav" (click)="navigatePrivate.emit()" class="bg-blue-600 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Privado</button>
-            <button *ngIf="showChatNav && showGroupNav" (click)="navigateGroup.emit()" class="bg-indigo-600 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Coletivo</button>
+            <button *ngIf="showChatNav && showPrivateNav" (click)="navigatePrivate.emit()" class="bg-blue-600 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm hover:bg-blue-700 transition-colors">Privado</button>
+            <button *ngIf="showChatNav && showGroupNav" (click)="navigateGroup.emit()" class="bg-indigo-600 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm hover:bg-indigo-700 transition-colors">Coletivo</button>
           </div>
 
-          <button *ngIf="showCancel" (click)="cancel.emit()" [disabled]="disableCancel" class="bg-white text-gray-600 px-2 py-1.5 rounded-lg border border-gray-300 disabled:opacity-50 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Cancelar</button>
-          <button *ngIf="showBack" (click)="back.emit()" class="bg-gray-800 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm">Voltar</button>
+          <button *ngIf="showCancel" (click)="cancel.emit()" [disabled]="disableCancel" class="bg-white text-gray-600 px-2 py-1.5 rounded-lg border border-emerald-200 disabled:opacity-50 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm hover:bg-emerald-50 transition-colors">Cancelar</button>
+          <button *ngIf="showBack" (click)="back.emit()" class="bg-gray-800 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm hover:bg-black transition-colors">Voltar</button>
         </ng-container>
 
-        <!-- Language Selector (Sempre disponível) -->
-        <div class="flex items-center bg-gray-100 px-2 py-1.5 rounded-lg border border-gray-200" [ngClass]="{'ml-auto': isAuthenticated}">
-          <button (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" [class.text-blue-600]="currentLang === 'pt'" class="text-[10px] text-gray-500 px-1 uppercase">PT</button>
-          <span class="text-gray-300 text-[10px]">|</span>
-          <button (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" [class.text-blue-600]="currentLang === 'en'" class="text-[10px] text-gray-500 px-1 uppercase">EN</button>
+        <!-- Language Selector -->
+        <div class="flex items-center bg-white/80 px-2 py-1.5 rounded-lg border border-emerald-100 shadow-sm" [ngClass]="{'ml-auto': isAuthenticated}">
+          <button (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" [class.text-emerald-600]="currentLang === 'pt'" class="text-[10px] text-gray-500 px-1 uppercase tracking-tighter">PT</button>
+          <span class="text-emerald-200 text-[10px]">|</span>
+          <button (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" [class.text-emerald-600]="currentLang === 'en'" class="text-[10px] text-gray-500 px-1 uppercase tracking-tighter">EN</button>
         </div>
       </div>
     </div>
