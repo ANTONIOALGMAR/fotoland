@@ -38,127 +38,95 @@
   <div class="slide" style="background-image: url('assets/futuristic-background3.jpg');"></div>
 </div>
 
-<div class="max-w-3xl mx-auto p-4">
-  <header class="text-3xl font-bold text-center my-6">
-    <h1>Global Feed</h1>
-  </header>
+<div class="max-w-6xl mx-auto p-4 flex flex-col md:flex-row gap-6">
+  <!-- Coluna do Feed (Esquerda/Centro) -->
+  <div class="flex-1 max-w-2xl">
+    <header class="text-3xl font-bold mb-6">
+      <h1>Global Feed</h1>
+    </header>
 
-  <div *ngIf="loading" class="text-center p-4">
-    <p class="text-lg text-gray-600">Loading feed...</p>
-  </div>
+    <div *ngIf="loading" class="text-center p-4">
+      <p class="text-lg text-gray-600">Loading feed...</p>
+    </div>
 
-  <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center" role="alert">
-    <p>{{ error }}</p>
-  </div>
+    <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center mb-4" role="alert">
+      <p>{{ error }}</p>
+    </div>
 
-  <div *ngIf="!loading && albums.length === 0 && !error" class="text-center p-4 bg-gray-100 rounded-lg">
-    <p class="text-lg text-gray-600">No albums found in the feed. Be the first to create one!</p>
-  </div>
+    <div *ngIf="!loading && albums.length === 0 && !error" class="text-center p-10 bg-white rounded-xl shadow-sm border border-gray-100">
+      <p class="text-lg text-gray-500 italic">O feed está vazio. Comece a seguir pessoas ou crie seu primeiro álbum!</p>
+    </div>
 
-  <div *ngIf="error" class="error-message">
-    <p>{{ error }}</p>
-  </div>
-
-  <div *ngIf="!loading && albums.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <div *ngFor="let album of albums" class="bg-white shadow-md rounded-lg p-4 mb-4">
-      <div class="flex justify-between items-center mb-2">
-        <h3 class="text-xl font-semibold">{{ album.title }}</h3>
-        <span class="px-2 py-1 bg-blue-200 text-blue-800 text-xs font-medium rounded-full">{{ album.type }}</span>
-      </div>
-      <div class="flex justify-between items-center mb-1">
-        <p class="text-sm text-gray-600">By: {{ album.author.fullName }} ({{ album.author.username }})</p>
-        <button *ngIf="album.author.username !== currentUserUsername"
-          type="button"
-          (click)="toggleFollow(album.author.username)"
-          class="follow-button text-xs font-bold px-3 py-1 rounded-full transition-all"
-          [class.following]="isFollowingUser(album.author.username)"
-          [attr.aria-pressed]="isFollowingUser(album.author.username)">
-          {{ isFollowingUser(album.author.username) ? 'Seguindo' : 'Seguir' }}
-        </button>
-      </div>
-      <p class="text-gray-700 mb-2">{{ album.description }}</p>
-      <p *ngIf="album.location" class="text-xs text-gray-500">Location: {{ album.location }}</p>
-      <p *ngIf="album.eventName" class="text-xs text-gray-500">Event: {{ album.eventName }}</p>
-
-      <div *ngIf="album.posts && album.posts.length > 0" class="mt-4 border-t pt-4">
-        <div *ngFor="let post of album.posts" class="bg-gray-50 p-3 rounded-lg mb-3 last:mb-0">
-          <div class="mb-2">
-            <!-- Grid de Mídias (Múltiplas Fotos) -->
-            <div class="grid gap-1" [ngClass]="{
-              'grid-cols-1': !post.medias || post.medias.length <= 1,
-              'grid-cols-2': post.medias && post.medias.length >= 2
-            }">
-              <ng-container *ngIf="post.medias && post.medias.length > 0; else singleMedia">
-                <div *ngFor="let m of post.medias" class="media-container relative">
-                  <img *ngIf="m.type === 'PHOTO' && m.mediaUrl" [src]="resolveMediaUrl(m.mediaUrl)" alt="Photo" class="w-full h-auto rounded-md object-cover">
-                  <video *ngIf="m.type === 'VIDEO' && m.mediaUrl" [src]="resolveMediaUrl(m.mediaUrl)" controls class="w-full h-auto rounded-md"></video>
-                </div>
-              </ng-container>
-              
-              <ng-template #singleMedia>
-                <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" [src]="resolveMediaUrl(post.mediaUrl)" alt="Photo Post" class="w-full h-auto rounded-md">
-                <div *ngIf="post.type === 'VIDEO' && post.mediaUrl" class="relative" style="padding-bottom: 56.25%; height: 0;">
-                  <iframe *ngIf="isYouTubeVideo(post.mediaUrl); else genericVideo" [src]="getYouTubeEmbedUrl(post.mediaUrl)" frameborder="0" allowfullscreen class="absolute top-0 left-0 w-full h-full rounded-md"></iframe>
-                  <ng-template #genericVideo>
-                    <video [src]="resolveMediaUrl(post.mediaUrl)" controls class="w-full h-auto rounded-md"></video>
-                  </ng-template>
-                </div>
-              </ng-template>
+    <div *ngIf="!loading && albums.length > 0" class="flex flex-col gap-6">
+      <div *ngFor="let album of albums" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+        <!-- Header do Album/Post -->
+        <div class="p-4 flex items-center justify-between border-b">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 to-purple-600 p-[2px]">
+              <div class="w-full h-full rounded-full bg-white p-[2px]">
+                <img [src]="resolveMediaUrl(album.author.profilePictureUrl || '')" class="w-full h-full rounded-full object-cover">
+              </div>
+            </div>
+            <div>
+              <p class="font-bold text-sm">{{ album.author.username }}</p>
+              <p class="text-xs text-gray-500">{{ album.location || 'Brasil' }}</p>
             </div>
           </div>
-          <div class="text-sm">
-            <p class="text-gray-800 mb-1">{{ post.caption }}</p>
-            <p class="text-xs text-gray-500">{{ post.createdAt | date:'medium' }}</p>
+          
+          <button *ngIf="album.author.username !== currentUserUsername"
+            (click)="toggleFollow(album.author.username)"
+            class="text-xs font-bold text-blue-500 hover:text-blue-700 transition-colors">
+            {{ isFollowingUser(album.author.username) ? 'Seguindo' : 'Seguir' }}
+          </button>
+        </div>
 
-            <!-- Ações de Curtir -->
-            <div class="mt-2 flex items-center space-x-4">
-              <button (click)="toggleLike(post)" class="flex items-center space-x-1 group">
-                <svg [class.text-red-500]="post.likedByCurrentUser" [class.fill-current]="post.likedByCurrentUser" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 group-hover:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        <!-- Conteúdo do Post -->
+        <div *ngIf="album.posts && album.posts.length > 0">
+          <div *ngFor="let post of album.posts" class="border-b last:border-b-0 pb-4">
+            <!-- Mídia com Double Tap -->
+            <div class="relative aspect-square md:aspect-auto overflow-hidden bg-black flex items-center justify-center group-media" (dblclick)="onDoubleTap(post)">
+              <!-- Heart Animation -->
+              <div class="double-tap-heart" [class.animate]="post.showHeart">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-24 h-24 text-white/90 drop-shadow-lg">
+                  <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001Z" />
                 </svg>
-                <span [class.text-red-600]="post.likedByCurrentUser" class="text-gray-600 font-medium">{{ post.likeCount || 0 }}</span>
-              </button>
+              </div>
+
+              <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" [src]="resolveMediaUrl(post.mediaUrl)" alt="Post" class="w-full h-auto max-h-[600px] object-contain">
+              <video *ngIf="post.type === 'VIDEO' && post.mediaUrl" [src]="resolveMediaUrl(post.mediaUrl)" controls class="w-full h-auto max-h-[600px]"></video>
             </div>
 
-            <!-- Ações do autor -->
-            <div class="mt-2 flex space-x-2" *ngIf="canEditPost(post)">
-              <a class="px-3 py-1 text-sm rounded bg-yellow-500 text-white hover:bg-yellow-600" [routerLink]="['/edit-post', post.id]">Editar</a>
-              <button class="px-3 py-1 text-sm rounded bg-red-600 text-white hover:bg-red-700" (click)="deletePost(post.id)">Excluir</button>
-            </div>
+            <!-- Interações -->
+            <div class="p-4">
+              <div class="flex items-center gap-4 mb-2">
+                <button (click)="toggleLike(post)" class="hover:opacity-60 transition-opacity">
+                  <svg [class.text-red-500]="post.likedByCurrentUser" [class.fill-current]="post.likedByCurrentUser" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                <button (click)="toggleComments(post.id)" class="hover:opacity-60 transition-opacity">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </button>
+              </div>
+              
+              <p class="font-bold text-sm mb-1">{{ post.likeCount || 0 }} curtidas</p>
+              <p class="text-sm">
+                <span class="font-bold mr-2">{{ album.author.username }}</span>
+                {{ post.caption }}
+              </p>
+              <p class="text-[10px] text-gray-400 uppercase mt-1">{{ post.createdAt | date:'shortDate' }}</p>
 
-            <!-- Moderação ADMIN -->
-            <div class="mt-2 flex space-x-2" *ngIf="isAdmin && !canEditPost(post)">
-              <a class="px-3 py-1 text-sm rounded bg-purple-600 text-white hover:bg-purple-700" [routerLink]="['/edit-post', post.id]">Editar (Admin)</a>
-              <button class="px-3 py-1 text-sm rounded bg-red-700 text-white hover:bg-red-800" (click)="adminDeletePost(post.id)">Excluir (Admin)</button>
-            </div>
-
-            <!-- Comentários -->
-            <div class="mt-3">
-              <button class="px-3 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300" (click)="toggleComments(post.id)">
-                {{ showComments[post.id] ? 'Ocultar comentários' : 'Mostrar comentários' }}
-              </button>
-
-              <div *ngIf="showComments[post.id]" class="mt-3 border-t pt-3">
-                <!-- Lista de comentários -->
-                <div *ngIf="commentsByPostId[post.id] && commentsByPostId[post.id].length > 0; else semComentarios">
-                  <div *ngFor="let comment of commentsByPostId[post.id]" class="mb-2">
-                    <p class="text-sm text-gray-800">{{ comment.text }}</p>
-                    <p class="text-xs text-gray-500">Por: {{ comment.author?.fullName || comment.author?.username }} • {{ comment.createdAt | date:'short' }}</p>
-                    <button *ngIf="canDeleteComment(comment)" class="text-xs text-red-600 hover:underline" (click)="deleteComment(comment.id, post.id)">Excluir</button>
-                  </div>
+              <!-- Seção de Comentários (Compacta) -->
+              <div class="mt-2" *ngIf="showComments[post.id]">
+                <div *ngFor="let comment of commentsByPostId[post.id]" class="text-sm mb-1">
+                  <span class="font-bold mr-2">{{ comment.author?.username }}</span> {{ comment.text }}
                 </div>
-                <ng-template #semComentarios>
-                  <p class="text-sm text-gray-500">Ainda não há comentários.</p>
-                </ng-template>
-
-                <!-- Adicionar comentário -->
-                <div class="mt-2" *ngIf="isAuthenticated; else precisaLogin">
-                  <input class="w-full border rounded p-2 text-sm" [(ngModel)]="newCommentText[post.id]" placeholder="Escreva um comentário..." />
-                  <button class="mt-2 px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700" (click)="addComment(post.id)">Enviar</button>
+                <div class="mt-2 flex gap-2">
+                  <input class="flex-1 text-sm border-none focus:ring-0 p-0" [(ngModel)]="newCommentText[post.id]" placeholder="Adicione um comentário..." (keyup.enter)="addComment(post.id)" />
+                  <button class="text-blue-500 font-bold text-sm" (click)="addComment(post.id)">Publicar</button>
                 </div>
-                <ng-template #precisaLogin>
-                  <p class="text-sm text-gray-500">Faça login para comentar.</p>
-                </ng-template>
               </div>
             </div>
           </div>
@@ -166,4 +134,47 @@
       </div>
     </div>
   </div>
+
+  <!-- Coluna Lateral (Sugestões - Somente Desktop) -->
+  <aside class="hidden lg:block w-[320px] pt-10">
+    <div class="sticky top-10">
+      <!-- Meu perfil rápido -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <img [src]="authService.resolveMediaUrl('')" class="w-12 h-12 rounded-full object-cover">
+          <div>
+            <p class="font-bold text-sm">{{ currentUserUsername }}</p>
+            <p class="text-gray-500 text-sm">Logado</p>
+          </div>
+        </div>
+        <button class="text-blue-500 font-bold text-xs" routerLink="/profile">Mudar</button>
+      </div>
+
+      <!-- Sugestões -->
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-gray-500 font-bold text-sm">Sugestões para você</span>
+        <button class="text-xs font-bold" routerLink="/explore">Ver tudo</button>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <div *ngFor="let user of suggestedUsers" class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <img [src]="authService.resolveMediaUrl(user.profilePictureUrl || '')" class="w-8 h-8 rounded-full object-cover">
+            <div>
+              <p class="font-bold text-xs">{{ user.username }}</p>
+              <p class="text-gray-400 text-[10px]">Novo no Fotoland</p>
+            </div>
+          </div>
+          <button (click)="toggleFollow(user.username)" class="text-blue-500 font-bold text-xs">
+            {{ isFollowingUser(user.username) ? 'Seguindo' : 'Seguir' }}
+          </button>
+        </div>
+      </div>
+
+      <footer class="mt-10 text-[10px] text-gray-300 uppercase tracking-widest">
+        &copy; 2026 Fotoland from Antonio Algmar
+      </footer>
+    </div>
+  </aside>
+</div>
 </div>

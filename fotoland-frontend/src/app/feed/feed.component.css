@@ -67,3 +67,31 @@
 .follow-button.following:hover {
   background-color: #e0e7ff;
 }
+
+/* Double Tap Heart Animation */
+.group-media {
+  cursor: pointer;
+  position: relative;
+}
+
+.double-tap-heart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.double-tap-heart.animate {
+  animation: heartFadeScale 0.8s ease-out;
+}
+
+@keyframes heartFadeScale {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  30% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
+  50% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+}

@@ -22,6 +22,9 @@ export class FeedComponent implements OnInit {
   currentUserId: number | null = null; // To store the ID of the currently logged-in user
   currentUserUsername: string | null = null;
   
+  // Suggestions
+  suggestedUsers: any[] = [];
+  
   // Follow-related
   followingMap: { [username: string]: boolean } = {};
 
@@ -40,10 +43,12 @@ export class FeedComponent implements OnInit {
         this.currentUserUsername = user.username;
         this.isAdmin = (user as any)?.role === 'ADMIN';
         this.loadAllAlbums(); // Load albums after getting user info to check follow status
+        this.loadSuggestions(); // Load people to follow
       },
       error: (err: any) => {
         console.error('Error fetching current user:', err);
         this.loadAllAlbums();
+        this.loadSuggestions();
       }
     });
   }
@@ -72,6 +77,19 @@ export class FeedComponent implements OnInit {
         this.error = 'Failed to load albums. Please try again later.';
         this.loading = false;
       }
+    });
+  }
+
+  loadSuggestions(): void {
+    this.authService.searchUsers('', 0, 10).subscribe({
+      next: (users) => {
+        // Filtrar a si mesmo e quem já segue (embora simplificado aqui para pegar alguns aleatórios)
+        this.suggestedUsers = users
+          .filter(u => u.username !== this.currentUserUsername)
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 5);
+      },
+      error: (err) => console.error('Error loading suggestions:', err)
     });
   }
 
@@ -214,6 +232,25 @@ export class FeedComponent implements OnInit {
   }
 
   // ❤️ Like methods
+  onDoubleTap(post: any): void {
+    if (!this.isAuthenticated) {
+      alert('Please login to like posts.');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // Se ainda não curtiu, curte agora
+    if (!post.likedByCurrentUser) {
+      this.toggleLike(post);
+    }
+
+    // Mostrar animação do coração
+    post.showHeart = true;
+    setTimeout(() => {
+      post.showHeart = false;
+    }, 800); // Mesmo tempo da animação CSS
+  }
+
   toggleLike(post: any): void {
     if (!this.isAuthenticated) {
       alert('Please login to like posts.');
