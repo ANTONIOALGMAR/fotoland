@@ -1,23 +1,65 @@
-/* General Container */
+/* Layout */
+:host {
+  display: block;
+  min-height: 100vh;
+  position: relative;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  background: transparent;
+}
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-}
-
-/* Background */
-:host {
-  display: block;
-  min-height: 100vh;
-  background: radial-gradient(circle at top, rgba(11, 94, 155, 0.75), rgba(4, 27, 52, 0.95)),
-              linear-gradient(180deg, #020617 0%, #050d22 100%);
-}
-
-.login-container {
   position: relative;
+  z-index: 2;
+}
+
+.background-slideshow {
+  position: absolute;
+  inset: 0;
   z-index: 1;
+  overflow: hidden;
+}
+
+.background-slideshow .slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.85);
+  opacity: 0;
+  animation: imageAnimation 30s infinite;
+  z-index: 0;
+}
+
+.background-slideshow .slide:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.background-slideshow .slide:nth-child(2) {
+  animation-delay: 10s;
+}
+
+.background-slideshow .slide:nth-child(3) {
+  animation-delay: 20s;
+}
+
+.background-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.6), rgba(5, 13, 34, 0.8));
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes imageAnimation {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  30% { opacity: 1; }
+  40% { opacity: 0; }
+  100% { opacity: 0; }
 }
 
 /* Glassmorphism Form */
