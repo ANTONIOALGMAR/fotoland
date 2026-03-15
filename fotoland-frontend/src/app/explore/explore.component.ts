@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth/services/auth.service';
 import { Post, User } from '../../../../api.models';
-import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-explore',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavHeaderComponent, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './explore.component.html',
   styleUrls: ['./explore.component.css']
 })

@@ -73,14 +73,24 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.notificationSubscriptions.add(this.notificationService.chatInviteCount$.subscribe(count => {
       this.chatInviteCount = count;
+      this.updateTotalNotifications();
     }));
     this.notificationSubscriptions.add(this.notificationService.chatMessageCount$.subscribe(count => {
       this.chatMessageCount = count;
+      this.updateTotalNotifications();
+    }));
+    this.notificationSubscriptions.add(this.notificationService.generalNotificationCount$.subscribe(count => {
+      this.generalNotificationCount = count;
+      this.updateTotalNotifications();
     }));
 
     this.notificationSubscriptions.add(this.notificationService.chatInvite$.subscribe(invite => {
       this.currentInvite = invite;
     }));
+  }
+
+  updateTotalNotifications(): void {
+    this.totalNotifications = this.chatInviteCount + this.chatMessageCount + this.generalNotificationCount;
   }
 
   startOnlineTracking(): void {
