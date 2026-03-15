@@ -1,2 +1,2 @@
 #!/bin/sh
-java -Dhibernate.dialect=org.hibernate.dialect.PostgreSQLDialect -jar app.jar
+exec java -Dserver.port=${PORT:-8080} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-dev} -jar app.jar
