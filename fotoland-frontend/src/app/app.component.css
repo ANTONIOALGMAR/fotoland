@@ -1,184 +1,195 @@
-/* Layout */
+/* Layout Global */
 .app-layout {
   display: flex;
   min-height: 100vh;
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-  background-color: #fefce8;
+  background-color: #fafafa;
+  color: #262626;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Botão Hamburguer */
-.hamburger {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
-  background: #065f46; /* Emerald Dark */
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 10px;
-  cursor: pointer;
-  z-index: 1100;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-.hamburger span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: #fff;
-  margin: 0 auto;
-}
-
+/* Sidebar Desktop */
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 240px;
+  width: 245px;
   height: 100vh;
-  background: #064e3b; /* Darker Emerald */
-  color: #ecfdf5;
-  padding: 20px 16px;
-  box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-  z-index: 1000;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-}
-
-.sidebar-header {
-  font-size: 1.4rem;
-  font-weight: 800;
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #34d399;
-}
-
-.collapse-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-links {
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 20px 12px;
+  border-right: 1px solid #dbdbdb;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  background: #fff;
+  z-index: 100;
 }
 
-/* Acordeão */
-.accordion-section {
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  padding-bottom: 4px;
+.sidebar-brand {
+  padding: 10px 12px 30px;
 }
-.accordion-header {
-  width: 100%;
-  text-align: left;
-  color: #d1fae5;
-  background: transparent;
-  border: none;
-  padding: 10px 12px;
-  border-radius: 8px;
-  cursor: pointer;
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-style: italic;
+}
+
+.nav-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-.accordion-header:hover {
-  background: rgba(255,255,255,0.08);
-}
-.accordion-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.25s ease;
-  background: rgba(0,0,0,0.1);
-  border-radius: 8px;
-}
-.accordion-content.open {
-  max-height: 300px;
-  margin-top: 4px;
-  margin-bottom: 8px;
-}
-
-.nav-link {
-  color: #a7f3d0;
-  text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  transition: all 0.2s;
-  display: block;
-  font-size: 0.875rem;
-}
-.nav-link:hover {
-  background: #10b981;
-  color: #fff;
-}
-
-.logout-btn {
-  margin-top: 20px;
-  width: 100%;
+  gap: 16px;
   padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: #ef4444;
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #262626;
+  font-size: 1rem;
   transition: background 0.2s;
 }
-.logout-btn:hover {
-  background: #dc2626;
+
+.nav-item:hover {
+  background: rgba(0, 0, 0, 0.05);
 }
 
-.content {
-  margin-left: 240px;
-  width: calc(100% - 240px);
-  transition: margin-left 0.25s ease, width 0.25s ease;
+.nav-item.active {
+  font-weight: 700;
+}
+
+.nav-item i {
+  font-size: 1.5rem;
+}
+
+/* Icons (usando emojis temporariamente como placeholders ou classes que mapearemos para SVG) */
+[class^="icon-"] {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+}
+
+.icon-home::before { content: "🏠"; }
+.icon-search::before { content: "🔍"; }
+.icon-plus::before { content: "➕"; }
+.icon-bell::before { content: "🔔"; }
+.icon-message::before { content: "💬"; }
+.icon-user::before { content: "👤"; }
+.icon-logout::before { content: "🚪"; }
+
+.create-btn {
+  margin: 10px 0;
+}
+
+.sidebar-footer {
+  padding-top: 20px;
+  border-top: 1px solid #efefef;
+}
+
+.logout-link {
+  width: 100%;
+  background: none;
+  border: none;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  color: #ed4956;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.logout-link:hover {
+  background: #fff1f2;
+}
+
+/* Bottom Nav Mobile */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background: #fff;
+  border-top: 1px solid #dbdbdb;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+}
+
+.bottom-item {
+  color: #262626;
+  text-decoration: none;
+  font-size: 1.4rem;
+}
+
+.plus-circle {
+  background: #262626;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+/* Content Area */
+.content {
+  margin-left: 245px;
+  flex: 1;
   min-height: 100vh;
 }
-.content.expanded {
+
+.content.no-sidebar {
   margin-left: 0;
-  width: 100%;
 }
 
 .content-wrapper {
-  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
 }
 
-/* Footer */
-.app-footer {
-  margin-top: auto;
-  padding: 24px;
-  text-align: center;
-  background: #064e3b;
-  color: #6ee7b7;
-  font-size: 0.85rem;
-  border-top: 4px solid #10b981;
+/* Badge Notificações */
+.icon-wrapper {
+  position: relative;
 }
 
-.badge {
-  display: inline-block;
-  background-color: #f87171;
-  color: white;
-  border-radius: 9999px;
-  padding: 1px 6px;
-  font-size: 0.65rem;
-  margin-left: 4px;
-  min-width: 16px;
-  text-align: center;
+.badge-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background: #ed4956;
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+  .bottom-nav {
+    display: flex;
+  }
+  .content {
+    margin-left: 0 !important;
+    padding-bottom: 50px;
+  }
+  .content-wrapper {
+    padding: 10px;
+  }
 }
