@@ -28,10 +28,12 @@
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: brightness(0.85);
+  filter: brightness(0.75);
   opacity: 0;
-  animation: imageAnimation 30s infinite;
+  animation: imageAnimation 18s linear infinite;
   z-index: 0;
+  transform: scale(1.1);
+  transition: transform 6s ease-out;
 }
 
 .background-slideshow .slide:nth-child(1) {
@@ -39,26 +41,27 @@
 }
 
 .background-slideshow .slide:nth-child(2) {
-  animation-delay: 10s;
+  animation-delay: 6s;
 }
 
 .background-slideshow .slide:nth-child(3) {
-  animation-delay: 20s;
+  animation-delay: 12s;
 }
 
 .background-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(2, 6, 23, 0.6), rgba(5, 13, 34, 0.8));
+  background: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%),
+              linear-gradient(180deg, rgba(2, 6, 23, 0.4), rgba(5, 13, 34, 0.6));
   z-index: 2;
   pointer-events: none;
 }
 
 @keyframes imageAnimation {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  30% { opacity: 1; }
-  40% { opacity: 0; }
+  0% { opacity: 0; transform: scale(1.1); }
+  5% { opacity: 1; }
+  33.33% { opacity: 1; transform: scale(1); }
+  38.33% { opacity: 0; }
   100% { opacity: 0; }
 }
 
