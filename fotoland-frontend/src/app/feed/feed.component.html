@@ -75,10 +75,13 @@
       </div>
       <div class="flex justify-between items-center mb-1">
         <p class="text-sm text-gray-600">By: {{ album.author.fullName }} ({{ album.author.username }})</p>
-        <button *ngIf="album.author.username !== currentUserUsername" (click)="toggleFollow(album.author.username)" 
-          class="text-xs font-bold px-3 py-1 rounded-full border transition-all"
-          [ngClass]="followingMap[album.author.username] ? 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-red-50 hover:text-red-600 hover:border-red-200' : 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700'">
-          {{ followingMap[album.author.username] ? 'Seguindo' : 'Seguir' }}
+        <button *ngIf="album.author.username !== currentUserUsername"
+          type="button"
+          (click)="toggleFollow(album.author.username)"
+          class="follow-button text-xs font-bold px-3 py-1 rounded-full transition-all"
+          [class.following]="isFollowingUser(album.author.username)"
+          [attr.aria-pressed]="isFollowingUser(album.author.username)">
+          {{ isFollowingUser(album.author.username) ? 'Seguindo' : 'Seguir' }}
         </button>
       </div>
       <p class="text-gray-700 mb-2">{{ album.description }}</p>

@@ -1,0 +1,17 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Retro gradient background">
+  <defs>
+    <linearGradient id="gradient1" x1="0" y1="0" x2="1920" y2="1080">
+      <stop offset="0%" stop-color="#0d1b2a" />
+      <stop offset="60%" stop-color="#1b3255" />
+      <stop offset="100%" stop-color="#253b6c" />
+    </linearGradient>
+    <radialGradient id="radial1" cx="75%" cy="20%" r="55%">
+      <stop offset="0%" stop-color="#78d1ff" stop-opacity="0.45" />
+      <stop offset="70%" stop-color="#0780d1" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#gradient1)" />
+  <ellipse cx="1420" cy="320" rx="520" ry="520" fill="url(#radial1)" />
+  <circle cx="320" cy="840" r="360" fill="rgba(255, 255, 255, 0.12)" />
+  <circle cx="1180" cy="900" r="260" fill="rgba(255, 255, 255, 0.08)" />
+</svg>

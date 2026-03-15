@@ -81,17 +81,19 @@ export class FeedComponent implements OnInit {
       return;
     }
 
-    if (this.followingMap[username]) {
-      this.authService.unfollow(username).subscribe({
-        next: () => this.followingMap[username] = false,
-        error: (err) => console.error('Error unfollowing:', err)
-      });
-    } else {
-      this.authService.follow(username).subscribe({
-        next: () => this.followingMap[username] = true,
-        error: (err) => console.error('Error following:', err)
-      });
-    }
+    const currentlyFollowing = this.isFollowingUser(username);
+    const request = currentlyFollowing
+      ? this.authService.unfollow(username)
+      : this.authService.follow(username);
+
+    request.subscribe({
+      next: () => {
+        this.followingMap[username] = !currentlyFollowing;
+      },
+      error: (err) => {
+        console.error(`Error ${currentlyFollowing ? 'unfollowing' : 'following'}:`, err);
+      }
+    });
   }
 
   isYouTubeVideo(url: string): boolean {
@@ -111,6 +113,9 @@ export class FeedComponent implements OnInit {
   // Resolver media URL via serviço
   resolveMediaUrl(url: string): string {
     return this.authService.resolveMediaUrl(url);
+  }
+  isFollowingUser(username: string): boolean {
+    return !!this.followingMap[username];
   }
 
   canEditPost(post: any): boolean {

@@ -61,9 +61,11 @@
         </div>
         
         <div class="follow-btn-wrapper">
-          <button (click)="toggleFollow(u.username)" 
-            class="follow-btn-custom transition-all"
-            [ngClass]="followingMap[u.username] ? 'follow-btn-outline' : 'follow-btn-blue'">
+          <button type="button"
+            (click)="toggleFollow(u.username)"
+            class="follow-btn-custom"
+            [class.following]="followingMap[u.username]"
+            [attr.aria-pressed]="followingMap[u.username]">
             {{ followingMap[u.username] ? ('COMMON.FOLLOWING' | translate) : ('COMMON.FOLLOW' | translate) }}
           </button>
         </div>

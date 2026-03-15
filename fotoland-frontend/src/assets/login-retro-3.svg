@@ -1,0 +1,17 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stylized retro background">
+  <defs>
+    <linearGradient id="gradient3" x1="0" y1="540" x2="1920" y2="540">
+      <stop offset="0%" stop-color="#0c1427" />
+      <stop offset="70%" stop-color="#14294d" />
+      <stop offset="100%" stop-color="#1f3a6f" />
+    </linearGradient>
+    <radialGradient id="radial3" cx="60%" cy="60%" r="40%">
+      <stop offset="0%" stop-color="#7c7cd6" stop-opacity="0.45" />
+      <stop offset="80%" stop-color="#0c1427" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#gradient3)" />
+  <path d="M0 300C320 180 620 260 900 180C1180 100 1460 220 1920 160V1080H0Z" fill="rgba(255, 255, 255, 0.05)" />
+  <circle cx="960" cy="540" r="420" fill="url(#radial3)" />
+  <rect x="140" y="700" width="900" height="240" rx="120" fill="rgba(255, 255, 255, 0.05)" />
+</svg>
