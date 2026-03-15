@@ -3,6 +3,7 @@ package com.fotoland.backend.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,7 +69,7 @@ public class JwtUtil {
         byte[] keyBytes;
         try {
             keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | DecodingException e) {
             // SECRET_KEY não está em Base64, usa bytes brutos
             keyBytes = SECRET_KEY.getBytes(java.nio.charset.StandardCharsets.UTF_8);
         }

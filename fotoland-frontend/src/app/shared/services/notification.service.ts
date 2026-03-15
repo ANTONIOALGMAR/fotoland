@@ -82,31 +82,27 @@ export class NotificationService implements OnDestroy {
       return;
     }
 
-    const token = this.authService.getToken() || '';
     const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
     const wsBase = this.BASE_URL.replace(/^http(s)?:/, `${scheme}:`);
     const url = `${wsBase}/ws-native`;
 
     this.client = new Client({
       webSocketFactory: () => new WebSocket(url),
-      connectHeaders: token ? { Authorization: `Bearer ${token}` } : {},
+      connectHeaders: {},
       debug: (str) => console.debug('[STOMP Notification]', str),
       reconnectDelay: 5000,
     });
 
     this.client.onConnect = () => {
       console.log('Connected to Notification WebSocket');
-      const username = this.authService.getUsernameFromToken();
-      if (username) {
-        this.notificationSubscription = this.client!.subscribe(`/user/queue/notifications`, (message: IMessage) => {
-          try {
-            const notification: Notification = JSON.parse(message.body);
-            this.handleNotification(notification);
-          } catch (e) {
-            console.error('Error parsing notification:', e);
-          }
-        });
-      }
+      this.notificationSubscription = this.client!.subscribe(`/user/queue/notifications`, (message: IMessage) => {
+        try {
+          const notification: Notification = JSON.parse(message.body);
+          this.handleNotification(notification);
+        } catch (e) {
+          console.error('Error parsing notification:', e);
+        }
+      });
     };
 
     this.client.onStompError = (frame) => {
@@ -180,4 +176,3 @@ export class NotificationService implements OnDestroy {
     this.generalNotificationCountSubject.next(0);
   }
 }
-

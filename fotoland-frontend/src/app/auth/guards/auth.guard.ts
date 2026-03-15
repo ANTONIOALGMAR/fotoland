@@ -12,17 +12,11 @@ export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): Observable<boolean | UrlTree> {
-    const token = this.authService.getToken();
-    if (!token) {
-      return of(this.router.createUrlTree(['/login']));
-    }
-
-    // Valida o token chamando o backend. Se falhar, redireciona para login
+    // Cookie HttpOnly: valida chamando o backend. Se falhar, redireciona para login.
     return this.authService.getMe().pipe(
       map(() => true),
       catchError(() => {
-        // Evitar navegação ativa dentro do guard; apenas limpar token e retornar UrlTree
-        localStorage.removeItem('jwt_token');
+        // Evitar navegação ativa dentro do guard; apenas retornar UrlTree
         return of(this.router.createUrlTree(['/login']));
       })
     );

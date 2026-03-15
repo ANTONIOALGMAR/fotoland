@@ -4,6 +4,7 @@ import com.fotoland.backend.service.UserDetailsServiceImpl;
 import com.fotoland.backend.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.NonNull;
@@ -18,6 +19,8 @@ import java.io.IOException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+    private static final String JWT_COOKIE_NAME = "fotoland_jwt";
+
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
 
@@ -31,16 +34,31 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain chain)
             throws ServletException, IOException {
 
-        final String authorizationHeader = request.getHeader("Authorization");
-
         String username = null;
         String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
+        // Preferir cookie HttpOnly para mitigar XSS; manter fallback por header para compatibilidade.
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (JWT_COOKIE_NAME.equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (jwt == null || jwt.isBlank()) {
+            final String authorizationHeader = request.getHeader("Authorization");
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                jwt = authorizationHeader.substring(7);
+            }
+        }
+
+        if (jwt != null && !jwt.isBlank()) {
             try {
                 // Evita parse de tokens malformados
-                if (jwt != null && jwt.contains(".") && jwt.split("\\.").length == 3) {
+                if (jwt.contains(".") && jwt.split("\\.").length == 3) {
                     username = jwtUtil.extractUsername(jwt);
                 }
             } catch (Exception ignored) {
@@ -72,8 +90,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
         // Não filtra endpoints públicos
         return path.startsWith("/api/auth/")
-                || path.equals("/api/upload")
-                || path.startsWith("/api/upload")
                 || path.startsWith("/uploads/");
     }
 }

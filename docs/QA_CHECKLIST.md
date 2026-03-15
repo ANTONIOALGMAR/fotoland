@@ -2,8 +2,8 @@
 
 - Autenticação:
   - Registrar novo usuário e validar resposta 201.
-  - Login e captura do token JWT.
-  - `/api/user/me` retorna perfil com token válido.
+  - Login e validar cookie `fotoland_jwt` (HttpOnly) no `Set-Cookie`.
+  - `/api/user/me` retorna perfil com cookie válido.
 
 - Álbuns:
   - Criar, listar meus, listar públicos.
@@ -20,9 +20,9 @@
   - Curtir, descurtir, contar likes.
 
 - Upload:
-  - Enviar `multipart/form-data` com `dummy.txt` e validar URL retornada.
+  - Enviar `multipart/form-data` autenticado e validar URL retornada.
 
 - Frontend:
   - Cadastro, login, navegação para Home.
   - Criar álbum e post, visualizar feed, curtir/ comentar.
-  - Interceptor não envia `Authorization` para `/api/auth/*` e `/api/upload`.
+  - Interceptor não envia `Authorization` (auth via cookie) e usa `withCredentials` para o backend.

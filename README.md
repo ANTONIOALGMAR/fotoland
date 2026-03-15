@@ -14,7 +14,7 @@ Fotoland é uma plataforma social moderna para compartilhamento de fotos e víde
 
 ### 🔐 Segurança & Autenticação
 - **Proteção de Rotas:** Acesso restrito a usuários autenticados via `AuthGuard`.
-- **JWT (JSON Web Token):** Autenticação segura com injeção de token via `AuthInterceptor`.
+- **JWT (JSON Web Token):** Autenticação via cookie HttpOnly (mitiga XSS). O `AuthInterceptor` envia `withCredentials` para o backend.
 - **Gestão de Sessão:** Logout seguro com limpeza de tokens e redirecionamento.
 
 ### 📱 Experiência do Usuário (UI/UX)

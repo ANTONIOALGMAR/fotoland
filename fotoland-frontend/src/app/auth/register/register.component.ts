@@ -110,15 +110,9 @@ export class RegisterComponent implements OnInit {
             username: this.user.username,
             password: this.user.password
           }).subscribe({
-            next: (resp) => {
-              if (resp.jwt) {
-                localStorage.setItem('jwt_token', resp.jwt);
-                alert('✅ Conta criada e login efetuado!');
-                this.router.navigate(['/home']);
-              } else {
-                alert('⚠️ Registro ok, mas falha ao logar automaticamente. Faça login manualmente.');
-                this.router.navigate(['/login']);
-              }
+            next: () => {
+              alert('✅ Conta criada e login efetuado!');
+              this.router.navigate(['/home']);
               this.isSubmitting = false;
             },
             error: (err) => {

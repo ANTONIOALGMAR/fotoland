@@ -1,6 +1,7 @@
 package com.fotoland.backend.config;
 
 import com.fotoland.backend.websocket.JwtChannelInterceptor;
+import com.fotoland.backend.websocket.JwtHandshakeInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -14,9 +15,11 @@ import org.springframework.lang.NonNull;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final JwtChannelInterceptor jwtChannelInterceptor;
+    private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
 
-    public WebSocketConfig(JwtChannelInterceptor jwtChannelInterceptor) {
+    public WebSocketConfig(JwtChannelInterceptor jwtChannelInterceptor, JwtHandshakeInterceptor jwtHandshakeInterceptor) {
         this.jwtChannelInterceptor = jwtChannelInterceptor;
+        this.jwtHandshakeInterceptor = jwtHandshakeInterceptor;
     }
 
     @Override
@@ -30,6 +33,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 "https://*.onrender.com",
                 "http://localhost:*"
             )
+            .addInterceptors(jwtHandshakeInterceptor)
             .withSockJS();
 
         // Endpoint nativo WebSocket (sem SockJS)
@@ -40,7 +44,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 "https://fotoland-frontend.onrender.com",
                 "https://*.onrender.com",
                 "http://localhost:*"
-            );
+            )
+            .addInterceptors(jwtHandshakeInterceptor);
     }
 
     @Override

@@ -47,13 +47,8 @@ export class LoginComponent implements OnInit {
     this.errorMessage = null;
     this.loading = true;
     this.authService.login(this.credentials).subscribe({
-      next: (response) => {
-        if (response.jwt) {
-          localStorage.setItem('jwt_token', response.jwt);
-          this.router.navigate(['/home']);
-        } else {
-          this.errorMessage = '⚠️ Falha no login: token não recebido do servidor';
-        }
+      next: () => {
+        this.router.navigate(['/home']);
         this.loading = false;
       },
       error: (error) => {

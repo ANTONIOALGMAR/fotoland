@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.lang.NonNull;
 
 import java.security.Principal;
+import java.util.Map;
 
 @Component
 public class JwtChannelInterceptor implements ChannelInterceptor {
@@ -29,9 +30,22 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
         if (StompCommand.CONNECT.equals(accessor.getCommand()) || StompCommand.SEND.equals(accessor.getCommand())) {
+            String token = null;
+
             String authHeader = accessor.getFirstNativeHeader("Authorization");
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                String token = authHeader.substring(7);
+                token = authHeader.substring(7);
+            }
+
+            if ((token == null || token.isBlank())) {
+                Map<String, Object> attrs = accessor.getSessionAttributes();
+                Object jwtAttr = attrs != null ? attrs.get("jwt") : null;
+                if (jwtAttr instanceof String s && !s.isBlank()) {
+                    token = s;
+                }
+            }
+
+            if (token != null && !token.isBlank()) {
                 try {
                     String username = jwtUtil.extractUsername(token);
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);

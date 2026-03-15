@@ -2,6 +2,7 @@ package com.fotoland.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.fotoland.backend.filter.ApiCsrfFilter;
 import com.fotoland.backend.filter.JwtRequestFilter;
 import com.fotoland.backend.service.UserDetailsServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,10 +25,12 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final ApiCsrfFilter apiCsrfFilter;
     private final JwtRequestFilter jwtRequestFilter;
     private final UserDetailsServiceImpl userDetailsService;
 
-    public SecurityConfig(JwtRequestFilter jwtRequestFilter, UserDetailsServiceImpl userDetailsService) {
+    public SecurityConfig(ApiCsrfFilter apiCsrfFilter, JwtRequestFilter jwtRequestFilter, UserDetailsServiceImpl userDetailsService) {
+        this.apiCsrfFilter = apiCsrfFilter;
         this.jwtRequestFilter = jwtRequestFilter;
         this.userDetailsService = userDetailsService;
     }
@@ -52,6 +55,7 @@ public class SecurityConfig {
                 .requestMatchers("/ws/**", "/ws-native/**").permitAll()
                 .anyRequest().authenticated()
             )
+            .addFilterBefore(apiCsrfFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -80,8 +84,8 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // Aumentando a força do BCrypt para 10 (padrão recomendado para produção).
-        return new BCryptPasswordEncoder(10);
+        // Aumentando a força do BCrypt.
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean

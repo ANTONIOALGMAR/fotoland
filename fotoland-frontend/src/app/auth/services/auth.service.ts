@@ -31,7 +31,24 @@ export class AuthService {
   isAuthenticated$ = this._isAuthenticated.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
-    this._isAuthenticated.next(!!this.getToken());
+    // Cookie HttpOnly nao e acessivel via JS; valida autenticacao via backend.
+    this.refreshAuthState();
+  }
+
+  refreshAuthState(): void {
+    this.getMe().subscribe({
+      next: () => this._isAuthenticated.next(true),
+      error: () => this._isAuthenticated.next(false),
+    });
+  }
+
+  isAuthenticatedNow(): boolean {
+    return this._isAuthenticated.getValue();
+  }
+
+  handleAuthExpired(): void {
+    this._isAuthenticated.next(false);
+    this.router.navigate(['/login']);
   }
 
   // 📸 Upload de imagem de perfil
@@ -54,51 +71,31 @@ export class AuthService {
 
   // 👤 Registro e login
   register(user: Partial<User>): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/register`, user);
-  }
-
-  login(credentials: any): Observable<{ jwt: string }> {
-    return this.http.post<{ jwt: string }>(`${this.apiUrl}/login`, credentials).pipe(
-      map(response => {
-        this.setToken(response.jwt);
-        return response;
+    return this.http.post<User>(`${this.apiUrl}/register`, user).pipe(
+      map((u) => {
+        this._isAuthenticated.next(true);
+        return u;
       })
     );
   }
 
-  private setToken(token: string): void {
-    localStorage.setItem('jwt_token', token);
-    this._isAuthenticated.next(true);
-  }
-
-  getToken(): string | null {
-      const raw = localStorage.getItem('jwt_token');
-      if (!raw) return null;
-      const token = raw.trim();
-      if (token === '' || token === 'undefined' || token === 'null') return null;
-      return token;
+  login(credentials: any): Observable<void> {
+    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
+      map(() => {
+        this._isAuthenticated.next(true);
+        return void 0;
+      })
+    );
   }
 
   logout(): void {
-    localStorage.removeItem('jwt_token');
+    this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
+      next: () => {},
+      error: () => {},
+      complete: () => {},
+    });
     this._isAuthenticated.next(false);
     this.router.navigate(['/login']);
-  }
-
-  getUsernameFromToken(): string {
-    const token = this.getToken();
-    if (!token) return 'me';
-    try {
-      const parts = token.split('.');
-      if (parts.length !== 3) return 'me';
-      // Handle URL-safe base64
-      const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-      const padded = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, '=');
-      const payload = JSON.parse(atob(padded));
-      return payload?.username || payload?.sub || 'me';
-    } catch {
-      return 'me';
-    }
   }
 
   getMe(): Observable<User> {

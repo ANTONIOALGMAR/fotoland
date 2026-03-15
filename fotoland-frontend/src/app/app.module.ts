@@ -8,6 +8,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { LoginComponent } from './auth/login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AuthInterceptor } from './auth/services/auth.interceptor';
+import { HttpErrorInterceptor } from './shared/services/http-error.interceptor';
 import { NavHeaderComponent } from './shared/nav-header/nav-header.component';
 import { ChatInviteAlertComponent } from './shared/components/chat-invite-alert/chat-invite-alert.component';
 
@@ -43,7 +44,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     })
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

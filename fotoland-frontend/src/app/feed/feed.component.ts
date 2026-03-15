@@ -151,7 +151,7 @@ export class FeedComponent implements OnInit {
 
   // Comment methods
   get isAuthenticated(): boolean {
-    return !!this.authService.getToken();
+    return this.authService.isAuthenticatedNow();
   }
 
   toggleComments(postId: number): void {

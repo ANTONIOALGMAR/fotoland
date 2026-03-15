@@ -40,8 +40,6 @@ export class ChatService {
         return;
       }
 
-      const token = localStorage.getItem('jwt_token') || '';
-
       // Escolhe o esquema ws/wss baseado no protocolo atual
       const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
       const wsBase = this.BASE_URL.replace(/^http(s)?:/, `${scheme}:`);
@@ -49,7 +47,7 @@ export class ChatService {
 
       this.client = new Client({
         webSocketFactory: () => new WebSocket(url),
-        connectHeaders: token ? { Authorization: `Bearer ${token}` } : {},
+        connectHeaders: {},
         debug: (str) => console.debug('[STOMP]', str),
         reconnectDelay: 5000,
       });
@@ -129,47 +127,30 @@ export class ChatService {
 
   send(content: string): void {
     if (!this.client || !this.client.connected) return;
-    const token = localStorage.getItem('jwt_token') || '';
     const payload: ChatMsg = {
-      sender: this.getUsernameFromToken(),
+      sender: 'me',
       content,
       timestamp: Date.now(),
     };
     this.client.publish({
       destination: '/app/chat.send',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      headers: {},
       body: JSON.stringify(payload),
     });
   }
 
   sendToRoom(roomId: number, content: string): void {
     if (!this.client || !this.client.connected) return;
-    const token = localStorage.getItem('jwt_token') || '';
     const payload: ChatMsg = {
-      sender: this.getUsernameFromToken(),
+      sender: 'me',
       content,
       timestamp: Date.now(),
       roomId
     };
     this.client.publish({
       destination: '/app/chat.room.send',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      headers: {},
       body: JSON.stringify(payload),
     });
-  }
-
-  getUsernameFromToken(): string {
-    const token = localStorage.getItem('jwt_token') || '';
-    try {
-      const parts = token.split('.');
-      if (parts.length !== 3) return 'me';
-      // Handle URL-safe base64
-      const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-      const padded = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, '=');
-      const payload = JSON.parse(atob(padded));
-      return payload?.username || payload?.sub || 'me';
-    } catch {
-      return 'me';
-    }
   }
 }

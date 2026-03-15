@@ -31,7 +31,10 @@ export class PrivateChatComponent implements OnInit, OnDestroy {
   constructor(private chat: ChatService, public auth: AuthService, private router: Router, private location: Location) {}
 
   ngOnInit(): void {
-    this.currentUsername = this.chat.getUsernameFromToken();
+    this.auth.getMe().subscribe({
+      next: (u: any) => this.currentUsername = u?.username || u?.email || '',
+      error: () => this.currentUsername = '',
+    });
     this.auth.getMyRooms().subscribe({
       next: (memberships) => {
         this.rooms = memberships.map(m => ({ id: m.room.id, room: m.room }));

@@ -26,7 +26,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   constructor(private chat: ChatService, private router: Router, private location: Location, public authService: AuthService) {}
 
   async ngOnInit() {
-    this.currentUsername = this.chat.getUsernameFromToken();
+    this.authService.getMe().subscribe({
+      next: (u: any) => this.currentUsername = u?.username || u?.email || '',
+      error: () => this.currentUsername = '',
+    });
     this.connecting = true;
     try {
       await this.chat.connect((msg) => {

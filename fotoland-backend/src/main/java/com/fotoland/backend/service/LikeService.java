@@ -3,6 +3,7 @@ package com.fotoland.backend.service;
 import com.fotoland.backend.model.*;
 import com.fotoland.backend.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LikeService {
@@ -48,6 +49,7 @@ public class LikeService {
         return postLikeRepository.countByPostId(postId);
     }
 
+    @Transactional
     public long unlikePost(Long postId, String username) {
         User user = userService.findByUsername(username);
         postLikeRepository.deleteByPostIdAndUserId(postId, user.getId());
@@ -83,6 +85,7 @@ public class LikeService {
         return commentLikeRepository.countByCommentId(commentId);
     }
 
+    @Transactional
     public long unlikeComment(Long commentId, String username) {
         User user = userService.findByUsername(username);
         commentLikeRepository.deleteByCommentIdAndUserId(commentId, user.getId());

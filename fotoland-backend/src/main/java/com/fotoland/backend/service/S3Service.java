@@ -40,6 +40,18 @@ public class S3Service {
     }
 
     private String generateFileName(String originalFileName) {
-        return UUID.randomUUID().toString() + "_" + originalFileName;
+        String base = (originalFileName == null || originalFileName.isBlank()) ? "file" : originalFileName;
+        // Remove caminho (alguns browsers/clientes podem enviar "C:\\path\\file.ext").
+        base = base.replace("\\", "/");
+        int lastSlash = base.lastIndexOf('/');
+        if (lastSlash >= 0) {
+            base = base.substring(lastSlash + 1);
+        }
+        // Normaliza caracteres para evitar keys estranhas e limitar tamanho.
+        base = base.replaceAll("[^a-zA-Z0-9._-]+", "_");
+        if (base.length() > 100) {
+            base = base.substring(base.length() - 100);
+        }
+        return UUID.randomUUID().toString() + "_" + base;
     }
 }
