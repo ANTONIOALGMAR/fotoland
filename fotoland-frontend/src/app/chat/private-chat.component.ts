@@ -137,6 +137,33 @@ export class PrivateChatComponent implements OnInit, OnDestroy {
   voltar(): void {
     this.location.back();
   }
+
+  /**
+   * Verifica se o conteúdo da mensagem é uma URL de imagem.
+   */
+  isImageUrl(content: string): boolean {
+    if (!content) return false;
+    return content.match(/\.(jpeg|jpg|gif|png|webp|svg)$/) != null || content.includes('/uploads/');
+  }
+
+  /**
+   * Faz o upload de um arquivo selecionado no chat e envia a URL como mensagem.
+   */
+  onChatFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (!file || !this.selectedRoomId) return;
+
+    this.auth.uploadProfilePicture(file).subscribe({
+      next: (res: any) => {
+        // Envia a URL da imagem como conteúdo da mensagem via WebSocket
+        this.chat.sendToRoom(this.selectedRoomId!, res.fileUrl);
+        // Recarrega mensagens para garantir sincronia (opcional se o socket já fizer o push)
+        setTimeout(() => this.joinRoom(this.selectedRoomId!), 500);
+      },
+      error: (err: any) => console.error('Error uploading chat image:', err)
+    });
+  }
+
   invite(): void {
       if (!this.selectedRoomId) return;
       const username = (this.inviteUsername || '').trim();

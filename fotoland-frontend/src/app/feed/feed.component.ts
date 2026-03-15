@@ -16,43 +16,63 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrls: ['./feed.component.css']
 })
 export class FeedComponent implements OnInit {
+  /** Lista de álbuns/posts exibidos no feed global */
   albums: any[] = [];
+  /** Lista de stories ativos */
+  stories: any[] = [];
+  /** Story atualmente em exibição no player */
+  activeStory: any = null;
+  /** Flag para indicar upload de story em andamento */
+  isUploadingStory: boolean = false;
+  /** Flag de controle de carregamento da interface */
   loading: boolean = true;
+  /** Armazena mensagens de erro para exibição ao usuário */
   error: string | null = null;
-  currentUserId: number | null = null; // To store the ID of the currently logged-in user
+  /** ID do usuário autenticado para controle de permissões de edição */
+  currentUserId: number | null = null;
+  /** Nome de usuário autenticado para lógica de follow e sugestões */
   currentUserUsername: string | null = null;
   
-  // Suggestions
+  /** Lista de usuários sugeridos para exibição na sidebar */
   suggestedUsers: any[] = [];
   
-  // Follow-related
+  /** Mapeamento de status de seguimento (username -> booleano) para otimização de renderização */
   followingMap: { [username: string]: boolean } = {};
 
-  // Comment-related properties
+  /** Armazenamento de comentários por ID de post para lazy loading */
   commentsByPostId: { [postId: number]: any[] } = {};
+  /** Texto temporário do novo comentário por post */
   newCommentText: { [postId: number]: string } = {};
+  /** Controle de visibilidade da seção de comentários por post */
   showComments: { [postId: number]: boolean } = {};
+  /** Indica se o usuário possui papel de administrador */
   isAdmin: boolean = false;
 
   constructor(private authService: AuthService, private router: Router, private sanitizer: DomSanitizer, private location: Location) { }
 
   ngOnInit(): void {
+    // Busca informações do usuário logado antes de carregar o feed
     this.authService.getMe().subscribe({
       next: (user) => {
         this.currentUserId = user.id;
         this.currentUserUsername = user.username;
         this.isAdmin = (user as any)?.role === 'ADMIN';
-        this.loadAllAlbums(); // Load albums after getting user info to check follow status
-        this.loadSuggestions(); // Load people to follow
+        this.loadAllAlbums(); 
+        this.loadSuggestions();
+        this.loadStories();
       },
       error: (err: any) => {
         console.error('Error fetching current user:', err);
         this.loadAllAlbums();
         this.loadSuggestions();
+        this.loadStories();
       }
     });
   }
 
+  /**
+   * Obtém todos os álbuns disponíveis e verifica se o usuário já segue os autores.
+   */
   loadAllAlbums(): void {
     this.loading = true;
     this.error = null;
@@ -81,7 +101,7 @@ export class FeedComponent implements OnInit {
   }
 
   loadSuggestions(): void {
-    this.authService.searchUsers('', 0, 10).subscribe({
+    this.authService.getAllUsers().subscribe({
       next: (users) => {
         // Filtrar a si mesmo e quem já segue (embora simplificado aqui para pegar alguns aleatórios)
         this.suggestedUsers = users
@@ -91,6 +111,67 @@ export class FeedComponent implements OnInit {
       },
       error: (err) => console.error('Error loading suggestions:', err)
     });
+  }
+
+  /**
+   * Carrega os stories ativos do backend.
+   */
+  loadStories(): void {
+    this.authService.getActiveStories().subscribe({
+      next: (res) => this.stories = res,
+      error: (err) => console.error('Error loading stories:', err)
+    });
+  }
+
+  /**
+   * Gerencia a seleção de arquivo para story.
+   * Faz o upload da imagem e depois registra o story no backend.
+   */
+  onStoryFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (!file) return;
+
+    this.isUploadingStory = true;
+    this.authService.uploadProfilePicture(file).subscribe({
+      next: (res: any) => {
+        const newStory = {
+          mediaUrl: res.fileUrl,
+          caption: ''
+        };
+        this.authService.postStory(newStory).subscribe({
+          next: () => {
+            this.isUploadingStory = false;
+            this.loadStories();
+          },
+          error: (err: any) => {
+            this.isUploadingStory = false;
+            console.error('Error posting story:', err);
+          }
+        });
+      },
+      error: (err: any) => {
+        this.isUploadingStory = false;
+        console.error('Error uploading story file:', err);
+      }
+    });
+  }
+
+  /**
+   * Abre o player de story em tela cheia.
+   */
+  openStory(story: any): void {
+    this.activeStory = story;
+    // Fecha automaticamente após 5 segundos (simulando player)
+    setTimeout(() => {
+      if (this.activeStory === story) this.closeStory();
+    }, 5000);
+  }
+
+  /**
+   * Fecha o player de story.
+   */
+  closeStory(): void {
+    this.activeStory = null;
   }
 
   toggleFollow(username: string): void {

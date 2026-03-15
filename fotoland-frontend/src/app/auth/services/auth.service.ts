@@ -326,4 +326,13 @@ export class AuthService {
   getFollowStats(username: string): Observable<{ followersCount: number, followingCount: number }> {
     return this.http.get<{ followersCount: number, followingCount: number }>(`${this.BASE_URL}/api/users/${username}/follow-stats`);
   }
+
+  // 📖 Stories
+  getActiveStories(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.BASE_URL}/api/stories`);
+  }
+
+  postStory(story: any): Observable<any> {
+    return this.http.post<any>(`${this.BASE_URL}/api/stories`, story);
+  }
 }

@@ -41,6 +41,33 @@
 <div class="max-w-6xl mx-auto p-4 flex flex-col md:flex-row gap-6">
   <!-- Coluna do Feed (Esquerda/Centro) -->
   <div class="flex-1 max-w-2xl">
+    
+    <!-- Barra de Stories -->
+    <div class="flex gap-4 overflow-x-auto no-scrollbar py-4 mb-4 bg-white border border-gray-200 rounded-xl px-4 shadow-sm">
+      <!-- Botão para adicionar story -->
+      <div class="flex flex-col items-center gap-1 min-w-[70px] cursor-pointer group" (click)="storyFileInput.click()">
+        <input type="file" #storyFileInput (change)="onStoryFileSelected($event)" hidden accept="image/*">
+        <div class="w-16 h-16 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center group-hover:border-blue-500 transition-colors relative overflow-hidden">
+          <svg *ngIf="!isUploadingStory" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-400 group-hover:text-blue-500">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          <!-- Spinner de carregamento -->
+          <div *ngIf="isUploadingStory" class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+        </div>
+        <span class="text-[10px] font-medium text-gray-500">Seu story</span>
+      </div>
+
+      <!-- Lista de Stories -->
+      <div *ngFor="let story of stories" (click)="openStory(story)" class="flex flex-col items-center gap-1 min-w-[70px] cursor-pointer">
+        <div class="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 to-purple-600">
+          <div class="w-full h-full rounded-full bg-white p-[2px]">
+            <img [src]="resolveMediaUrl(story.user.profilePictureUrl || '')" class="w-full h-full rounded-full object-cover">
+          </div>
+        </div>
+        <span class="text-[10px] font-medium text-gray-700 truncate w-14 text-center">{{ story.user.username }}</span>
+      </div>
+    </div>
+
     <header class="text-3xl font-bold mb-6">
       <h1>Global Feed</h1>
     </header>
@@ -176,5 +203,40 @@
       </footer>
     </div>
   </aside>
+
+  <!-- Player de Story (Modal) -->
+  <div class="fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center p-0 md:p-4" *ngIf="activeStory">
+    <div class="relative w-full max-w-md aspect-[9/16] bg-gray-900 shadow-2xl overflow-hidden flex items-center justify-center">
+      
+      <!-- Barra de Progresso Animada -->
+      <div class="absolute top-0 left-0 w-full p-2 flex gap-1 z-20">
+        <div class="h-1 bg-white/30 flex-1 rounded-full overflow-hidden">
+          <div class="h-full bg-white progress-bar"></div>
+        </div>
+      </div>
+
+      <!-- Header com Autor -->
+      <div class="absolute top-4 left-0 w-full p-4 flex items-center justify-between z-20">
+        <div class="flex items-center gap-3">
+          <img [src]="resolveMediaUrl(activeStory.user.profilePictureUrl || '')" class="w-8 h-8 rounded-full border border-white">
+          <span class="text-white text-sm font-bold shadow-sm">{{ activeStory.user.username }}</span>
+          <span class="text-white/60 text-xs shadow-sm">{{ activeStory.createdAt | date:'shortTime' }}</span>
+        </div>
+        <button (click)="closeStory()" class="text-white p-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mídia do Story -->
+      <img [src]="resolveMediaUrl(activeStory.mediaUrl)" class="w-full h-full object-cover">
+
+      <!-- Legenda Inferior -->
+      <div class="absolute bottom-10 left-0 w-full p-6 text-center text-white text-lg font-medium drop-shadow-lg z-20" *ngIf="activeStory.caption">
+        {{ activeStory.caption }}
+      </div>
+    </div>
+  </div>
 </div>
 </div>
