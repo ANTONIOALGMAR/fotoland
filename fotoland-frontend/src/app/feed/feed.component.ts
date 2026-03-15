@@ -47,7 +47,7 @@ export class FeedComponent implements OnInit {
   /** Indica se o usuário possui papel de administrador */
   isAdmin: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router, private sanitizer: DomSanitizer, private location: Location) { }
+  constructor(public authService: AuthService, private router: Router, private sanitizer: DomSanitizer, private location: Location) { }
 
   ngOnInit(): void {
     // Busca informações do usuário logado antes de carregar o feed

@@ -24,6 +24,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   chatInviteCount: number = 0;
   chatMessageCount: number = 0;
+  generalNotificationCount: number = 0;
+  totalNotifications: number = 0;
   currentInvite: any = null;
   
   onlineFollowers: User[] = [];
