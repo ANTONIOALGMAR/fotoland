@@ -120,6 +120,21 @@
   flex: 1;
 }
 
+.unfollow-btn {
+  background-color: #f88e3b;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.unfollow-btn:hover {
+  background-color: #d8701f;
+}
+
 /* Post Cards */
 .results .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
 .post-card { border: 1px solid #eee; border-radius: 10px; overflow: hidden; background: #fff; }
