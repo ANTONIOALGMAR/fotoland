@@ -61,14 +61,20 @@
           </div>
         </div>
         
-        <div class="follow-btn-wrapper flex flex-col gap-1">
-          <button type="button"
-            (click)="toggleFollow(u.username)"
-            class="follow-btn-custom"
-            [class.following]="followingMap[u.username]"
-            [attr.aria-pressed]="followingMap[u.username]">
-            {{ followingMap[u.username] ? ('COMMON.FOLLOWING' | translate) : ('COMMON.FOLLOW' | translate) }}
-          </button>
+        <div class="follow-btn-wrapper flex flex-col gap-2">
+          <div class="follow-action flex items-center gap-2">
+            <button type="button"
+              (click)="!followingMap[u.username] && toggleFollow(u.username)"
+              [disabled]="followingMap[u.username]"
+              class="follow-btn-custom"
+              [class.following]="followingMap[u.username]"
+              [attr.aria-pressed]="followingMap[u.username]">
+              {{ followingMap[u.username] ? ('COMMON.FOLLOWING' | translate) : ('COMMON.FOLLOW' | translate) }}
+            </button>
+            <button *ngIf="followingMap[u.username]" type="button" class="text-[10px] text-gray-500 hover:text-gray-700 font-semibold focus:underline" (click)="toggleFollow(u.username)">
+              Deixar de seguir
+            </button>
+          </div>
           
           <!-- Botão Admin para Excluir Usuário -->
           <button *ngIf="isAdmin" type="button" (click)="adminDeleteUser(u.id)" class="text-[9px] text-red-600 font-bold hover:underline">

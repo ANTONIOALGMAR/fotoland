@@ -78,7 +78,6 @@
 }
 
 .follow-btn-custom {
-  width: 100%;
   padding: 8px;
   border-radius: 10px;
   font-weight: 600;
@@ -103,6 +102,22 @@
 
 .follow-btn-custom.following:hover {
   background-color: #e0e7ff;
+}
+
+.follow-action {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.follow-btn-custom:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.follow-action .follow-btn-custom {
+  width: auto;
+  flex: 1;
 }
 
 /* Post Cards */
