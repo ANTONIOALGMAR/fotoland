@@ -23,7 +23,7 @@
 
     <div class="filters flex flex-col gap-3" *ngIf="activeTab === 'users'">
       <div class="flex gap-3">
-        <input type="text" class="flex-1 p-2 border rounded-lg" placeholder="Digite o nickname ou nome..." [(ngModel)]="userQuery" (input)="onUserQueryChange($event.target.value)" (keyup.enter)="onSearchUsers()">
+        <input #userSearchInput type="text" class="flex-1 p-2 border rounded-lg" placeholder="Digite o nickname ou nome..." [(ngModel)]="userQuery" (input)="onUserQueryChange(userSearchInput.value)" (keyup.enter)="onSearchUsers()">
         <button class="btn primary bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700" (click)="onSearchUsers()">Buscar Nick</button>
       </div>
       <div *ngIf="userLoading" class="text-sm text-gray-500">Buscando usuários...</div>
