@@ -11,6 +11,12 @@ import { AuthInterceptor } from './auth/services/auth.interceptor';
 import { HttpErrorInterceptor } from './shared/services/http-error.interceptor';
 import { NavHeaderComponent } from './shared/nav-header/nav-header.component';
 import { ChatInviteAlertComponent } from './shared/components/chat-invite-alert/chat-invite-alert.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
+import { FeedComponent } from './feed/feed.component';
+import { CreateAlbumComponent } from './create-album/create-album.component';
+import { CreatePostComponent } from './create-post/create-post.component';
+import { AlbumDetailComponent } from './album-detail/album-detail.component';
+import { ChatComponent } from './chat/chat.component';
 
 // i18n
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -34,6 +40,12 @@ export function HttpLoaderFactory(http: HttpClient) {
     HomeComponent,
     NavHeaderComponent,
     ChatInviteAlertComponent,
+    LandingPageComponent,
+    FeedComponent,
+    CreateAlbumComponent,
+    CreatePostComponent,
+    AlbumDetailComponent,
+    ChatComponent,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
