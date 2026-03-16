@@ -4,11 +4,12 @@ import { AuthService } from '../auth/services/auth.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [RouterLink, NavHeaderComponent],
+  imports: [RouterLink, NavHeaderComponent, TranslateModule],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css']
 })
