@@ -38,7 +38,10 @@ export class AuthService {
   refreshAuthState(): void {
     this.getMe().subscribe({
       next: () => this._isAuthenticated.next(true),
-      error: () => this._isAuthenticated.next(false),
+      error: (err) => {
+        if (isDevMode()) console.warn('Auth check failed on startup (normal if not logged in):', err.status);
+        this._isAuthenticated.next(false);
+      },
     });
   }
 
@@ -107,7 +110,10 @@ export class AuthService {
 
   // Keep a single helper to check admin role
   isAdmin(): Observable<boolean> {
-      return this.getMe().pipe(map((u) => (u as any)?.role === 'ADMIN'));
+      return this.getMe().pipe(
+        map((u) => (u as any)?.role === 'ADMIN'),
+        catchError(() => of(false))
+      );
   }
 
   // 🖼️ Álbuns

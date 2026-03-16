@@ -73,17 +73,26 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.notificationSubscriptions.add(this.notificationService.chatInviteCount$.subscribe(count => {
-      this.chatInviteCount = count;
-      this.updateTotalNotifications();
+    this.notificationSubscriptions.add(this.notificationService.chatInviteCount$.subscribe({
+      next: count => {
+        this.chatInviteCount = count;
+        this.updateTotalNotifications();
+      },
+      error: err => console.error('Error in chatInviteCount:', err)
     }));
-    this.notificationSubscriptions.add(this.notificationService.chatMessageCount$.subscribe(count => {
-      this.chatMessageCount = count;
-      this.updateTotalNotifications();
+    this.notificationSubscriptions.add(this.notificationService.chatMessageCount$.subscribe({
+      next: count => {
+        this.chatMessageCount = count;
+        this.updateTotalNotifications();
+      },
+      error: err => console.error('Error in chatMessageCount:', err)
     }));
-    this.notificationSubscriptions.add(this.notificationService.generalNotificationCount$.subscribe(count => {
-      this.generalNotificationCount = count;
-      this.updateTotalNotifications();
+    this.notificationSubscriptions.add(this.notificationService.generalNotificationCount$.subscribe({
+      next: count => {
+        this.generalNotificationCount = count;
+        this.updateTotalNotifications();
+      },
+      error: err => console.error('Error in generalNotificationCount:', err)
     }));
 
     this.notificationSubscriptions.add(this.notificationService.chatInvite$.subscribe(invite => {
