@@ -23,6 +23,7 @@ export class ExploreComponent implements OnInit {
   userResults: User[] = [];
   userQuery: string = '';
   followingMap: { [username: string]: boolean } = {};
+  isAdmin: boolean = false;
 
   search = {
     q: '',
@@ -33,12 +34,37 @@ export class ExploreComponent implements OnInit {
   constructor(public authService: AuthService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.authService.isAdmin().subscribe(admin => this.isAdmin = admin);
     // Verificar se deve abrir o catálogo por padrão via parâmetro de URL
     this.route.queryParams.subscribe(params => {
       if (params['tab'] === 'catalog') {
         this.onLoadCatalog();
       }
     });
+  }
+
+  adminDeletePost(postId: number): void {
+    if (confirm('ADMIN: Confirmar exclusão deste post?')) {
+      this.authService.adminDeletePost(postId).subscribe({
+        next: () => {
+          this.results = this.results.filter(p => p.id !== postId);
+          alert('Post removido.');
+        },
+        error: (err) => alert('Erro ao remover post.')
+      });
+    }
+  }
+
+  adminDeleteUser(userId: number): void {
+    if (confirm('ADMIN: Confirmar exclusão deste usuário e todos os seus dados?')) {
+      this.authService.adminDeleteUser(userId).subscribe({
+        next: () => {
+          this.userResults = this.userResults.filter(u => u.id !== userId);
+          alert('Usuário removido.');
+        },
+        error: (err) => alert('Erro ao remover usuário.')
+      });
+    }
   }
 
   onSearch(): void {

@@ -43,7 +43,9 @@
         <img [src]="authService.resolveMediaUrl(post.mediaUrl)" class="w-full h-full object-cover transition-transform group-hover:scale-105" alt="media">
         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-white">
           <span class="text-xs font-bold truncate">{{ post.caption }}</span>
-          <span class="text-[10px] opacity-80">{{ post.createdAt | date:'short' }}</span>
+          <span class="text-[10px] opacity-80 mb-2">{{ post.createdAt | date:'short' }}</span>
+          <!-- Botão Admin para Moderar Posts -->
+          <button *ngIf="isAdmin" class="bg-red-600/80 hover:bg-red-700 text-white text-[10px] font-bold py-1 px-2 rounded-md transition-colors" (click)="adminDeletePost(post.id)">Excluir (ADMIN)</button>
         </div>
       </div>
     </div>
@@ -59,13 +61,18 @@
           </div>
         </div>
         
-        <div class="follow-btn-wrapper">
+        <div class="follow-btn-wrapper flex flex-col gap-1">
           <button type="button"
             (click)="toggleFollow(u.username)"
             class="follow-btn-custom"
             [class.following]="followingMap[u.username]"
             [attr.aria-pressed]="followingMap[u.username]">
             {{ followingMap[u.username] ? ('COMMON.FOLLOWING' | translate) : ('COMMON.FOLLOW' | translate) }}
+          </button>
+          
+          <!-- Botão Admin para Excluir Usuário -->
+          <button *ngIf="isAdmin" type="button" (click)="adminDeleteUser(u.id)" class="text-[9px] text-red-600 font-bold hover:underline">
+            DELETAR (ADMIN)
           </button>
         </div>
       </div>

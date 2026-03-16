@@ -255,6 +255,15 @@ export class AuthService {
     return this.http.delete<void>(`${this.BASE_URL}/api/admin/posts/${postId}`);
   }
 
+  // Métodos de moderação de usuários (ADMIN)
+  adminGetAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.BASE_URL}/api/admin/users`);
+  }
+
+  adminDeleteUser(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.BASE_URL}/api/admin/users/${userId}`);
+  }
+
   warmup(): Observable<void> {
     return this.http.get(`${this.BASE_URL}/api/search/posts?page=0&size=1`)
       .pipe(map(() => void 0), catchError(() => of(void 0)));
