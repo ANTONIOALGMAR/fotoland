@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -35,7 +35,8 @@ export class RegisterComponent implements OnInit {
     private router: Router, 
     private authService: AuthService, 
     private cepService: CepService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -88,6 +89,7 @@ export class RegisterComponent implements OnInit {
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreview = reader.result;
+      this.cdr.detectChanges(); // Força a atualização no mobile
     };
     reader.readAsDataURL(file);
   }
