@@ -1,9 +1,10 @@
 package com.fotoland.backend.service;
 
 import com.fotoland.backend.model.User;
-import com.fotoland.backend.repository.UserRepository;
+import com.fotoland.backend.repository.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,10 +13,33 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PostRepository postRepository;
+    private final AlbumRepository albumRepository;
+    private final CommentRepository commentRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final FollowRepository followRepository;
+    private final NotificationRepository notificationRepository;
+    private final ChatMessageRepository chatMessageRepository;
+    private final ChatRoomMemberRepository chatRoomMemberRepository;
+    private final StoryRepository storyRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       PostRepository postRepository, AlbumRepository albumRepository,
+                       CommentRepository commentRepository, PostLikeRepository postLikeRepository,
+                       FollowRepository followRepository, NotificationRepository notificationRepository,
+                       ChatMessageRepository chatMessageRepository, ChatRoomMemberRepository chatRoomMemberRepository,
+                       StoryRepository storyRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.postRepository = postRepository;
+        this.albumRepository = albumRepository;
+        this.commentRepository = commentRepository;
+        this.postLikeRepository = postLikeRepository;
+        this.followRepository = followRepository;
+        this.notificationRepository = notificationRepository;
+        this.chatMessageRepository = chatMessageRepository;
+        this.chatRoomMemberRepository = chatRoomMemberRepository;
+        this.storyRepository = storyRepository;
     }
 
     public List<User> searchUsers(String query) {
@@ -89,10 +113,23 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    @Transactional
     public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found");
-        }
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Remove tudo que aponta para este usuário antes de deletá-lo
+        postLikeRepository.deleteByUserId(user.getId());
+        postRepository.deleteByAuthorId(user.getId());
+        albumRepository.deleteByAuthorId(user.getId());
+        commentRepository.deleteByAuthorId(user.getId());
+        followRepository.deleteByFollowerId(user.getId());
+        followRepository.deleteByFollowingId(user.getId());
+        notificationRepository.deleteByUserId(user.getId());
+        storyRepository.deleteByUserId(user.getId());
+        chatMessageRepository.deleteBySenderUsername(user.getUsername());
+        chatRoomMemberRepository.deleteByUserId(user.getId());
+
+        userRepository.delete(user);
     }
 }

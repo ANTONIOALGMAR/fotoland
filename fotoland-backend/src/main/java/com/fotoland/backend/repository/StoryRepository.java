@@ -14,4 +14,6 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
     List<Story> findActiveStories(LocalDateTime now);
     
     List<Story> findByUserIdAndExpiresAtAfter(Long userId, LocalDateTime now);
+
+    void deleteByUserId(Long userId);
 }

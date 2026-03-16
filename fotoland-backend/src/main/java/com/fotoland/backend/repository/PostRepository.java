@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long>, org.springframework.data.jpa.repository.JpaSpecificationExecutor<Post> {
     Page<Post> findByAlbumId(Long albumId, Pageable pageable);
+    void deleteByAuthorId(Long authorId);
 }

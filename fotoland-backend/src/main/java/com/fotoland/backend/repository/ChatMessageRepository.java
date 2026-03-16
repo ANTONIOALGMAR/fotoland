@@ -10,4 +10,5 @@ import java.util.List;
 public interface ChatMessageRepository extends JpaRepository<ChatMessageEntity, Long> {
     // Últimas 50 mensagens em ordem cronológica
     List<ChatMessageEntity> findTop50ByRoom_IdOrderByCreatedAtAsc(Long roomId);
+    void deleteBySenderUsername(String senderUsername);
 }
