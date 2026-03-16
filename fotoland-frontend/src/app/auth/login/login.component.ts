@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string | null = null;
   currentLang: string = 'pt';
+  showPassword: boolean = false;
 
   // Injeta o roteador e o serviço de autenticação no construtor
   constructor(
@@ -67,5 +68,6 @@ export class LoginComponent implements OnInit {
   irParaPrivado(): void { this.router.navigate(['/private-chat']); }
   irParaColetivo(): void { this.router.navigate(['/chat']); }
   cancelar(): void { this.credentials = { username: '', password: '' }; this.errorMessage = null; }
+  toggleShowPassword(): void { this.showPassword = !this.showPassword; }
   voltar(): void { this.location.back(); }
 }
