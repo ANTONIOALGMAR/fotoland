@@ -76,3 +76,45 @@ button {
 button:hover {
   background-color: #256acb;
 }
+
+.message-body {
+  flex: 1;
+}
+
+.actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.edit-btn {
+  background-color: #d0e2ff;
+  color: #134ab9;
+}
+
+.edit-btn:hover {
+  background-color: #b4d2ff;
+}
+
+.delete-btn {
+  background-color: #ffb5b5;
+  color: #9b1c1c;
+}
+
+.delete-btn:hover {
+  background-color: #ff9b9b;
+}
