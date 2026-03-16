@@ -56,6 +56,16 @@
         <label for="address">{{ 'PROFILE.ADDRESS' | translate }}</label>
         <input type="text" id="address" name="address" [(ngModel)]="user.address" autocomplete="street-address" [placeholder]="'PROFILE.ADDRESS' | translate">
       </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="form-group">
+          <label for="houseNumber">{{ 'PROFILE.HOUSE_NUMBER' | translate }}</label>
+          <input type="text" id="houseNumber" name="houseNumber" [(ngModel)]="user.houseNumber" [placeholder]="'PROFILE.HOUSE_NUMBER' | translate">
+        </div>
+        <div class="form-group">
+          <label for="complement">{{ 'PROFILE.COMPLEMENT' | translate }}</label>
+          <input type="text" id="complement" name="complement" [(ngModel)]="user.complement" [placeholder]="'PROFILE.COMPLEMENT' | translate">
+        </div>
+      </div>
       <div class="form-group">
         <label for="state">{{ 'PROFILE.STATE' | translate }}</label>
         <input type="text" id="state" name="state" [(ngModel)]="user.state" autocomplete="address-level1" placeholder="SP">

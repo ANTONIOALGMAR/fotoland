@@ -18,9 +18,12 @@ export interface User {
   email?: string;
   phoneNumber?: string;
   address?: string;
+  houseNumber?: string;
+  complement?: string;
   profilePictureUrl?: string;
   state?: string;
   country?: string;
+  zipCode?: string;
   cep?: string;
 }
 

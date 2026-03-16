@@ -59,6 +59,8 @@
     "PHONE": "Telefone",
     "CEP": "CEP",
     "ADDRESS": "Endereço",
+    "HOUSE_NUMBER": "Número",
+    "COMPLEMENT": "Complemento",
     "STATE": "Estado",
     "COUNTRY": "País",
     "CHOOSE_IMAGE": "Escolher Imagem",

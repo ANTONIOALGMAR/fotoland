@@ -99,6 +99,8 @@ public class UserController {
         incoming.setState(payload.getState());
         incoming.setCountry(payload.getCountry());
         incoming.setZipCode(payload.getZipCode());
+        incoming.setHouseNumber(payload.getHouseNumber());
+        incoming.setComplement(payload.getComplement());
 
         User updated = userService.updateProfile(authentication.getName(), incoming);
         return ResponseEntity.ok(UserResponse.from(updated));

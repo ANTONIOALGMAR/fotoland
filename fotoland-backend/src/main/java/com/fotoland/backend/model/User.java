@@ -40,6 +40,10 @@ public class User {
 
     private String address; // Endereço
 
+    private String houseNumber; // Número da residência
+
+    private String complement; // Complemento
+
     private String profilePictureUrl; // URL da Foto de Perfil
 
     private String role; // Role for Spring Security (e.g., "USER", "ADMIN")

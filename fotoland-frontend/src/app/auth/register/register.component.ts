@@ -18,6 +18,8 @@ export class RegisterComponent implements OnInit {
     password: '',
     phoneNumber: '',
     address: '',
+    houseNumber: '',
+    complement: '',
     state: '',
     country: '',
     cep: '',
@@ -52,7 +54,7 @@ export class RegisterComponent implements OnInit {
   irParaPrivado(): void { this.router.navigate(['/private-chat']); }
   irParaColetivo(): void { this.router.navigate(['/chat']); }
   cancelar(): void {
-    this.user = { fullName: '', username: '', email: '', password: '', phoneNumber: '', address: '', state: '', country: '', cep: '', profilePictureUrl: '' };
+    this.user = { fullName: '', username: '', email: '', password: '', phoneNumber: '', address: '', houseNumber: '', complement: '', state: '', country: '', cep: '', profilePictureUrl: '' };
     this.selectedFile = null;
     this.selectedFileName = '';
     this.imagePreview = null;

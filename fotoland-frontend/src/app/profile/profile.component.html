@@ -48,6 +48,17 @@
       <label>{{ 'PROFILE.ADDRESS' | translate }}</label>
       <input [(ngModel)]="form.address" type="text" placeholder="Rua Exemplo, 123">
 
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label>{{ 'PROFILE.HOUSE_NUMBER' | translate }}</label>
+          <input [(ngModel)]="form.houseNumber" type="text" [placeholder]="'PROFILE.HOUSE_NUMBER' | translate">
+        </div>
+        <div>
+          <label>{{ 'PROFILE.COMPLEMENT' | translate }}</label>
+          <input [(ngModel)]="form.complement" type="text" [placeholder]="'PROFILE.COMPLEMENT' | translate">
+        </div>
+      </div>
+
       <label>{{ 'PROFILE.STATE' | translate }}</label>
       <input [(ngModel)]="form.state" type="text" placeholder="SP">
 

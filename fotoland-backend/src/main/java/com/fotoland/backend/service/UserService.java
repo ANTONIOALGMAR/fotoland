@@ -79,6 +79,8 @@ public class UserService {
         if (incoming.getState() != null) existing.setState(incoming.getState());
         if (incoming.getCountry() != null) existing.setCountry(incoming.getCountry());
         if (incoming.getZipCode() != null) existing.setZipCode(incoming.getZipCode());
+        if (incoming.getHouseNumber() != null) existing.setHouseNumber(incoming.getHouseNumber());
+        if (incoming.getComplement() != null) existing.setComplement(incoming.getComplement());
         return userRepository.saveAndFlush(existing);
     }
 

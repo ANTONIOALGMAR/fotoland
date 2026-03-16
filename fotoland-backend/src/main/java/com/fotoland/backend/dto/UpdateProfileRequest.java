@@ -21,4 +21,6 @@ public class UpdateProfileRequest {
     private String state;
     private String country;
     private String zipCode;
+    private String houseNumber;
+    private String complement;
 }

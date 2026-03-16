@@ -55,6 +55,12 @@ public class AuthController {
             user.setPassword(registerRequest.getPassword());
             user.setFullName(registerRequest.getFullName());
             user.setPhoneNumber(registerRequest.getPhoneNumber());
+            user.setAddress(registerRequest.getAddress());
+            user.setState(registerRequest.getState());
+            user.setCountry(registerRequest.getCountry());
+            user.setZipCode(registerRequest.getZipCode());
+            user.setHouseNumber(registerRequest.getHouseNumber());
+            user.setComplement(registerRequest.getComplement());
 
             User registeredUser = userService.registerNewUser(user);
             emailService.send(registeredUser.getEmail(), "Bem-vindo ao Fotoland", "Sua conta foi criada com sucesso!");

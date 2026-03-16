@@ -26,4 +26,10 @@ public class RegisterRequest {
 
     private String fullName;
     private String phoneNumber;
+    private String address;
+    private String houseNumber;
+    private String complement;
+    private String state;
+    private String country;
+    private String zipCode;
 }

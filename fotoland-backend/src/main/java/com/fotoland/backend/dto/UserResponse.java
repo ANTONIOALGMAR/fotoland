@@ -14,10 +14,12 @@ public class UserResponse {
     private String state;    // novo
     private String country;  // novo
     private String zipCode;  // novo
+    private String houseNumber;
+    private String complement;
 
     public UserResponse() {}
 
-    public UserResponse(Long id, String username, String fullName, String phoneNumber, String address, String profilePictureUrl, String role, String email, String state, String country, String zipCode) {
+    public UserResponse(Long id, String username, String fullName, String phoneNumber, String address, String profilePictureUrl, String role, String email, String state, String country, String zipCode, String houseNumber, String complement) {
         this.id = id;
         this.username = username;
         this.fullName = fullName;
@@ -29,6 +31,8 @@ public class UserResponse {
         this.state = state;
         this.country = country;
         this.zipCode = zipCode;
+        this.houseNumber = houseNumber;
+        this.complement = complement;
     }
 
     public static UserResponse from(User user) {
@@ -43,7 +47,9 @@ public class UserResponse {
             user.getEmail(),
             user.getState(),
             user.getCountry(),
-            user.getZipCode()
+            user.getZipCode(),
+            user.getHouseNumber(),
+            user.getComplement()
         );
     }
 
@@ -58,6 +64,8 @@ public class UserResponse {
     public String getState() { return state; }         // novo
     public String getCountry() { return country; }     // novo
     public String getZipCode() { return zipCode; }     // novo
+    public String getHouseNumber() { return houseNumber; }
+    public String getComplement() { return complement; }
 
     public void setId(Long id) { this.id = id; }
     public void setUsername(String username) { this.username = username; }
@@ -69,4 +77,7 @@ public class UserResponse {
     public void setEmail(String email) { this.email = email; }       // novo
     public void setState(String state) { this.state = state; }       // novo
     public void setCountry(String country) { this.country = country; } // novo
-}
+    public void setZipCode(String zipCode) { this.zipCode = zipCode; }
+    public void setHouseNumber(String houseNumber) { this.houseNumber = houseNumber; }
+    public void setComplement(String complement) { this.complement = complement; }
+    }

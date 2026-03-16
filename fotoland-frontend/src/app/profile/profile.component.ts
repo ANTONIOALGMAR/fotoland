@@ -26,9 +26,9 @@ export class ProfileComponent implements OnInit {
 
   form: {
     fullName: string; username: string; phoneNumber?: string; address?: string; profilePictureUrl?: string;
-    email?: string; state?: string; country?: string; cep?: string
+    email?: string; state?: string; country?: string; cep?: string; houseNumber?: string; complement?: string;
   } = {
-    fullName: '', username: '', phoneNumber: '', address: '', profilePictureUrl: '', email: '', state: '', country: '', cep: ''
+    fullName: '', username: '', phoneNumber: '', address: '', profilePictureUrl: '', email: '', state: '', country: '', cep: '', houseNumber: '', complement: ''
   };
 
   selectedFile: File | null = null;
@@ -51,6 +51,8 @@ export class ProfileComponent implements OnInit {
         this.form.state = (u as any)?.state ?? '';
         this.form.country = (u as any)?.country ?? '';
         this.form.cep = (u as any)?.zipCode ?? ''; // backend usa zipCode
+        this.form.houseNumber = (u as any)?.houseNumber ?? '';
+        this.form.complement = (u as any)?.complement ?? '';
         this.loading = false;
         this.loadFollowStats(u.username);
       },
@@ -123,7 +125,9 @@ export class ProfileComponent implements OnInit {
       email: this.form.email,
       state: this.form.state,
       country: this.form.country,
-      zipCode: this.form.cep
+      zipCode: this.form.cep,
+      houseNumber: this.form.houseNumber,
+      complement: this.form.complement
     };
     this.authService.updateMe(payload).subscribe({
       next: (u) => {
