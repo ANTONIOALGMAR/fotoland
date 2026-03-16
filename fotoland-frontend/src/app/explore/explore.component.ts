@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth/services/auth.service';
 import { Post, User } from '../../../../api.models';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subject, Subscription, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, catchError, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-explore',
@@ -13,7 +15,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './explore.component.html',
   styleUrls: ['./explore.component.css']
 })
-export class ExploreComponent implements OnInit {
+export class ExploreComponent implements OnInit, OnDestroy {
   loading = false;
   error: string | null = null;
   results: Post[] = [];
@@ -24,6 +26,9 @@ export class ExploreComponent implements OnInit {
   userQuery: string = '';
   followingMap: { [username: string]: boolean } = {};
   isAdmin: boolean = false;
+  userLoading = false;
+  private userSearchSubject = new Subject<string>();
+  private userSearchSubscription?: Subscription;
 
   search = {
     q: '',
@@ -40,6 +45,27 @@ export class ExploreComponent implements OnInit {
       if (params['tab'] === 'catalog') {
         this.onLoadCatalog();
       }
+    });
+
+    this.userSearchSubscription = this.userSearchSubject.pipe(
+      tap(query => {
+        this.activeTab = 'users';
+        this.userLoading = true;
+        this.error = null;
+      }),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(query => query ? this.authService.searchUsers(query) : of([])),
+      catchError((err) => {
+        console.error(err);
+        this.error = 'Erro ao buscar usuários.';
+        this.userLoading = false;
+        return of([]);
+      })
+    ).subscribe((data) => {
+      this.userResults = data;
+      this.userLoading = false;
+      this.checkFollowingStatus();
     });
   }
 
@@ -93,20 +119,7 @@ export class ExploreComponent implements OnInit {
   onSearchUsers(): void {
     if (!this.userQuery.trim()) return;
     this.activeTab = 'users';
-    this.loading = true;
-    this.error = null;
-    this.authService.searchUsers(this.userQuery).subscribe({
-      next: (data) => {
-        this.userResults = data;
-        this.loading = false;
-        this.checkFollowingStatus();
-      },
-      error: (err) => {
-        console.error(err);
-        this.error = 'Erro ao buscar usuários.';
-        this.loading = false;
-      }
-    });
+    this.userSearchSubject.next(this.userQuery.trim());
   }
 
   onLoadCatalog(): void {
@@ -135,6 +148,22 @@ export class ExploreComponent implements OnInit {
         error: () => {}
       });
     });
+  }
+
+  onUserQueryChange(value: string): void {
+    this.userQuery = value;
+    this.activeTab = 'users';
+    const trimmed = value.trim();
+    if (!trimmed) {
+      this.userResults = [];
+      this.userLoading = false;
+      return;
+    }
+    this.userSearchSubject.next(trimmed);
+  }
+
+  ngOnDestroy(): void {
+    this.userSearchSubscription?.unsubscribe();
   }
 
   toggleFollow(username: string): void {
