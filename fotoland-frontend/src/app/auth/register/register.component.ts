@@ -1,12 +1,17 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CepService } from '../../shared/services/cep.service'; // novo
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NavHeaderComponent } from '../../shared/nav-header/nav-header.component';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
+  imports: [CommonModule, FormsModule, NavHeaderComponent, TranslateModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })

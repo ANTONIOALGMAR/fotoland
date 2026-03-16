@@ -28,14 +28,14 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 @NgModule({
   declarations: [
-    AppComponent,
-    RegisterComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    RegisterComponent,
     LoginComponent,
     HomeComponent,
     NavHeaderComponent,
