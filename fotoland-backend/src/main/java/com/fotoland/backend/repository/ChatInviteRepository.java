@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChatInviteRepository extends JpaRepository<ChatInvite, Long> {
+    void deleteByInvitedUserId(Long invitedUserId);
+    void deleteByInvitedById(Long invitedById);
 }

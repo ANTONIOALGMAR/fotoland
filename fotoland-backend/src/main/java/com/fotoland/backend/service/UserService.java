@@ -23,13 +23,16 @@ public class UserService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomMemberRepository chatRoomMemberRepository;
     private final StoryRepository storyRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatInviteRepository chatInviteRepository;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
                        PostRepository postRepository, AlbumRepository albumRepository,
                        CommentRepository commentRepository, CommentLikeRepository commentLikeRepository, PostLikeRepository postLikeRepository,
                        FollowRepository followRepository, NotificationRepository notificationRepository,
                        ChatMessageRepository chatMessageRepository, ChatRoomMemberRepository chatRoomMemberRepository,
-                       StoryRepository storyRepository) {
+                       StoryRepository storyRepository, ChatRoomRepository chatRoomRepository,
+                       ChatInviteRepository chatInviteRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.postRepository = postRepository;
@@ -42,6 +45,8 @@ public class UserService {
         this.chatMessageRepository = chatMessageRepository;
         this.chatRoomMemberRepository = chatRoomMemberRepository;
         this.storyRepository = storyRepository;
+        this.chatRoomRepository = chatRoomRepository;
+        this.chatInviteRepository = chatInviteRepository;
     }
 
     public List<User> searchUsers(String query) {
@@ -131,6 +136,10 @@ public class UserService {
         storyRepository.deleteByUserId(user.getId());
         commentLikeRepository.deleteByUserId(user.getId());
         chatMessageRepository.deleteBySenderUsername(user.getUsername());
+        chatInviteRepository.deleteByInvitedUserId(user.getId());
+        chatInviteRepository.deleteByInvitedById(user.getId());
+        chatRoomMemberRepository.deleteByRoom_OwnerId(user.getId());
+        chatRoomRepository.deleteByOwnerId(user.getId());
         chatRoomMemberRepository.deleteByUserId(user.getId());
 
         userRepository.delete(user);
