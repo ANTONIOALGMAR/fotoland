@@ -146,7 +146,14 @@ export class ExploreComponent implements OnInit {
     } else {
       this.authService.follow(username).subscribe({
         next: () => this.followingMap[username] = true,
-        error: () => alert('Erro ao seguir.')
+        error: (err) => {
+          if (err?.status === 409) {
+            // Already following; update UI so button switches to "Seguindo"
+            this.followingMap[username] = true;
+            return;
+          }
+          alert('Erro ao seguir.');
+        }
       });
     }
   }
