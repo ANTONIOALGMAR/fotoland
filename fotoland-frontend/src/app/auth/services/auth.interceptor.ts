@@ -18,11 +18,16 @@ export class AuthInterceptor implements HttpInterceptor {
     ).replace(/:+$/, '');
 
     if (request.url.startsWith(backendBaseUrl)) {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('fotoland_token') : null;
+      let headers = request.headers.set('X-Requested-With', 'XMLHttpRequest');
+      
+      if (token) {
+        headers = headers.set('Authorization', `Bearer ${token}`);
+      }
+
       request = request.clone({
         withCredentials: true,
-        setHeaders: {
-          'X-Requested-With': 'XMLHttpRequest',
-        },
+        headers: headers
       });
     }
 

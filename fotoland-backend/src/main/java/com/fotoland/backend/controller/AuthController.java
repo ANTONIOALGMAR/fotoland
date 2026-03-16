@@ -69,7 +69,7 @@ public class AuthController {
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                    .body(com.fotoland.backend.dto.UserResponse.from(registeredUser));
+                    .body(new AuthenticationResponse(jwt));
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -91,8 +91,7 @@ public class AuthController {
         ResponseCookie cookie = buildJwtCookie(request, jwt);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                // Nao expor JWT no body reduz superficie para XSS.
-                .body(new AuthenticationResponse(null));
+                .body(new AuthenticationResponse(jwt));
     }
 
     @PostMapping("/logout")

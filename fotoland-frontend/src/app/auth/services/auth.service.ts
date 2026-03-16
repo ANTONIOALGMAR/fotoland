@@ -71,17 +71,19 @@ export class AuthService {
 
   // 👤 Registro e login
   register(user: Partial<User>): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}/register`, user).pipe(
-      map((u) => {
+    return this.http.post<any>(`${this.apiUrl}/register`, user).pipe(
+      map((res) => {
+        if (res.jwt) localStorage.setItem('fotoland_token', res.jwt);
         this._isAuthenticated.next(true);
-        return u;
+        return res;
       })
     );
   }
 
   login(credentials: any): Observable<void> {
-    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
-      map(() => {
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+      map((res) => {
+        if (res.jwt) localStorage.setItem('fotoland_token', res.jwt);
         this._isAuthenticated.next(true);
         return void 0;
       })
@@ -94,6 +96,7 @@ export class AuthService {
       error: () => {},
       complete: () => {},
     });
+    localStorage.removeItem('fotoland_token');
     this._isAuthenticated.next(false);
     this.router.navigate(['/login']);
   }
