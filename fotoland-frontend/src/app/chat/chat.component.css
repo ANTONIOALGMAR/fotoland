@@ -18,8 +18,9 @@
 
 .message {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 12px;
+  gap: 8px;
 }
 
 .avatar {
@@ -79,6 +80,28 @@ button:hover {
 
 .message-body {
   flex: 1;
+}
+
+.message.own-message {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.message.own-message .message-body {
+  background: #2a7ae4;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 12px 12px 2px 12px;
+  max-width: 70%;
+  margin-left: 0;
+  margin-right: 40px;
+}
+
+.message:not(.own-message) .message-body {
+  background: #ffffff;
+  border-radius: 12px 12px 12px 2px;
+  padding: 8px 12px;
+  max-width: 75%;
 }
 
 .actions {
