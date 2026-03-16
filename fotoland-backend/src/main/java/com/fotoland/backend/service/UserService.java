@@ -16,6 +16,7 @@ public class UserService {
     private final PostRepository postRepository;
     private final AlbumRepository albumRepository;
     private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
     private final PostLikeRepository postLikeRepository;
     private final FollowRepository followRepository;
     private final NotificationRepository notificationRepository;
@@ -25,7 +26,7 @@ public class UserService {
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
                        PostRepository postRepository, AlbumRepository albumRepository,
-                       CommentRepository commentRepository, PostLikeRepository postLikeRepository,
+                       CommentRepository commentRepository, CommentLikeRepository commentLikeRepository, PostLikeRepository postLikeRepository,
                        FollowRepository followRepository, NotificationRepository notificationRepository,
                        ChatMessageRepository chatMessageRepository, ChatRoomMemberRepository chatRoomMemberRepository,
                        StoryRepository storyRepository) {
@@ -34,6 +35,7 @@ public class UserService {
         this.postRepository = postRepository;
         this.albumRepository = albumRepository;
         this.commentRepository = commentRepository;
+        this.commentLikeRepository = commentLikeRepository;
         this.postLikeRepository = postLikeRepository;
         this.followRepository = followRepository;
         this.notificationRepository = notificationRepository;
@@ -127,6 +129,7 @@ public class UserService {
         followRepository.deleteByFollowingId(user.getId());
         notificationRepository.deleteByUserId(user.getId());
         storyRepository.deleteByUserId(user.getId());
+        commentLikeRepository.deleteByUserId(user.getId());
         chatMessageRepository.deleteBySenderUsername(user.getUsername());
         chatRoomMemberRepository.deleteByUserId(user.getId());
 
