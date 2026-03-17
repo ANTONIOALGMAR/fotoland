@@ -8,7 +8,7 @@ import { Location } from '@angular/common';
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription, Subject, of } from 'rxjs';
-import { User } from '../../api.models';
+import { User } from '../../../../api.models';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, tap } from 'rxjs/operators';
 
 @Component({

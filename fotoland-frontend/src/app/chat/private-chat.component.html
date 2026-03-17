@@ -32,8 +32,8 @@
       <div class="chat-header" *ngIf="selectedRoomName">
         <h3>{{ selectedRoomName }}</h3>
         <div class="invite-box">
-          <input [(ngModel)]="inviteUsername" placeholder="Nick do amigo..."
-            (input)="onInviteQueryChange($event.target.value)">
+          <input #inviteInput [(ngModel)]="inviteUsername" placeholder="Nick do amigo..."
+            (input)="onInviteQueryChange(inviteInput.value)">
           <button (click)="invite()">Convidar</button>
         </div>
         <div class="invite-suggestions" *ngIf="inviteSuggestions.length">
