@@ -7,6 +7,9 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { Subscription, Subject, of } from 'rxjs';
+import { User } from '../../api.models';
+import { debounceTime, distinctUntilChanged, switchMap, catchError, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-private-chat',
@@ -20,6 +23,10 @@ export class PrivateChatComponent implements OnInit, OnDestroy {
   selectedRoomId: number | null = null;
   newRoomName = '';
   inviteUsername = '';
+  inviteSuggestions: User[] = [];
+  private inviteSearchSubject = new Subject<string>();
+  private inviteSearchSubscription?: Subscription;
+  inviteLoading = false;
   messages: ChatMsg[] = [];
   newMessage = '';
   connecting = false;
@@ -40,10 +47,25 @@ export class PrivateChatComponent implements OnInit, OnDestroy {
         this.rooms = memberships.map(m => ({ id: m.room.id, room: m.room }));
       }
     });
+    this.inviteSearchSubscription = this.inviteSearchSubject.pipe(
+      tap(() => this.inviteLoading = true),
+      debounceTime(250),
+      distinctUntilChanged(),
+      switchMap(query => query ? this.auth.searchUsers(query) : of([])),
+      catchError(err => {
+        console.error('Erro ao buscar sugestões de convite:', err);
+        this.inviteLoading = false;
+        return of([] as User[]);
+      })
+    ).subscribe(users => {
+      this.inviteSuggestions = users;
+      this.inviteLoading = false;
+    });
   }
 
   ngOnDestroy(): void {
     this.chat.disconnect();
+    this.inviteSearchSubscription?.unsubscribe();
   }
 
   createRoom(): void {
@@ -174,5 +196,20 @@ export class PrivateChatComponent implements OnInit, OnDestroy {
               alert('Convite enviado!');
           }
       });
+  }
+
+  onInviteQueryChange(value: string): void {
+    this.inviteUsername = value;
+    const trimmed = value.trim();
+    if (!trimmed) {
+      this.inviteSuggestions = [];
+      return;
+    }
+    this.inviteSearchSubject.next(trimmed);
+  }
+
+  applyInviteSuggestion(username: string): void {
+    this.inviteUsername = username;
+    this.inviteSuggestions = [];
   }
 }

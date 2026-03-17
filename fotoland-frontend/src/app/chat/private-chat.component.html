@@ -32,8 +32,14 @@
       <div class="chat-header" *ngIf="selectedRoomName">
         <h3>{{ selectedRoomName }}</h3>
         <div class="invite-box">
-          <input [(ngModel)]="inviteUsername" placeholder="Nick do amigo...">
+          <input [(ngModel)]="inviteUsername" placeholder="Nick do amigo..."
+            (input)="onInviteQueryChange($event.target.value)">
           <button (click)="invite()">Convidar</button>
+        </div>
+        <div class="invite-suggestions" *ngIf="inviteSuggestions.length">
+          <div class="invite-suggestion" *ngFor="let suggestion of inviteSuggestions" (click)="applyInviteSuggestion(suggestion.username)">
+            {{ suggestion.username }} <small class="text-xs text-gray-500">{{ suggestion.fullName }}</small>
+          </div>
         </div>
       </div>
 
