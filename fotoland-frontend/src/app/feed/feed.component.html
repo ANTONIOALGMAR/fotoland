@@ -1,5 +1,5 @@
 <!-- Barra de Busca no Topo -->
-<div class="sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-sm border-b mb-6">
+<div class="sticky top-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b dark:border-slate-800 mb-6 transition-colors duration-300">
   <div class="max-w-5xl mx-auto px-4 py-3">
     <div class="flex flex-col md:flex-row items-center gap-3">
       <div class="relative flex-1 w-full">
@@ -8,22 +8,22 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </span>
-        <input class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" 
+        <input class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors" 
                type="text" [placeholder]="'FEED.SEARCH_CAPTION' | translate" [(ngModel)]="search.q" (keyup.enter)="onSearch()">
       </div>
       
       <div class="flex w-full md:w-auto gap-2">
-        <select class="block w-full md:w-32 py-2 pl-3 pr-10 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" 
+        <select class="block w-full md:w-32 py-2 pl-3 pr-10 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 focus:ring-blue-500 focus:border-blue-500 text-sm" 
                 [(ngModel)]="search.type">
           <option value="">{{ 'FEED.SEARCH_TYPE' | translate }}</option>
           <option value="PHOTO">{{ 'FEED.PHOTO' | translate }}</option>
           <option value="VIDEO">{{ 'FEED.VIDEO' | translate }}</option>
         </select>
         
-        <input class="block w-full md:w-48 py-2 px-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" 
+        <input class="block w-full md:w-48 py-2 px-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 focus:ring-blue-500 focus:border-blue-500 text-sm" 
                type="text" [placeholder]="'FEED.SEARCH_AUTHOR' | translate" [(ngModel)]="search.author" (keyup.enter)="onSearch()">
         
-        <button class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors" 
+        <button class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-md" 
                 (click)="onSearch()">
           {{ 'FEED.SEARCH_BUTTON' | translate }}
         </button>
@@ -32,71 +32,68 @@
   </div>
 </div>
 
-<div class="background-slideshow">
-  <div class="slide" style="background-image: url('assets/futuristic-background.jpg');"></div>
-  <div class="slide" style="background-image: url('assets/futuristic-background2.jpg');"></div>
-  <div class="slide" style="background-image: url('assets/futuristic-background3.jpg');"></div>
-</div>
-
 <div class="max-w-6xl mx-auto p-4 flex flex-col md:flex-row gap-6">
   <!-- Coluna do Feed (Esquerda/Centro) -->
   <div class="flex-1 max-w-2xl">
     
+    <!-- SKELETON STORIES -->
+    <app-skeleton-loader *ngIf="loading" type="story" [count]="6"></app-skeleton-loader>
+
     <!-- Barra de Stories -->
-    <div class="flex gap-4 overflow-x-auto no-scrollbar py-4 mb-4 bg-white border border-gray-200 rounded-xl px-4 shadow-sm">
+    <div *ngIf="!loading" class="flex gap-4 overflow-x-auto no-scrollbar py-4 mb-4 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-4 shadow-sm transition-colors duration-300">
       <!-- Botão para adicionar story -->
       <div class="flex flex-col items-center gap-1 min-w-[70px] cursor-pointer group" (click)="storyFileInput.click()">
         <input type="file" #storyFileInput (change)="onStoryFileSelected($event)" hidden accept="image/*">
-        <div class="w-16 h-16 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center group-hover:border-blue-500 transition-colors relative overflow-hidden">
+        <div class="w-16 h-16 rounded-full border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center group-hover:border-blue-500 transition-colors relative overflow-hidden">
           <svg *ngIf="!isUploadingStory" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-400 group-hover:text-blue-500">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
-          <!-- Spinner de carregamento -->
           <div *ngIf="isUploadingStory" class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
         </div>
-        <span class="text-[10px] font-medium text-gray-500">Seu story</span>
+        <span class="text-[10px] font-medium text-gray-500 dark:text-slate-400">Seu story</span>
       </div>
 
       <!-- Lista de Stories -->
       <div *ngFor="let story of stories" (click)="openStory(story)" class="flex flex-col items-center gap-1 min-w-[70px] cursor-pointer">
         <div class="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 to-purple-600">
-          <div class="w-full h-full rounded-full bg-white p-[2px]">
+          <div class="w-full h-full rounded-full bg-white dark:bg-slate-900 p-[2px]">
             <img [src]="resolveMediaUrl(story.user.profilePictureUrl || '')" class="w-full h-full rounded-full object-cover">
           </div>
         </div>
-        <span class="text-[10px] font-medium text-gray-700 truncate w-14 text-center">{{ story.user.username }}</span>
+        <span class="text-[10px] font-medium text-gray-700 dark:text-slate-300 truncate w-14 text-center">{{ story.user.username }}</span>
       </div>
     </div>
 
-    <header class="text-3xl font-bold mb-6">
+    <header class="text-3xl font-bold mb-6 dark:text-slate-100 transition-colors">
       <h1>Global Feed</h1>
     </header>
 
-    <div *ngIf="loading" class="text-center p-4">
-      <p class="text-lg text-gray-600">Loading feed...</p>
+    <!-- SKELETON FEED -->
+    <div *ngIf="loading" class="flex flex-col gap-6">
+      <app-skeleton-loader type="feed" [count]="3"></app-skeleton-loader>
     </div>
 
-    <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center mb-4" role="alert">
+    <div *ngIf="error" class="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded relative text-center mb-4" role="alert">
       <p>{{ error }}</p>
     </div>
 
-    <div *ngIf="!loading && albums.length === 0 && !error" class="text-center p-10 bg-white rounded-xl shadow-sm border border-gray-100">
-      <p class="text-lg text-gray-500 italic">O feed está vazio. Comece a seguir pessoas ou crie seu primeiro álbum!</p>
+    <div *ngIf="!loading && albums.length === 0 && !error" class="text-center p-10 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 transition-colors">
+      <p class="text-lg text-gray-500 dark:text-slate-400 italic">O feed está vazio. Comece a seguir pessoas ou crie seu primeiro álbum!</p>
     </div>
 
     <div *ngIf="!loading && albums.length > 0" class="flex flex-col gap-6">
-      <div *ngFor="let album of albums" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-        <!-- Header do Album/Post -->
-        <div class="p-4 flex items-center justify-between border-b">
+      <div *ngFor="let album of albums" class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm transition-colors">
+        <!-- Header do Album -->
+        <div class="p-4 flex items-center justify-between border-b dark:border-slate-700">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 to-purple-600 p-[2px]">
-              <div class="w-full h-full rounded-full bg-white p-[2px]">
+              <div class="w-full h-full rounded-full bg-white dark:bg-slate-900 p-[2px]">
                 <img [src]="resolveMediaUrl(album.author.profilePictureUrl || '')" class="w-full h-full rounded-full object-cover">
               </div>
             </div>
             <div>
-              <p class="font-bold text-sm">{{ album.author.username }}</p>
-              <p class="text-xs text-gray-500">{{ album.location || 'Brasil' }}</p>
+              <p class="font-bold text-sm dark:text-slate-100">{{ album.author.username }}</p>
+              <p class="text-xs text-gray-500 dark:text-slate-400">{{ album.location || 'Brasil' }}</p>
             </div>
           </div>
           
@@ -109,49 +106,45 @@
 
         <!-- Conteúdo do Post -->
         <div *ngIf="album.posts && album.posts.length > 0">
-          <div *ngFor="let post of album.posts" class="border-b last:border-b-0 pb-4">
-            <!-- Mídia com Double Tap -->
+          <div *ngFor="let post of album.posts" class="border-b dark:border-slate-700 last:border-b-0 pb-4">
             <div class="relative aspect-square md:aspect-auto overflow-hidden bg-black flex items-center justify-center group-media" (dblclick)="onDoubleTap(post)">
-              <!-- Heart Animation -->
               <div class="double-tap-heart" [class.animate]="post.showHeart">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-24 h-24 text-white/90 drop-shadow-lg">
                   <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001Z" />
                 </svg>
               </div>
-
               <img *ngIf="post.type === 'PHOTO' && post.mediaUrl" [src]="resolveMediaUrl(post.mediaUrl)" alt="Post" class="w-full h-auto max-h-[600px] object-contain">
               <video *ngIf="post.type === 'VIDEO' && post.mediaUrl" [src]="resolveMediaUrl(post.mediaUrl)" controls class="w-full h-auto max-h-[600px]"></video>
             </div>
 
-            <!-- Interações -->
             <div class="p-4">
               <div class="flex items-center gap-4 mb-2">
-                <button (click)="toggleLike(post)" class="hover:opacity-60 transition-opacity">
+                <button (click)="toggleLike(post)" class="hover:opacity-60 transition-opacity dark:text-slate-100">
                   <svg [class.text-red-500]="post.likedByCurrentUser" [class.fill-current]="post.likedByCurrentUser" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </button>
-                <button (click)="toggleComments(post.id)" class="hover:opacity-60 transition-opacity">
+                <button (click)="toggleComments(post.id)" class="hover:opacity-60 transition-opacity dark:text-slate-100">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </button>
               </div>
               
-              <p class="font-bold text-sm mb-1">{{ post.likeCount || 0 }} curtidas</p>
-              <p class="text-sm">
+              <p class="font-bold text-sm mb-1 dark:text-slate-100">{{ post.likeCount || 0 }} curtidas</p>
+              <p class="text-sm dark:text-slate-300">
                 <span class="font-bold mr-2">{{ album.author.username }}</span>
                 {{ post.caption }}
               </p>
-              <p class="text-[10px] text-gray-400 uppercase mt-1">{{ post.createdAt | date:'shortDate' }}</p>
+              <p class="text-[10px] text-gray-400 uppercase mt-1 transition-colors">{{ post.createdAt | date:'shortDate' }}</p>
 
-              <!-- Seção de Comentários (Compacta) -->
+              <!-- Comentários -->
               <div class="mt-2" *ngIf="showComments[post.id]">
-                <div *ngFor="let comment of commentsByPostId[post.id]" class="text-sm mb-1">
+                <div *ngFor="let comment of commentsByPostId[post.id]" class="text-sm mb-1 dark:text-slate-300">
                   <span class="font-bold mr-2">{{ comment.author?.username }}</span> {{ comment.text }}
                 </div>
                 <div class="mt-2 flex gap-2">
-                  <input class="flex-1 text-sm border-none focus:ring-0 p-0" [(ngModel)]="newCommentText[post.id]" placeholder="Adicione um comentário..." (keyup.enter)="addComment(post.id)" />
+                  <input class="flex-1 text-sm border-none focus:ring-0 p-0 bg-transparent dark:text-slate-100 dark:placeholder-slate-500" [(ngModel)]="newCommentText[post.id]" placeholder="Adicione um comentário..." (keyup.enter)="addComment(post.id)" />
                   <button class="text-blue-500 font-bold text-sm" (click)="addComment(post.id)">Publicar</button>
                 </div>
               </div>
@@ -162,25 +155,23 @@
     </div>
   </div>
 
-  <!-- Coluna Lateral (Sugestões - Somente Desktop) -->
+  <!-- Sugestões Desktop -->
   <aside class="hidden lg:block w-[320px] pt-10">
     <div class="sticky top-10">
-      <!-- Meu perfil rápido -->
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-3">
           <img [src]="authService.resolveMediaUrl('')" class="w-12 h-12 rounded-full object-cover">
           <div>
-            <p class="font-bold text-sm">{{ currentUserUsername }}</p>
-            <p class="text-gray-500 text-sm">Logado</p>
+            <p class="font-bold text-sm dark:text-slate-100">{{ currentUserUsername }}</p>
+            <p class="text-gray-500 dark:text-slate-400 text-sm">Logado</p>
           </div>
         </div>
         <button class="text-blue-500 font-bold text-xs" routerLink="/profile">Mudar</button>
       </div>
 
-      <!-- Sugestões -->
       <div class="flex items-center justify-between mb-4">
-        <span class="text-gray-500 font-bold text-sm">Sugestões para você</span>
-        <button class="text-xs font-bold" routerLink="/explore">Ver tudo</button>
+        <span class="text-gray-500 dark:text-slate-400 font-bold text-sm">Sugestões para você</span>
+        <button class="text-xs font-bold dark:text-slate-300" routerLink="/explore">Ver tudo</button>
       </div>
 
       <div class="flex flex-col gap-3">
@@ -188,8 +179,8 @@
           <div class="flex items-center gap-3">
             <img [src]="authService.resolveMediaUrl(user.profilePictureUrl || '')" class="w-8 h-8 rounded-full object-cover">
             <div>
-              <p class="font-bold text-xs">{{ user.username }}</p>
-              <p class="text-gray-400 text-[10px]">Novo no Fotoland</p>
+              <p class="font-bold text-xs dark:text-slate-100">{{ user.username }}</p>
+              <p class="text-gray-400 dark:text-slate-500 text-[10px]">Novo no Fotoland</p>
             </div>
           </div>
           <button (click)="toggleFollow(user.username)" class="text-blue-500 font-bold text-xs">
@@ -198,29 +189,24 @@
         </div>
       </div>
 
-      <footer class="mt-10 text-[10px] text-gray-300 uppercase tracking-widest">
+      <footer class="mt-10 text-[10px] text-gray-300 dark:text-slate-600 uppercase tracking-widest">
         &copy; 2026 Fotoland from Antonio Algmar
       </footer>
     </div>
   </aside>
 
   <!-- Player de Story (Modal) -->
-  <div class="fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center p-0 md:p-4" *ngIf="activeStory">
-    <div class="relative w-full max-w-md aspect-[9/16] bg-gray-900 shadow-2xl overflow-hidden flex items-center justify-center">
-      
-      <!-- Barra de Progresso Animada -->
+  <div class="fixed inset-0 z-[2000] bg-black/95 flex items-center justify-center p-0 md:p-4" *ngIf="activeStory">
+    <div class="relative w-full max-w-md aspect-[9/16] bg-gray-900 shadow-2xl overflow-hidden flex items-center justify-center rounded-none md:rounded-xl">
       <div class="absolute top-0 left-0 w-full p-2 flex gap-1 z-20">
         <div class="h-1 bg-white/30 flex-1 rounded-full overflow-hidden">
           <div class="h-full bg-white progress-bar"></div>
         </div>
       </div>
-
-      <!-- Header com Autor -->
       <div class="absolute top-4 left-0 w-full p-4 flex items-center justify-between z-20">
         <div class="flex items-center gap-3">
           <img [src]="resolveMediaUrl(activeStory.user.profilePictureUrl || '')" class="w-8 h-8 rounded-full border border-white">
           <span class="text-white text-sm font-bold shadow-sm">{{ activeStory.user.username }}</span>
-          <span class="text-white/60 text-xs shadow-sm">{{ activeStory.createdAt | date:'shortTime' }}</span>
         </div>
         <button (click)="closeStory()" class="text-white p-2">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7">
@@ -228,11 +214,7 @@
           </svg>
         </button>
       </div>
-
-      <!-- Mídia do Story -->
       <img [src]="resolveMediaUrl(activeStory.mediaUrl)" class="w-full h-full object-cover">
-
-      <!-- Legenda Inferior -->
       <div class="absolute bottom-10 left-0 w-full p-6 text-center text-white text-lg font-medium drop-shadow-lg z-20" *ngIf="activeStory.caption">
         {{ activeStory.caption }}
       </div>

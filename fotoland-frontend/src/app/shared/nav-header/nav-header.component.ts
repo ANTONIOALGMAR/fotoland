@@ -4,6 +4,7 @@ import { NotificationService } from '../services/notification.service';
 import { RouterLink } from '@angular/router';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../auth/services/auth.service';
+import { ThemeService } from '../services/theme.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -11,16 +12,16 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [CommonModule, RouterLink, TranslateModule],
   template: `
-    <div class="flex flex-col gap-2 mb-4 w-full bg-emerald-50/90 backdrop-blur-md p-3 rounded-2xl border border-emerald-100 shadow-sm" [ngClass]="{'pl-14': shouldPad && !isMobile, 'pl-2': isMobile}">
+    <div class="flex flex-col gap-2 mb-4 w-full bg-emerald-50/90 dark:bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl border border-emerald-100 dark:border-slate-800 shadow-sm transition-colors duration-300" [ngClass]="{'pl-14': shouldPad && !isMobile, 'pl-2': isMobile}">
       
       <!-- Linha Superior: Título e Notificações -->
       <div class="flex items-center justify-between w-full">
-        <h2 *ngIf="!isAuthenticated" class="font-bold text-emerald-700 italic text-sm sm:text-lg">Bem-vindo ao Fotoland</h2>
-        <h2 *ngIf="isAuthenticated && title" class="font-bold text-gray-800 text-lg lg:text-xl truncate max-w-[150px] sm:max-w-none">{{ title }}</h2>
+        <h2 *ngIf="!isAuthenticated" class="font-bold text-emerald-700 dark:text-emerald-500 italic text-sm sm:text-lg">Bem-vindo ao Fotoland</h2>
+        <h2 *ngIf="isAuthenticated && title" class="font-bold text-gray-800 dark:text-slate-100 text-lg lg:text-xl truncate max-w-[150px] sm:max-w-none">{{ title }}</h2>
 
         <div class="flex items-center space-x-1" *ngIf="isAuthenticated">
           <!-- Mensagens (Azul) -->
-          <a routerLink="/private-chat" class="relative p-1.5 text-blue-500 hover:bg-blue-50 rounded-full transition-all" title="Mensagens">
+          <a routerLink="/private-chat" class="relative p-1.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full transition-all" title="Mensagens">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3.091-3.091c-.333-.03-.662-.065-.99-.103l-4.578-.512a2.25 2.25 0 01-1.98-2.253V10.608c0-.969.616-1.813 1.5-2.097a17.523 17.523 0 0110.5 0z" />
             </svg>
@@ -28,7 +29,7 @@ import { Subscription } from 'rxjs';
           </a>
 
           <!-- Convites (Índigo) -->
-          <a routerLink="/notifications" class="relative p-1.5 text-indigo-500 hover:bg-indigo-50 rounded-full transition-all" title="Convites">
+          <a routerLink="/notifications" class="relative p-1.5 text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-full transition-all" title="Convites">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
             </svg>
@@ -36,14 +37,14 @@ import { Subscription } from 'rxjs';
           </a>
 
           <!-- Catálogo (Verde Esmeralda) -->
-          <a [routerLink]="['/explore']" [queryParams]="{tab: 'catalog'}" class="relative p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-full transition-all" title="Catálogo de Membros">
+          <a [routerLink]="['/explore']" [queryParams]="{tab: 'catalog'}" class="relative p-1.5 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 rounded-full transition-all" title="Catálogo de Membros">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.25 0 11-5.25 0 2.625 2.25 0 015.25 0z" />
             </svg>
           </a>
 
           <!-- Notificações (Laranja/Vermelho) -->
-          <a routerLink="/notifications" class="relative p-1.5 text-orange-500 hover:bg-orange-50 rounded-full transition-all" title="Notificações">
+          <a routerLink="/notifications" class="relative p-1.5 text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/30 rounded-full transition-all" title="Notificações">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.248 24.248 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
             </svg>
@@ -60,15 +61,27 @@ import { Subscription } from 'rxjs';
             <button *ngIf="showChatNav && showGroupNav" (click)="navigateGroup.emit()" class="bg-indigo-600 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm hover:bg-indigo-700 transition-colors">Coletivo</button>
           </div>
 
-          <button *ngIf="showCancel" (click)="cancel.emit()" [disabled]="disableCancel" class="bg-white text-gray-600 px-2 py-1.5 rounded-lg border border-emerald-200 disabled:opacity-50 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm hover:bg-emerald-50 transition-colors">Cancelar</button>
-          <button *ngIf="showBack" (click)="back.emit()" class="bg-gray-800 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm hover:bg-black transition-colors">Voltar</button>
+          <button *ngIf="showCancel" (click)="cancel.emit()" [disabled]="disableCancel" class="bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 px-2 py-1.5 rounded-lg border border-emerald-200 dark:border-slate-700 disabled:opacity-50 text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors">Cancelar</button>
+          <button *ngIf="showBack" (click)="back.emit()" class="bg-gray-800 dark:bg-slate-700 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm hover:bg-black dark:hover:bg-slate-600 transition-colors">Voltar</button>
         </ng-container>
 
-        <!-- Language Selector -->
-        <div class="flex items-center bg-white/80 px-2 py-1.5 rounded-lg border border-emerald-100 shadow-sm" [ngClass]="{'ml-auto': isAuthenticated}">
-          <button (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" [class.text-emerald-600]="currentLang === 'pt'" class="text-[10px] text-gray-500 px-1 uppercase tracking-tighter">PT</button>
-          <span class="text-emerald-200 text-[10px]">|</span>
-          <button (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" [class.text-emerald-600]="currentLang === 'en'" class="text-[10px] text-gray-500 px-1 uppercase tracking-tighter">EN</button>
+        <div class="flex items-center gap-2" [ngClass]="{'ml-auto': isAuthenticated}">
+          <!-- Theme Toggle -->
+          <button (click)="themeService.toggleTheme()" class="p-1.5 text-gray-500 dark:text-yellow-400 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-all shadow-sm border border-emerald-50 dark:border-slate-800" [title]="themeService.isDarkMode() ? 'Modo Claro' : 'Modo Escuro'">
+            <svg *ngIf="!themeService.isDarkMode()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+            </svg>
+            <svg *ngIf="themeService.isDarkMode()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m0 13.5V21m8.25-9h2.25m-13.5 0H3m15.364-6.364l-1.591 1.591M6.75 16.5l-1.591 1.591m12.728 0l-1.591-1.591M6.75 7.5l-1.591-1.591M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+            </svg>
+          </button>
+
+          <!-- Language Selector -->
+          <div class="flex items-center bg-white/80 dark:bg-slate-800/80 px-2 py-1.5 rounded-lg border border-emerald-100 dark:border-slate-800 shadow-sm transition-colors duration-300">
+            <button (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" [class.text-emerald-600]="currentLang === 'pt'" [class.dark:text-emerald-400]="currentLang === 'pt'" class="text-[10px] text-gray-500 dark:text-slate-400 px-1 uppercase tracking-tighter">PT</button>
+            <span class="text-emerald-200 dark:text-slate-700 text-[10px]">|</span>
+            <button (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" [class.text-emerald-600]="currentLang === 'en'" [class.dark:text-emerald-400]="currentLang === 'en'" class="text-[10px] text-gray-500 dark:text-slate-400 px-1 uppercase tracking-tighter">EN</button>
+          </div>
         </div>
       </div>
     </div>
@@ -106,11 +119,13 @@ export class NavHeaderComponent implements OnInit, OnDestroy {
   constructor(
     private notificationService: NotificationService, 
     private translate: TranslateService,
-    private authService: AuthService
+    private authService: AuthService,
+    public themeService: ThemeService
   ) {
     this.currentLang = translate.currentLang || translate.defaultLang || 'pt';
     this.checkScreenSize();
   }
+
 
   ngOnInit(): void {
     this.authSubscription = this.authService.isAuthenticated$.subscribe(status => {

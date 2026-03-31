@@ -5,6 +5,7 @@ import { Subscription, interval, of } from 'rxjs';
 import { filter, startWith, switchMap, catchError } from 'rxjs/operators';
 import { NotificationService } from './shared/services/notification.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ThemeService } from './shared/services/theme.service';
 import { User } from '../../../api.models';
 
 @Component({
@@ -45,13 +46,15 @@ export class AppComponent implements OnInit, OnDestroy {
     public authService: AuthService, 
     private router: Router, 
     private notificationService: NotificationService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private themeService: ThemeService
   ) {
     const savedLang = localStorage.getItem('selectedLang') || 'pt';
     this.translate.addLangs(['pt', 'en']);
     this.translate.setDefaultLang('pt');
     this.translate.use(savedLang);
   }
+
 
   ngOnInit(): void {
     this.authStatusSubscription = this.authService.isAuthenticated$.subscribe(status => {

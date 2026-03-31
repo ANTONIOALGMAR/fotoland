@@ -6,11 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Location } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { SkeletonLoaderComponent } from '../shared/components/skeleton-loader/skeleton-loader.component';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, SkeletonLoaderComponent],
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.css']
 })

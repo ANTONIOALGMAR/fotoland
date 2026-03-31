@@ -1,108 +1,54 @@
-# 📸 Fotoland
+# 📸 Fotoland - 2026 Edition
 
 ![Angular](https://img.shields.io/badge/Angular-17.0.0-DD0031?style=for-the-badge&logo=angular&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.0-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.18-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4479A1?style=for-the-badge&logo=postgresql&logoColor=white)
-![AWS S3](https://img.shields.io/badge/AWS_S3-FF9900?style=for-the-badge&logo=amazons3&logoColor=white)
+![PWA](https://img.shields.io/badge/PWA-Ready-00AEEF?style=for-the-badge&logo=pwa&logoColor=white)
+![Futuristic UI](https://img.shields.io/badge/UI-Futuristic-10B981?style=for-the-badge&logo=design&logoColor=white)
 
-Fotoland é uma plataforma social moderna para compartilhamento de fotos e vídeos, construída com uma arquitetura robusta e escalável.
-
----
-
-## 🚀 Funcionalidades Principais
-
-### 🔐 Segurança & Autenticação
-- **Proteção de Rotas:** Acesso restrito a usuários autenticados via `AuthGuard`.
-- **JWT (JSON Web Token):** Autenticação via cookie HttpOnly (mitiga XSS). O `AuthInterceptor` envia `withCredentials` para o backend.
-- **Gestão de Sessão:** Logout seguro com limpeza de tokens e redirecionamento.
-
-### 📱 Experiência do Usuário (UI/UX)
-- **Design Responsivo:** Interface moderna utilizando Tailwind CSS.
-- **Feed Global:** Visualize álbuns e posts de todos os usuários.
-- **Perfis Personalizáveis:** Edite suas informações, username e foto de perfil.
-- **Notificações em Tempo Real:** Acompanhe interações e atualizações.
-
-### 💬 Comunicação & Interação
-- **Chat em Tempo Real:** Comunicação privada e coletiva via WebSockets (StompJS/SockJS).
-- **Sistema de Comentários:** Interaja diretamente nos posts dos usuários.
-- **Explorar:** Busca avançada de posts por legenda, tipo (foto/vídeo) e autor.
+Fotoland é uma plataforma social de elite para compartilhamento de mídia, agora modernizada com as tendências mais quentes do mercado de 2026.
 
 ---
 
-## 🛠️ Stack Tecnológica
+## 🚀 Novas Funcionalidades (Update 2026)
+
+### 🌑 Futuristic Dark Mode
+- **Interface Camaleão:** Alternância inteligente entre temas Claro e Escuro com transições suaves.
+- **Glassmorphism:** Efeitos de vidro fosco e desfoque de fundo (backdrop-blur) em toda a interface.
+- **Mesh Gradients:** Fundo animado futurista na tela de login para uma experiência imersiva.
+
+### 📱 Experiência Mobile & PWA
+- **App Instalável:** Suporte completo a Progressive Web App (PWA). Instale o Fotoland no seu celular ou desktop.
+- **Offline First:** Service Workers garantem que a estrutura básica carregue instantaneamente, mesmo sem internet.
+
+### ⚡ Performance & Fluidez
+- **Skeleton Loading:** Carregamento visual animado em vez de telas brancas ou spinners chatos. Sente o app carregar como as gigantes do mercado (Instagram/Facebook).
+- **Explore Grid (Masonry):** Aba explorar reformulada com layout de grade dinâmica e hover effects modernos.
+
+---
+
+## 🛠️ Stack Tecnológica Atualizada
 
 ### Frontend
-- **Framework:** Angular 17
-- **Estilização:** Tailwind CSS
-- **Comunicação Real-time:** StompJS & SockJS
-- **Estado & Rotas:** Angular Router & RxJS
+- **Framework:** Angular 17 (Standalone Components)
+- **Estilização:** Tailwind CSS + Custom Dark Theme
+- **Service Workers:** @angular/pwa
+- **Animações:** CSS Moderno (Keyframes & Transitions)
 
 ### Backend
 - **Framework:** Spring Boot 3.3.0
-- **Linguagem:** Java 17
-- **Banco de Dados:** PostgreSQL (Produção) / H2 (Desenvolvimento)
-- **Segurança:** Spring Security & JWT
-- **Armazenamento de Mídia:** AWS S3
+- **Segurança:** Spring Security & JWT via HttpOnly Cookies
+- **Armazenamento:** AWS S3
 
 ---
 
 ## ⚙️ Configuração do Ambiente
 
-### Pré-requisitos
-- Node.js (>= 18.18.0)
-- Java 17
-- Maven
-- Docker (Opcional)
-
-### Backend
-1. Navegue até o diretório do backend:
-   ```bash
-   cd fotoland-backend
-   ```
-2. Execute localmente:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-3. Ou utilize Docker:
-   ```bash
-   docker-compose up
-   ```
-
 ### Frontend
-1. Navegue até o diretório do frontend:
-   ```bash
-   cd fotoland-frontend
-   ```
-2. Instale as dependências:
-   ```bash
-   npm install
-   ```
-3. Inicie o servidor de desenvolvimento:
-   ```bash
-   npm start
-   ```
+1. Navegue até o diretório: `cd fotoland-frontend`
+2. Instale: `npm install`
+3. Inicie: `npm start`
+4. Para ver o PWA em ação: `npm run build` e sirva a pasta `dist`.
 
 ---
 
-## 📈 Roadmap de Evolução
-
-- [x] **Sistema de Curtidas:** Adicionar "Like" aos posts.
-- [x] **Seguidores:** Implementar sistema de "Seguir/Seguidores".
-- [ ] **Melhorias de Performance:** Otimização de carregamento de imagens.
-- [ ] **PWA:** Tornar a plataforma instalável em dispositivos móveis.
-- [ ] **Internacionalização (i18n):** Suporte a múltiplos idiomas.
-
----
-
-## 🤝 Contribuindo
-
-1. Faça um Fork do projeto.
-2. Crie uma Branch para sua feature (`git checkout -b feature/NovaFeature`).
-3. Commit suas mudanças (`git commit -m 'Adicionando nova feature'`).
-4. Push para a Branch (`git push origin feature/NovaFeature`).
-5. Abra um Pull Request.
-
----
-
-Desenvolvido por [Antonio Algmar](https://github.com/ANTONIOALGMAR) 🚀
+Desenvolvido com ❤️ por [Antonio Algmar](https://github.com/ANTONIOALGMAR) & Gemini CLI 🚀

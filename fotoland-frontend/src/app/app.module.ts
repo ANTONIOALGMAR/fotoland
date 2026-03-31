@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -17,10 +17,12 @@ import { CreateAlbumComponent } from './create-album/create-album.component';
 import { CreatePostComponent } from './create-post/create-post.component';
 import { AlbumDetailComponent } from './album-detail/album-detail.component';
 import { ChatComponent } from './chat/chat.component';
+import { SkeletonLoaderComponent } from './shared/components/skeleton-loader/skeleton-loader.component';
 
 // i18n
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -46,6 +48,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     CreatePostComponent,
     AlbumDetailComponent,
     ChatComponent,
+    SkeletonLoaderComponent,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -53,6 +56,12 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       },
       defaultLanguage: 'pt'
+    }),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
     })
   ],
   providers: [

@@ -1,89 +1,96 @@
-<div class="explore-page max-w-5xl mx-auto p-4 pt-10">
+<div class="explore-page max-w-5xl mx-auto p-4 pt-10 transition-colors duration-300">
 
-  <div class="flex border-b mb-6 overflow-x-auto no-scrollbar">
-    <button (click)="activeTab = 'posts'" [class.border-blue-600]="activeTab === 'posts'" [class.text-blue-600]="activeTab === 'posts'" class="py-2 px-6 border-b-2 font-bold transition-all whitespace-nowrap">Posts</button>
-    <button (click)="activeTab = 'users'" [class.border-blue-600]="activeTab === 'users'" [class.text-blue-600]="activeTab === 'users'" class="py-2 px-6 border-b-2 font-bold transition-all whitespace-nowrap">Buscar Nick</button>
-    <button (click)="onLoadCatalog()" [class.border-blue-600]="activeTab === 'catalog'" [class.text-blue-600]="activeTab === 'catalog'" class="py-2 px-6 border-b-2 font-bold transition-all whitespace-nowrap">Catálogo (A-Z)</button>
+  <!-- Tabs de Navegação -->
+  <div class="flex border-b dark:border-slate-800 mb-6 overflow-x-auto no-scrollbar">
+    <button (click)="activeTab = 'posts'" [class.border-blue-600]="activeTab === 'posts'" [class.text-blue-600]="activeTab === 'posts'" class="py-2 px-6 border-b-2 font-bold transition-all whitespace-nowrap dark:text-slate-300 dark:hover:text-white">Posts</button>
+    <button (click)="activeTab = 'users'" [class.border-blue-600]="activeTab === 'users'" [class.text-blue-600]="activeTab === 'users'" class="py-2 px-6 border-b-2 font-bold transition-all whitespace-nowrap dark:text-slate-300 dark:hover:text-white">Buscar Nick</button>
+    <button (click)="onLoadCatalog()" [class.border-blue-600]="activeTab === 'catalog'" [class.text-blue-600]="activeTab === 'catalog'" class="py-2 px-6 border-b-2 font-bold transition-all whitespace-nowrap dark:text-slate-300 dark:hover:text-white">Catálogo (A-Z)</button>
   </div>
 
-  <!-- Filtros (Posts e Busca Manual) -->
-  <section class="card bg-white p-6 rounded-xl shadow-sm border mb-6" *ngIf="activeTab !== 'catalog'">
-    <h2 class="text-xl font-bold mb-4">{{ activeTab === 'posts' ? 'Explorar Posts' : 'Buscar Usuários' }}</h2>
+  <!-- Filtros -->
+  <section class="card bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border dark:border-slate-700 mb-6 transition-colors" *ngIf="activeTab !== 'catalog'">
+    <h2 class="text-xl font-bold mb-4 dark:text-slate-100">{{ activeTab === 'posts' ? 'Explorar Posts' : 'Buscar Usuários' }}</h2>
     
     <div class="filters flex flex-wrap gap-3" *ngIf="activeTab === 'posts'">
-      <input type="text" class="flex-1 min-w-[200px] p-2 border rounded-lg" [placeholder]="'FEED.SEARCH_CAPTION' | translate" [(ngModel)]="search.q">
-      <select class="p-2 border rounded-lg" [(ngModel)]="search.type">
+      <input type="text" class="flex-1 min-w-[200px] p-2 border dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none transition-all" [placeholder]="'FEED.SEARCH_CAPTION' | translate" [(ngModel)]="search.q">
+      <select class="p-2 border dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none" [(ngModel)]="search.type">
         <option value="">{{ 'FEED.SEARCH_TYPE' | translate }}</option>
         <option value="PHOTO">{{ 'FEED.PHOTO' | translate }}</option>
         <option value="VIDEO">{{ 'FEED.VIDEO' | translate }}</option>
       </select>
-      <input type="text" class="p-2 border rounded-lg" [placeholder]="'FEED.SEARCH_AUTHOR' | translate" [(ngModel)]="search.author">
-      <button class="btn primary bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700" (click)="onSearch()">Buscar</button>
+      <input type="text" class="p-2 border dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none" [placeholder]="'FEED.SEARCH_AUTHOR' | translate" [(ngModel)]="search.author">
+      <button class="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700 shadow-md transition-colors" (click)="onSearch()">Buscar</button>
     </div>
 
     <div class="filters flex flex-col gap-3" *ngIf="activeTab === 'users'">
       <div class="flex gap-3">
-        <input #userSearchInput type="text" class="flex-1 p-2 border rounded-lg" placeholder="Digite o nickname ou nome..." [(ngModel)]="userQuery" (input)="onUserQueryChange(userSearchInput.value)" (keyup.enter)="onSearchUsers()">
-        <button class="btn primary bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700" (click)="onSearchUsers()">Buscar Nick</button>
+        <input #userSearchInput type="text" class="flex-1 p-2 border dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="Digite o nickname ou nome..." [(ngModel)]="userQuery" (input)="onUserQueryChange(userSearchInput.value)" (keyup.enter)="onSearchUsers()">
+        <button class="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700 shadow-md transition-colors" (click)="onSearchUsers()">Buscar Nick</button>
       </div>
-      <div *ngIf="userLoading" class="text-sm text-gray-500">Buscando usuários...</div>
+      <div *ngIf="userLoading" class="text-sm text-gray-500 dark:text-slate-400 italic">Buscando usuários...</div>
     </div>
   </section>
 
   <!-- Título Catálogo -->
-  <h2 class="text-xl font-bold mb-4 px-2" *ngIf="activeTab === 'catalog'">Todos os Membros (A-Z)</h2>
+  <h2 class="text-xl font-bold mb-4 px-2 dark:text-slate-100" *ngIf="activeTab === 'catalog'">Todos os Membros (A-Z)</h2>
 
-  <div class="loading text-center p-10" *ngIf="loading">
-    <span class="text-gray-500 font-medium italic">Carregando lista...</span>
+  <!-- SKELETON LOADERS -->
+  <div class="p-4" *ngIf="loading">
+    <app-skeleton-loader *ngIf="activeTab === 'posts'" type="grid" [count]="8"></app-skeleton-loader>
+    <app-skeleton-loader *ngIf="activeTab === 'users' || activeTab === 'catalog'" type="feed" [count]="4"></app-skeleton-loader>
   </div>
 
   <section class="results" *ngIf="!loading">
-    <div class="error bg-red-100 text-red-700 p-3 rounded-lg mb-4" *ngIf="error">{{ error }}</div>
+    <div class="error bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-3 rounded-lg mb-4 border border-red-200 dark:border-red-800" *ngIf="error">{{ error }}</div>
     
-    <!-- Grid de Posts -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" *ngIf="activeTab === 'posts'">
-      <div class="post-card group relative bg-gray-100 rounded-lg overflow-hidden aspect-square shadow-sm" *ngFor="let post of results">
-        <img [src]="authService.resolveMediaUrl(post.mediaUrl)" class="w-full h-full object-cover transition-transform group-hover:scale-105" alt="media">
-        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-white">
-          <span class="text-xs font-bold truncate">{{ post.caption }}</span>
-          <span class="text-[10px] opacity-80 mb-2">{{ post.createdAt | date:'short' }}</span>
-          <!-- Botão Admin para Moderar Posts -->
-          <button *ngIf="isAdmin" class="bg-red-600/80 hover:bg-red-700 text-white text-[10px] font-bold py-1 px-2 rounded-md transition-colors" (click)="adminDeletePost(post.id)">Excluir (ADMIN)</button>
+    <!-- Grid de Posts (Instagram Style) -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4" *ngIf="activeTab === 'posts'">
+      <div class="post-card group relative bg-gray-100 dark:bg-slate-800 rounded-lg overflow-hidden aspect-square shadow-sm cursor-pointer" *ngFor="let post of results">
+        <img [src]="authService.resolveMediaUrl(post.mediaUrl)" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="media">
+        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center p-3 text-white text-center">
+          <div class="flex items-center gap-4 mb-2">
+            <span class="flex items-center gap-1 font-bold text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24"><path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001Z" /></svg>
+              {{ post.likeCount || 0 }}
+            </span>
+          </div>
+          <span class="text-xs font-medium line-clamp-2 px-2">{{ post.caption }}</span>
+          
+          <button *ngIf="isAdmin" class="mt-4 bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold py-1 px-3 rounded-full transition-colors" (click)="adminDeletePost(post.id); $event.stopPropagation()">Excluir (ADMIN)</button>
         </div>
       </div>
     </div>
 
-    <!-- Lista de Usuários (Busca e Catálogo) -->
-    <div class="user-results-grid" *ngIf="activeTab === 'users' || activeTab === 'catalog'">
-      <div class="user-card-custom" *ngFor="let u of userResults">
-        <div class="user-info-wrapper">
-          <img [src]="authService.resolveMediaUrl(u.profilePictureUrl || '')" class="user-avatar" alt="avatar">
-          <div class="user-details">
-            <p class="user-name" [title]="u.fullName">{{ u.fullName }}</p>
-            <p class="user-nick"><span>&#64;</span>{{ u.username }}</p>
+    <!-- Lista de Usuários Modernizada -->
+    <div class="flex flex-col gap-3" *ngIf="activeTab === 'users' || activeTab === 'catalog'">
+      <div class="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl shadow-sm hover:shadow-md transition-all" *ngFor="let u of userResults">
+        <div class="flex items-center gap-4">
+          <img [src]="authService.resolveMediaUrl(u.profilePictureUrl || '')" class="w-12 h-12 rounded-full object-cover border-2 border-emerald-500 p-[1px]" alt="avatar">
+          <div>
+            <p class="font-bold text-gray-900 dark:text-slate-100 leading-tight">{{ u.fullName }}</p>
+            <p class="text-sm text-gray-500 dark:text-slate-400"><span>&#64;</span>{{ u.username }}</p>
           </div>
         </div>
         
-        <div class="follow-btn-wrapper flex flex-col gap-2">
-          <div class="follow-action flex items-center gap-2">
-            <button *ngIf="!followingMap[u.username]" type="button"
-              (click)="toggleFollow(u.username)"
-              class="follow-btn-custom">
-              {{ 'COMMON.FOLLOW' | translate }}
-            </button>
-            <button *ngIf="followingMap[u.username]" type="button" class="unfollow-btn" (click)="toggleFollow(u.username)">
-              Deixar de seguir
-            </button>
-          </div>
+        <div class="flex items-center gap-3">
+          <button (click)="toggleFollow(u.username)" 
+            [class.bg-blue-600]="!followingMap[u.username]"
+            [class.text-white]="!followingMap[u.username]"
+            [class.bg-gray-200]="followingMap[u.username]"
+            [class.dark:bg-slate-700]="followingMap[u.username]"
+            [class.text-gray-800]="followingMap[u.username]"
+            [class.dark:text-slate-200]="followingMap[u.username]"
+            class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all hover:scale-105 active:scale-95">
+            {{ followingMap[u.username] ? 'Seguindo' : 'Seguir' }}
+          </button>
           
-          <!-- Botão Admin para Excluir Usuário -->
-          <button *ngIf="isAdmin" type="button" (click)="adminDeleteUser(u.id)" class="text-[9px] text-red-600 font-bold hover:underline">
-            DELETAR (ADMIN)
+          <button *ngIf="isAdmin" (click)="adminDeleteUser(u.id)" class="text-[10px] text-red-500 font-bold hover:underline px-2">
+            BANIR
           </button>
         </div>
       </div>
-      <p class="col-span-full text-center text-gray-500 italic py-10" *ngIf="userResults.length === 0 && activeTab === 'users' && userQuery">Nenhum usuário encontrado.</p>
-      <p class="col-span-full text-center text-gray-500 italic py-10" *ngIf="userResults.length === 0 && activeTab === 'catalog'">O catálogo está vazio.</p>
+      
+      <p class="text-center text-gray-500 dark:text-slate-400 italic py-10" *ngIf="userResults.length === 0 && !loading">Nenhum resultado encontrado.</p>
     </div>
   </section>
 </div>

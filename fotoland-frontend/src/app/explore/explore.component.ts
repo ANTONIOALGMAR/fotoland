@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth/services/auth.service';
 import { Post, User } from '../../../../api.models';
 import { TranslateModule } from '@ngx-translate/core';
+import { SkeletonLoaderComponent } from '../shared/components/skeleton-loader/skeleton-loader.component';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, Subscription, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, tap } from 'rxjs/operators';
@@ -11,7 +12,7 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, tap } from '
 @Component({
   selector: 'app-explore',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, SkeletonLoaderComponent],
   templateUrl: './explore.component.html',
   styleUrls: ['./explore.component.css']
 })
