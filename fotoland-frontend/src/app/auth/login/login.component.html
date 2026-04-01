@@ -1,16 +1,11 @@
 <!-- Layout de login com fundo centralizado e slideshow futurista -->
-<div class="background-slideshow">
-  <div class="slide" style="background-image: url('assets/futuristic-background.jpg');"></div>
-  <div class="slide" style="background-image: url('assets/futuristic-background2.jpg');"></div>
-  <div class="slide" style="background-image: url('assets/futuristic-background3.jpg');"></div>
-  <div class="background-overlay"></div>
-</div>
+<div class="background-slideshow"></div>
 
 <!-- Seletor de Idioma no Login -->
-<div class="fixed top-4 right-4 z-50 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30 flex gap-2">
-  <button (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" class="text-xs text-white hover:text-blue-200">PT</button>
-  <span class="text-white/30 text-xs">|</span>
-  <button (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" class="text-xs text-white hover:text-blue-200">EN</button>
+<div class="fixed top-4 right-4 z-[100] bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 flex gap-2">
+  <button (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" class="text-xs text-white hover:text-emerald-400 transition-colors uppercase">PT</button>
+  <span class="text-white/20 text-xs">|</span>
+  <button (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" class="text-xs text-white hover:text-emerald-400 transition-colors uppercase">EN</button>
 </div>
 
 <div class="login-container">
@@ -19,12 +14,12 @@
     <form (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="username">{{ 'AUTH.USERNAME' | translate }}</label>
-        <input type="text" id="username" name="username" [(ngModel)]="credentials.username" required>
+        <input type="text" id="username" name="username" [(ngModel)]="credentials.username" required placeholder="Digite seu usuário">
       </div>
       <div class="form-group">
         <label for="password">{{ 'AUTH.PASSWORD' | translate }}</label>
         <div class="password-wrapper">
-          <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" [(ngModel)]="credentials.password" autocomplete="current-password" required>
+          <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" [(ngModel)]="credentials.password" autocomplete="current-password" required placeholder="Sua senha">
           <button type="button" class="btn-outline" (click)="toggleShowPassword()">
             {{ showPassword ? ('AUTH.HIDE' | translate) : ('AUTH.SHOW' | translate) }}
           </button>
@@ -37,7 +32,6 @@
 
       <div class="loading-indicator" *ngIf="loading">
         <span class="spinner"></span>
-        <span class="loading-text">{{ 'COMMON.LOADING' | translate }}</span>
       </div>
 
       <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>

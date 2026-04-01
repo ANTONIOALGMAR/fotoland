@@ -8,10 +8,19 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.app-layout:not(.authenticated) {
+  background-color: transparent;
+}
+
 :host-context(html.dark) .app-layout {
   background-color: #0f172a;
   color: #f1f5f9;
 }
+
+:host-context(html.dark) .app-layout:not(.authenticated) {
+  background-color: transparent;
+}
+
 
 /* Sidebar Desktop */
 .sidebar {
