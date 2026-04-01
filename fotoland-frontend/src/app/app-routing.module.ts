@@ -14,8 +14,9 @@ import { ChatComponent } from './chat/chat.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent, canActivate: [AuthGuard] },
-  { path: 'register', component: RegisterComponent, canActivate: [UnauthGuard] },
-  { path: 'login', component: LoginComponent, canActivate: [UnauthGuard] },
+  { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent },
+
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'create-album', component: CreateAlbumComponent, canActivate: [AuthGuard] },
   { path: 'edit-album/:id', component: CreateAlbumComponent, canActivate: [AuthGuard] },

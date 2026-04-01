@@ -21,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
       const token = typeof window !== 'undefined' ? localStorage.getItem('fotoland_token') : null;
       let headers = request.headers.set('X-Requested-With', 'XMLHttpRequest');
       
-      if (token) {
+      if (token && token !== 'null' && token !== 'undefined') {
         headers = headers.set('Authorization', `Bearer ${token}`);
       }
 
@@ -30,6 +30,7 @@ export class AuthInterceptor implements HttpInterceptor {
         headers: headers
       });
     }
+
 
     return next.handle(request);
   }

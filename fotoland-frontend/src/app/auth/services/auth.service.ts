@@ -105,8 +105,14 @@ export class AuthService {
   }
 
   getMe(): Observable<User> {
-    return this.http.get<User>(`${this.userApiUrl}/me`);
+    return this.http.get<User>(`${this.userApiUrl}/me`).pipe(
+      catchError((err) => {
+        // Silencia erro no console se for apenas verificação de sessão inicial
+        return throwError(() => err);
+      })
+    );
   }
+
 
   // Keep a single helper to check admin role
   isAdmin(): Observable<boolean> {
