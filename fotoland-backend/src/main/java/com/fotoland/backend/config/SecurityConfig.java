@@ -54,6 +54,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/user/**").authenticated()
                 .requestMatchers("/api/chat/**").authenticated()
                 .requestMatchers("/ws/**", "/ws-native/**").permitAll()
+                .requestMatchers("/actuator/prometheus", "/actuator/health", "/actuator/info").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(apiCsrfFilter, UsernamePasswordAuthenticationFilter.class)

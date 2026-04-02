@@ -66,6 +66,13 @@ cd fotoland-backend
 ./mvnw spring-boot:run
 ```
 
+### 1.1 Script de inicialização
+Para garantir que o RabbitMQ/Postgres estejam prontos antes do backend, execute o script interno:
+```bash
+./scripts/start-backend.sh
+```
+Ele sobe os containers (RabbitMQ + Postgres), espera o healthcheck e inicia o `spring-boot:run`.
+
 ### 2. Frontend
 ```bash
 cd fotoland-frontend
@@ -81,6 +88,16 @@ npx ng build
 npx http-server dist/fotoland-frontend/browser
 ```
 *Acesse o link gerado e clique em **"Instalar App"** na barra de endereços do Chrome.*
+
+### 🧯 Camada assíncrona de notificações (RabbitMQ)
+- O backend agora publica eventos `NotificationEvent` em vez de invocar o `NotificationService` diretamente, deixando RabbitMQ entregar os eventos de curtida, comentário, follow ou chat de forma escalável.
+- Execute `docker compose up -d rabbitmq postgres` (o `docker-compose.yml` já registra o serviço `rabbitmq:3-management`, expondo 5672/15672 e um healthcheck `rabbitmqctl status`), depois rode a API; os listeners declararem as filas automaticamente.
+- Para validar o fluxo, existe o teste `NotificationEventIntegrationTest`, que sobe um RabbitMQ via Testcontainers, publica um evento e espera até que a notificação seja persistida. Basta rodar `./mvnw test` (o container é baixado automaticamente na primeira execução).
+
+### 📡 Observabilidade + métricas
+- Micrometer/Prometheus estão habilitados (`micrometer-registry-prometheus`) e expõem `/actuator/prometheus` com métricas do broker graças ao binder `RabbitMetrics`.
+- Os endpoints `health`, `info` e `prometheus` já estão expostos e incluo tags fixas (`management.metrics.tags.application=fotoland-backend`) para facilitar agregação.
+- Se quiser integração com Prometheus/Grafana, direcione o scrape para `http://localhost:8080/actuator/prometheus` e monitore `rabbitmq.*` junto com métricas de heap, GC e latência.
 
 ---
 
