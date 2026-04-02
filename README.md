@@ -71,7 +71,41 @@ Para garantir que o RabbitMQ/Postgres estejam prontos antes do backend, execute 
 ```bash
 ./scripts/start-backend.sh
 ```
-Ele sobe os containers (RabbitMQ + Postgres), espera o healthcheck e inicia o `spring-boot:run`.
+Ele sobe os containers (RabbitMQ + Postgres), espera os healthchecks e inicia o `spring-boot:run`.
+
+### 1.2 Deploy Docker / Render
+Use o `Dockerfile` abaixo para criar a imagem final. A sequência multi-stage compila o backend e copia o JAR + script de inicialização.
+```dockerfile
+FROM eclipse-temurin:17-jdk-jammy AS builder
+WORKDIR /app
+COPY . .
+RUN ./mvnw -DskipTests package
+
+FROM eclipse-temurin:17-jre-jammy
+WORKDIR /app
+COPY --from=builder /app/target/fotoland-backend-0.0.1-SNAPSHOT.jar ./fotoland-backend.jar
+COPY --from=builder /app/scripts/start-backend.sh ./scripts/start-backend.sh
+RUN chmod +x ./scripts/start-backend.sh
+
+ENTRYPOINT ["./scripts/start-backend.sh"]
+```
+
+No Render, defina o comando de startup exatamente como acima e configure as variáveis de ambiente listadas abaixo.
+
+#### Variáveis necessárias (Render / outro host)
+- `SPRING_PROFILES_ACTIVE=prod` (ou `dev` para habilitar logs/H2)
+- `SPRING_DATASOURCE_URL=jdbc:postgresql://<postgres-host>:5432/<db-name>`
+- `SPRING_DATASOURCE_USERNAME=<user>`
+- `SPRING_DATASOURCE_PASSWORD=<senha>`
+- `SPRING_RABBITMQ_HOST=<rabbitmq-host>`
+- `SPRING_RABBITMQ_PORT=5672`
+- `SPRING_RABBITMQ_USERNAME=<user>`
+- `SPRING_RABBITMQ_PASSWORD=<senha>`
+- `JWT_SECRET=<chave base64 com >=32 bytes>`
+- `AWS_S3_BUCKET_NAME` e `AWS_S3_ENDPOINT` se usar S3
+- `MAIL`/`SMS` credenciais se o fluxo precisa de envio
+
+Não exponha `fotoland_jwt` no frontend; o backend entrega cookie HttpOnly para autenticação.
 
 ### 2. Frontend
 ```bash
