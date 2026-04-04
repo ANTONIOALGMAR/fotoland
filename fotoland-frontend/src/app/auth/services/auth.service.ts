@@ -16,8 +16,10 @@ export class AuthService {
     this.BASE_URL_OVERRIDE
       ? this.BASE_URL_OVERRIDE
       : (/^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/.test(window.location.hostname)
-          ? 'http://localhost:8080'
-          : 'https://fotoland-backend.onrender.com')
+          ? 'http://localhost:8888'
+          : (window.location.hostname.includes('onrender.com') 
+              ? `https://${window.location.hostname.replace('-frontend', '-backend')}`
+              : 'https://fotoland-backend.onrender.com'))
   ).replace(/:+$/, '');
 
   private readonly apiUrl = `${this.BASE_URL}/api/auth`;

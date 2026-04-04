@@ -12,10 +12,10 @@
 </div>
 
 <!-- Seletor de Idioma no Registro -->
-<div class="fixed top-4 right-4 z-50 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30 flex gap-2">
-  <button type="button" (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" class="text-xs text-white hover:text-blue-200">PT</button>
+<div class="fixed top-4 right-4 z-[9999] bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30 flex gap-2">
+  <button type="button" (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" class="text-xs text-white hover:text-blue-200 cursor-pointer">PT</button>
   <span class="text-white/30 text-xs">|</span>
-  <button type="button" (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" class="text-xs text-white hover:text-blue-200">EN</button>
+  <button type="button" (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" class="text-xs text-white hover:text-blue-200 cursor-pointer">EN</button>
 </div>
 
 <div class="register-container">
