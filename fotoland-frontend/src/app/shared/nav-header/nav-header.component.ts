@@ -77,10 +77,21 @@ import { Subscription } from 'rxjs';
           </button>
 
           <!-- Language Selector -->
-          <div class="flex items-center bg-white/80 dark:bg-slate-800/80 px-2 py-1.5 rounded-lg border border-emerald-100 dark:border-slate-800 shadow-sm transition-colors duration-300">
-            <button (click)="changeLang('pt')" [class.font-bold]="currentLang === 'pt'" [class.text-emerald-600]="currentLang === 'pt'" [class.dark:text-emerald-400]="currentLang === 'pt'" class="text-[10px] text-gray-500 dark:text-slate-400 px-1 uppercase tracking-tighter">PT</button>
-            <span class="text-emerald-200 dark:text-slate-700 text-[10px]">|</span>
-            <button (click)="changeLang('en')" [class.font-bold]="currentLang === 'en'" [class.text-emerald-600]="currentLang === 'en'" [class.dark:text-emerald-400]="currentLang === 'en'" class="text-[10px] text-gray-500 dark:text-slate-400 px-1 uppercase tracking-tighter">EN</button>
+          <div class="flex items-center bg-gray-100 dark:bg-slate-800 p-1 rounded-xl border border-emerald-100 dark:border-slate-700 shadow-inner transition-colors duration-300">
+            <button (click)="changeLang('pt')" 
+              [class.bg-emerald-600]="currentLang === 'pt'" 
+              [class.text-white]="currentLang === 'pt'"
+              [class.shadow-md]="currentLang === 'pt'"
+              class="text-[10px] text-gray-500 dark:text-slate-400 px-2 py-1 rounded-lg uppercase tracking-wider font-bold transition-all duration-200">
+              PT
+            </button>
+            <button (click)="changeLang('en')" 
+              [class.bg-emerald-600]="currentLang === 'en'" 
+              [class.text-white]="currentLang === 'en'"
+              [class.shadow-md]="currentLang === 'en'"
+              class="text-[10px] text-gray-500 dark:text-slate-400 px-2 py-1 rounded-lg uppercase tracking-wider font-bold transition-all duration-200">
+              EN
+            </button>
           </div>
         </div>
       </div>
@@ -128,6 +139,11 @@ export class NavHeaderComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'pt';
+    this.translate.onLangChange.subscribe((event) => {
+      this.currentLang = event.lang;
+    });
+
     this.authSubscription = this.authService.isAuthenticated$.subscribe(status => {
       this.shouldPad = status;
       this.isAuthenticated = status;
