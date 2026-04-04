@@ -69,14 +69,16 @@ public class SecurityConfig {
 
             configuration.setAllowedOrigins(List.of(
                 "https://fotoland-frontend.onrender.com",
+                "https://fotoland-frontend-v2.onrender.com", // Adicionando variante
                 "https://fotoland-frontend.vercel.app",
+                "https://fotoland.onrender.com",
                 "http://localhost:4200",
                 "http://localhost:8080"
             ));
 
-            configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-            configuration.setAllowedHeaders(List.of("Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"));
-            configuration.setExposedHeaders(List.of("Authorization"));
+            configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+            configuration.setAllowedHeaders(List.of("*")); // Permitir todos os headers para evitar bloqueios
+            configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
             configuration.setAllowCredentials(true);
             configuration.setMaxAge(3600L);
 
