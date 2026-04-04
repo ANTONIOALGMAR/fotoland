@@ -2,6 +2,6 @@
 .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; }
 .row { margin-bottom: 12px; display: grid; gap: 6px; }
 .row label { font-weight: 600; }
-.row input[type="password"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+.row input[type="password"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; color: #1a1a1a; background: #fff; }
 .btn { padding: 8px 12px; border-radius: 6px; cursor: pointer; }
 .btn.primary { background: #4a6cf7; color: white; border: none; }
