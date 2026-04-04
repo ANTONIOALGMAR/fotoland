@@ -35,11 +35,13 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'pt';
+    this.translate.onLangChange.subscribe((event) => {
+      this.currentLang = event.lang;
+    });
   }
 
   changeLang(lang: string) {
     this.translate.use(lang);
-    this.currentLang = lang;
     localStorage.setItem('selectedLang', lang);
   }
 
