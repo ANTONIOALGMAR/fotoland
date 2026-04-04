@@ -33,6 +33,9 @@ export class AuthService {
   isAuthenticated$ = this._isAuthenticated.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
+    if (typeof window !== 'undefined') {
+      console.log('🚀 Backend URL detected as:', this.BASE_URL);
+    }
     // Cookie HttpOnly nao e acessivel via JS; valida autenticacao via backend.
     this.refreshAuthState();
   }

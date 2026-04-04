@@ -13,8 +13,10 @@ export class AuthInterceptor implements HttpInterceptor {
       backendBaseUrlOverride
         ? backendBaseUrlOverride
         : (/^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/.test(window.location.hostname)
-            ? 'http://localhost:8080'
-            : 'https://fotoland-backend.onrender.com')
+            ? 'http://localhost:8888'
+            : (window.location.hostname.includes('onrender.com') 
+                ? `https://${window.location.hostname.replace('-frontend', '-backend')}`
+                : 'https://fotoland-backend.onrender.com'))
     ).replace(/:+$/, '');
 
     if (request.url.startsWith(backendBaseUrl)) {
