@@ -3,21 +3,29 @@
 .profile-picture img { width: 200px; height: 200px; object-fit: cover; border-radius: 12px; border: 1px solid #ddd; }
 .upload-controls { margin-top: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .image-preview { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; }
-.profile-form { display: grid; gap: 8px; max-width: 520px; }
+.profile-form label {
+  font-weight: 700;
+  color: #000000;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  display: block;
+}
+
 .profile-form input { 
   padding: 10px; 
   border: 1px solid #ccc; 
   border-radius: 8px; 
-  color: #000000; 
-  background-color: #ffffff;
+  color: #000000 !important; 
+  background-color: #ffffff !important;
   width: 100%;
   font-size: 15px;
+  opacity: 1 !important; /* Força opacidade total mesmo se desabilitado */
 }
 
-.profile-form input:focus {
-  border-color: #4a6cf7;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.1);
+.profile-form input:disabled {
+  background-color: #f9f9f9 !important; /* Um cinza bem clarinho para indicar que é fixo, mas com texto preto */
+  cursor: not-allowed;
+  border-color: #ddd;
 }
 .btn { padding: 8px 12px; border-radius: 6px; cursor: pointer; }
 .btn.primary { background: #4a6cf7; color: white; border: none; }
