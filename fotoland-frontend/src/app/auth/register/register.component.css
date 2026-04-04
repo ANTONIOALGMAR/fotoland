@@ -150,6 +150,11 @@ button[type="submit"]:hover {
   box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2);
 }
 
+button[type="submit"]:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(0, 210, 255, 0.2);
+}
+
 /* Login Link */
 .login-link {
   margin-top: 25px;
