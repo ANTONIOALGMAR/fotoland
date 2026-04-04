@@ -66,16 +66,16 @@
       <input [(ngModel)]="form.country" type="text" placeholder="Brasil">
 
       <!-- Escolha de Idioma -->
-      <div class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-        <label class="block font-bold mb-2 text-gray-700">{{ 'PROFILE.SELECT_LANG' | translate }}</label>
+      <div class="mt-4 p-4 bg-white rounded-lg border border-gray-300">
+        <label class="block font-bold mb-2">{{ 'PROFILE.SELECT_LANG' | translate }}</label>
         <div class="flex gap-4">
           <label class="flex items-center space-x-2 cursor-pointer">
             <input type="radio" name="lang" value="pt" [(ngModel)]="selectedLanguage" (change)="changeLanguage('pt')" class="w-4 h-4 text-blue-600">
-            <span>Português (Brasil)</span>
+            <span class="text-black font-medium">Português (Brasil)</span>
           </label>
           <label class="flex items-center space-x-2 cursor-pointer">
             <input type="radio" name="lang" value="en" [(ngModel)]="selectedLanguage" (change)="changeLanguage('en')" class="w-4 h-4 text-blue-600">
-            <span>English (US)</span>
+            <span class="text-black font-medium">English (US)</span>
           </label>
         </div>
       </div>
