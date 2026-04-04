@@ -4,7 +4,21 @@
 .upload-controls { margin-top: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .image-preview { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; }
 .profile-form { display: grid; gap: 8px; max-width: 520px; }
-.profile-form input { padding: 8px; border: 1px solid #ddd; border-radius: 6px; }
+.profile-form input { 
+  padding: 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 8px; 
+  color: #000000; 
+  background-color: #ffffff;
+  width: 100%;
+  font-size: 15px;
+}
+
+.profile-form input:focus {
+  border-color: #4a6cf7;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.1);
+}
 .btn { padding: 8px 12px; border-radius: 6px; cursor: pointer; }
 .btn.primary { background: #4a6cf7; color: white; border: none; }
 .btn.secondary { background: #00b894; color: white; border: none; }
