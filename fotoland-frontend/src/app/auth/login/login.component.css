@@ -94,11 +94,11 @@ label {
 
 input {
   width: 100%;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 14px;
   padding: 14px 18px;
-  color: #ffffff;
+  color: #000000;
   font-size: 1rem;
   transition: all 0.2s ease;
   outline: none;
@@ -106,12 +106,12 @@ input {
 
 input:focus {
   border-color: var(--accent-primary);
-  background: rgba(15, 23, 42, 0.8);
+  background: #ffffff;
   box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: #666666;
 }
 
 .password-wrapper {
