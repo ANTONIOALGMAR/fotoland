@@ -65,9 +65,9 @@ import { Subscription } from 'rxjs';
           <button *ngIf="showBack" (click)="back.emit()" class="bg-gray-800 dark:bg-slate-700 text-white px-2 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold whitespace-nowrap shadow-sm hover:bg-black dark:hover:bg-slate-600 transition-colors">Voltar</button>
         </ng-container>
 
-        <div class="flex items-center gap-2" [ngClass]="{'ml-auto': isAuthenticated}">
-          <!-- Theme Toggle -->
-          <button (click)="themeService.toggleTheme()" class="p-1.5 text-gray-500 dark:text-yellow-400 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-all shadow-sm border border-emerald-50 dark:border-slate-800" [title]="themeService.isDarkMode() ? 'Modo Claro' : 'Modo Escuro'">
+          <div class="flex items-center gap-2" [ngClass]="{'ml-auto': isAuthenticated}">
+            <!-- Theme Toggle -->
+            <button (click)="themeService.toggleTheme()" class="p-1.5 text-gray-500 dark:text-yellow-400 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-all shadow-sm border border-emerald-50 dark:border-slate-800" [title]="themeService.isDarkMode() ? 'Modo Claro' : 'Modo Escuro'">
             <svg *ngIf="!themeService.isDarkMode()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
             </svg>
@@ -78,20 +78,11 @@ import { Subscription } from 'rxjs';
 
           <!-- Language Selector -->
           <div class="flex items-center bg-gray-100 dark:bg-slate-800 p-1 rounded-xl border border-emerald-100 dark:border-slate-700 shadow-inner transition-colors duration-300">
-            <button (click)="changeLang('pt')" 
-              [class.bg-emerald-600]="currentLang === 'pt'" 
-              [class.text-white]="currentLang === 'pt'"
-              [class.shadow-md]="currentLang === 'pt'"
-              class="text-[10px] text-gray-500 dark:text-slate-400 px-2 py-1 rounded-lg uppercase tracking-wider font-bold transition-all duration-200">
-              PT
-            </button>
-            <button (click)="changeLang('en')" 
-              [class.bg-emerald-600]="currentLang === 'en'" 
-              [class.text-white]="currentLang === 'en'"
-              [class.shadow-md]="currentLang === 'en'"
-              class="text-[10px] text-gray-500 dark:text-slate-400 px-2 py-1 rounded-lg uppercase tracking-wider font-bold transition-all duration-200">
-              EN
-            </button>
+            <div class="lang-toggle">
+              <span class="lang-indicator" [class.lang-indicator--en]="currentLang === 'en'"></span>
+              <button (click)="changeLang('pt')" class="lang-button" [class.lang-button--active]="currentLang === 'pt'">PT</button>
+              <button (click)="changeLang('en')" class="lang-button" [class.lang-button--active]="currentLang === 'en'">EN</button>
+            </div>
           </div>
         </div>
       </div>
@@ -100,6 +91,47 @@ import { Subscription } from 'rxjs';
   styles: [`
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .lang-toggle {
+      position: relative;
+      display: inline-flex;
+      gap: 0.15rem;
+      padding: 0.1rem;
+      border-radius: 999px;
+    }
+    .lang-indicator {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      left: 4px;
+      width: calc(50% - 0.1rem);
+      border-radius: 999px;
+      background: linear-gradient(135deg, #059669, #10b981);
+      opacity: 0.35;
+      transition: transform 0.25s ease;
+    }
+    .lang-indicator.lang-indicator--en {
+      transform: translateX(calc(100% + 0.15rem));
+    }
+    .lang-button {
+      position: relative;
+      z-index: 1;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: #0f172a;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .lang-button--active {
+      color: #0f172a;
+    }
+    .lang-button:hover {
+      transform: translateY(-1px);
+    }
   `]
 })
 export class NavHeaderComponent implements OnInit, OnDestroy {
