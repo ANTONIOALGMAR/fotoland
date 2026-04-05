@@ -20,11 +20,12 @@ export enum PostType {
 }
 
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-post',
   standalone: true,
-  imports: [FormsModule, CommonModule, NavHeaderComponent],
+  imports: [FormsModule, CommonModule, NavHeaderComponent, TranslateModule],
   templateUrl: './create-post.component.html',
   styleUrl: './create-post.component.css'
 })

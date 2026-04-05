@@ -5,11 +5,12 @@ import { AuthService } from '../auth/services/auth.service';
 import { Album, Post } from '../../../../api.models';
 import { Location } from '@angular/common';
 import { NavHeaderComponent } from '../shared/nav-header/nav-header.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-album-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, NavHeaderComponent],
+  imports: [CommonModule, RouterLink, NavHeaderComponent, TranslateModule],
   templateUrl: './album-detail.component.html',
   styleUrls: ['./album-detail.component.css']
 })
