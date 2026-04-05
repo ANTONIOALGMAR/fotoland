@@ -7,7 +7,11 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
@@ -21,12 +25,21 @@ public class S3Service {
     @Value("${cloud.aws.s3.endpoint}")
     private String s3Endpoint;
 
+    @Value("${storage.mode:s3}")
+    private String storageMode;
+
     public S3Service(S3Client s3Client) {
         this.s3Client = s3Client;
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
         String fileName = generateFileName(file.getOriginalFilename());
+
+        if ("local".equalsIgnoreCase(storageMode)) {
+            return saveToLocalStorage(file, fileName);
+        }
+
+        // Upload para S3 (Original)
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileName)
@@ -39,15 +52,25 @@ public class S3Service {
         return s3Endpoint + "/" + bucketName + "/" + fileName;
     }
 
+    private String saveToLocalStorage(MultipartFile file, String fileName) throws IOException {
+        Path uploadPath = Paths.get("uploads");
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        Path filePath = uploadPath.resolve(fileName);
+        Files.copy(file.getInputStream(), filePath);
+        
+        // Retorna a URL relativa que o Spring vai servir
+        return "/api/upload/files/" + fileName;
+    }
+
     private String generateFileName(String originalFileName) {
         String base = (originalFileName == null || originalFileName.isBlank()) ? "file" : originalFileName;
-        // Remove caminho (alguns browsers/clientes podem enviar "C:\\path\\file.ext").
         base = base.replace("\\", "/");
         int lastSlash = base.lastIndexOf('/');
         if (lastSlash >= 0) {
             base = base.substring(lastSlash + 1);
         }
-        // Normaliza caracteres para evitar keys estranhas e limitar tamanho.
         base = base.replaceAll("[^a-zA-Z0-9._-]+", "_");
         if (base.length() > 100) {
             base = base.substring(base.length() - 100);

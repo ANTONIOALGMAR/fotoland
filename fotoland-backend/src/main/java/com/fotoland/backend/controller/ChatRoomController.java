@@ -1,10 +1,11 @@
 package com.fotoland.backend.controller;
 
+import com.fotoland.backend.event.NotificationEvent;
 import com.fotoland.backend.model.ChatInvite;
 import com.fotoland.backend.model.ChatRoom;
 import com.fotoland.backend.model.ChatRoomMember;
 import com.fotoland.backend.service.ChatRoomService;
-import com.fotoland.backend.service.NotificationService;
+import com.fotoland.backend.service.NotificationPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +17,11 @@ import java.util.List;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
-    private final NotificationService notificationService;
+    private final NotificationPublisher notificationPublisher;
 
-    public ChatRoomController(ChatRoomService chatRoomService, NotificationService notificationService) {
+    public ChatRoomController(ChatRoomService chatRoomService, NotificationPublisher notificationPublisher) {
         this.chatRoomService = chatRoomService;
-        this.notificationService = notificationService;
+        this.notificationPublisher = notificationPublisher;
     }
 
     public static class CreateRoomRequest { public String name; }
@@ -45,8 +46,11 @@ public class ChatRoomController {
         String inviter = auth.getName();
         ChatInvite invite = chatRoomService.invite(roomId, body.username, inviter);
     
-        notificationService.notifyUser(body.username, com.fotoland.backend.model.Notification.Type.CHAT_INVITE,
-            java.util.Map.of("roomId", roomId, "senderUsername", inviter, "inviteId", invite.getId()));
+        notificationPublisher.publish(new NotificationEvent(
+                body.username,
+                com.fotoland.backend.model.Notification.Type.CHAT_INVITE,
+                java.util.Map.of("roomId", roomId, "senderUsername", inviter, "inviteId", invite.getId())
+        ));
     
         return ResponseEntity.ok(invite);
     }

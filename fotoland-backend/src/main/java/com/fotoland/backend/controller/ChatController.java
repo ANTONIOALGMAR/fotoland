@@ -1,19 +1,20 @@
 package com.fotoland.backend.controller;
 
 import com.fotoland.backend.dto.ChatMessage;
+import com.fotoland.backend.event.NotificationEvent;
+import com.fotoland.backend.model.ChatMessageEntity;
+import com.fotoland.backend.model.ChatRoom;
+import com.fotoland.backend.repository.ChatMessageRepository;
+import com.fotoland.backend.repository.ChatRoomMemberRepository;
+import com.fotoland.backend.repository.ChatRoomRepository;
+import com.fotoland.backend.repository.UserRepository;
+import com.fotoland.backend.service.ChatRoomService;
+import com.fotoland.backend.service.NotificationPublisher;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+
 import java.security.Principal;
-
-import com.fotoland.backend.service.ChatRoomService;
-import com.fotoland.backend.repository.ChatMessageRepository;
-import com.fotoland.backend.repository.ChatRoomRepository;
-import com.fotoland.backend.repository.ChatRoomMemberRepository;
-import com.fotoland.backend.model.ChatMessageEntity;
-import com.fotoland.backend.model.ChatRoom;
-
-import com.fotoland.backend.repository.UserRepository;
 
 @Controller
 public class ChatController {
@@ -23,20 +24,20 @@ public class ChatController {
     private final ChatMessageRepository messageRepo;
     private final ChatRoomRepository roomRepo;
     private final ChatRoomMemberRepository memberRepo;
-    private final com.fotoland.backend.service.NotificationService notificationService;
+    private final NotificationPublisher notificationPublisher;
     private final UserRepository userRepository;
 
     public ChatController(SimpMessagingTemplate messagingTemplate, ChatRoomService chatRoomService,
                           ChatMessageRepository messageRepo, ChatRoomRepository roomRepo,
                           ChatRoomMemberRepository memberRepo,
-                          com.fotoland.backend.service.NotificationService notificationService,
+                          NotificationPublisher notificationPublisher,
                           UserRepository userRepository) {
         this.messagingTemplate = messagingTemplate;
         this.chatRoomService = chatRoomService;
         this.messageRepo = messageRepo;
         this.roomRepo = roomRepo;
         this.memberRepo = memberRepo;
-        this.notificationService = notificationService;
+        this.notificationPublisher = notificationPublisher;
         this.userRepository = userRepository;
     }
 
@@ -97,8 +98,11 @@ public class ChatController {
             for (var m : memberRepo.findByRoom_Id(room.getId())) {
                 String target = m.getUser().getUsername();
                 if (!target.equals(username)) {
-                    notificationService.notifyUser(target, com.fotoland.backend.model.Notification.Type.CHAT_MESSAGE,
-                        java.util.Map.of("roomId", room.getId(), "senderUsername", username, "chatRoomName", room.getName()));
+                    notificationPublisher.publish(new NotificationEvent(
+                            target,
+                            com.fotoland.backend.model.Notification.Type.CHAT_MESSAGE,
+                            java.util.Map.of("roomId", room.getId(), "senderUsername", username, "chatRoomName", room.getName())
+                    ));
                 }
             }
         }

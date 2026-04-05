@@ -1,5 +1,6 @@
 package com.fotoland.backend.service;
 
+import com.fotoland.backend.event.NotificationEvent;
 import com.fotoland.backend.model.*;
 import com.fotoland.backend.repository.*;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,13 +13,16 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserService userService;
-    private final NotificationService notificationService;
+    private final NotificationPublisher notificationPublisher;
 
-    public CommentService(CommentRepository commentRepository, PostRepository postRepository, UserService userService, NotificationService notificationService) {
+    public CommentService(CommentRepository commentRepository,
+                          PostRepository postRepository,
+                          UserService userService,
+                          NotificationPublisher notificationPublisher) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.userService = userService;
-        this.notificationService = notificationService;
+        this.notificationPublisher = notificationPublisher;
     }
 
     public List<Comment> getCommentsByPostId(Long postId) {
@@ -36,8 +40,11 @@ public class CommentService {
 
         // Notify post author
         if (!post.getAlbum().getAuthor().getUsername().equals(username)) {
-            notificationService.notifyUser(post.getAlbum().getAuthor().getUsername(), Notification.Type.POST_COMMENT,
-                    java.util.Map.of("commenterUsername", username, "commentContent", text, "postId", postId));
+            notificationPublisher.publish(new NotificationEvent(
+                    post.getAlbum().getAuthor().getUsername(),
+                    Notification.Type.POST_COMMENT,
+                    java.util.Map.of("commenterUsername", username, "commentContent", text, "postId", postId)
+            ));
         }
 
         return saved;

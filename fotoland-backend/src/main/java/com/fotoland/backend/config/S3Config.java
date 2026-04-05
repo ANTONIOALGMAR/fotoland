@@ -3,6 +3,8 @@ package com.fotoland.backend.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
@@ -17,8 +19,20 @@ public class S3Config {
     @Value("${cloud.aws.s3.endpoint:}")
     private String s3Endpoint;
 
+    @Value("${storage.mode:s3}")
+    private String storageMode;
+
     @Bean
     public S3Client s3Client() {
+        // Se estivermos em modo local, criamos um cliente que não tenta buscar credenciais na rede
+        if ("local".equalsIgnoreCase(storageMode)) {
+            return S3Client.builder()
+                    .region(Region.of(awsRegion))
+                    .credentialsProvider(StaticCredentialsProvider.create(
+                            AwsBasicCredentials.create("dummy", "dummy")))
+                    .build();
+        }
+
         if (s3Endpoint != null && !s3Endpoint.isBlank()) {
             return S3Client.builder()
                     .region(Region.of(awsRegion))

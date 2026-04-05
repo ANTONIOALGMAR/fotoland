@@ -1,5 +1,6 @@
 package com.fotoland.backend.service;
 
+import com.fotoland.backend.event.NotificationEvent;
 import com.fotoland.backend.model.*;
 import com.fotoland.backend.repository.*;
 import org.springframework.stereotype.Service;
@@ -13,20 +14,20 @@ public class LikeService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final UserService userService;
-    private final NotificationService notificationService;
+    private final NotificationPublisher notificationPublisher;
 
     public LikeService(PostLikeRepository postLikeRepository,
                        CommentLikeRepository commentLikeRepository,
                        PostRepository postRepository,
                        CommentRepository commentRepository,
                        UserService userService,
-                       NotificationService notificationService) {
+                       NotificationPublisher notificationPublisher) {
         this.postLikeRepository = postLikeRepository;
         this.commentLikeRepository = commentLikeRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.userService = userService;
-        this.notificationService = notificationService;
+        this.notificationPublisher = notificationPublisher;
     }
 
     // Post likes
@@ -42,8 +43,11 @@ public class LikeService {
 
             // Notify owner
             if (!post.getAlbum().getAuthor().getUsername().equals(username)) {
-                notificationService.notifyUser(post.getAlbum().getAuthor().getUsername(), Notification.Type.POST_LIKE,
-                        java.util.Map.of("likerUsername", username, "postId", postId));
+                notificationPublisher.publish(new NotificationEvent(
+                        post.getAlbum().getAuthor().getUsername(),
+                        Notification.Type.POST_LIKE,
+                        java.util.Map.of("likerUsername", username, "postId", postId)
+                ));
             }
         }
         return postLikeRepository.countByPostId(postId);
@@ -78,8 +82,11 @@ public class LikeService {
 
             // Notify owner
             if (!comment.getAuthor().getUsername().equals(username)) {
-                notificationService.notifyUser(comment.getAuthor().getUsername(), Notification.Type.COMMENT_LIKE,
-                        java.util.Map.of("likerUsername", username, "commentId", commentId, "commentContent", comment.getText()));
+                notificationPublisher.publish(new NotificationEvent(
+                        comment.getAuthor().getUsername(),
+                        Notification.Type.COMMENT_LIKE,
+                        java.util.Map.of("likerUsername", username, "commentId", commentId, "commentContent", comment.getText())
+                ));
             }
         }
         return commentLikeRepository.countByCommentId(commentId);
