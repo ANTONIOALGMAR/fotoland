@@ -21,20 +21,8 @@ public class ApiCsrfFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        if (!SAFE_METHODS.contains(request.getMethod())
-                && request.getServletPath() != null
-                && request.getServletPath().startsWith("/api/")
-                && !request.getServletPath().startsWith("/api/auth/")) {
-            // Protecao simples anti-CSRF: exige header que forms nao conseguem setar.
-            String requestedWith = request.getHeader("X-Requested-With");
-            if (requestedWith == null || !requestedWith.equalsIgnoreCase("XMLHttpRequest")) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.setContentType("application/json");
-                response.getWriter().write("{\"error\":\"CSRF protection: missing X-Requested-With\"}");
-                return;
-            }
-        }
-
+        // Permitir que todas as requisições passem para o FilterChain.
+        // O CSRF já está desabilitado no SecurityConfig por estarmos usando JWT.
         filterChain.doFilter(request, response);
     }
 }
