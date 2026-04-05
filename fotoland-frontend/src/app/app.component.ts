@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ApplicationRef } from '@angular/core';
 import { AuthService } from './auth/services/auth.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription, interval, of } from 'rxjs';
@@ -47,12 +47,20 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router, 
     private notificationService: NotificationService,
     private translate: TranslateService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private appRef: ApplicationRef
   ) {
     const savedLang = localStorage.getItem('selectedLang') || 'pt';
     this.translate.addLangs(['pt', 'en']);
     this.translate.setDefaultLang('pt');
     this.translate.use(savedLang);
+
+    // Forçar atualização de toda a aplicação quando o idioma mudar
+    this.translate.onLangChange.subscribe(() => {
+      setTimeout(() => {
+        this.appRef.tick();
+      }, 100);
+    });
   }
 
 

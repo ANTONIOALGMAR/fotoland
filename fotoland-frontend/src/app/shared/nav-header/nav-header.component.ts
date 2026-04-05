@@ -181,8 +181,10 @@ export class NavHeaderComponent implements OnInit, OnDestroy {
   }
 
   changeLang(lang: string) {
-    this.translate.use(lang);
-    this.currentLang = lang;
-    localStorage.setItem('selectedLang', lang);
+    this.translate.use(lang).subscribe(() => {
+      this.currentLang = lang;
+      localStorage.setItem('selectedLang', lang);
+      // O TranslateService já emite o evento onLangChange que o pipe | translate ouve.
+    });
   }
 }
