@@ -77,7 +77,40 @@
     "SEARCH_TYPE": "Type",
     "SEARCH_BUTTON": "Search",
     "PHOTO": "Photo",
-    "VIDEO": "Video"
+    "VIDEO": "Video",
+    "YOUR_STORY": "Your story",
+    "LIKES": "likes",
+    "PUBLISH": "Publish",
+    "ADD_COMMENT": "Add a comment...",
+    "SUGGESTIONS": "Suggestions for you",
+    "SEE_ALL": "See all",
+    "CHANGE": "Change",
+    "LOGGED_IN": "Logged in",
+    "NEW_USER": "New to Fotoland",
+    "EMPTY_FEED": "The feed is empty. Start following people or create your first album!",
+    "FOLLOW": "Follow",
+    "FOLLOWING": "Following"
+  },
+  "POSTS": {
+    "CREATE_TITLE": "Create New Post",
+    "EDIT_TITLE": "Edit Post",
+    "SELECT_ALBUM": "Select Album",
+    "POST_TYPE": "Post Type",
+    "MEDIA": "Media (Select one or more)",
+    "CHOOSE_MEDIA": "Choose Photos or Videos",
+    "CAPTION": "Caption",
+    "CREATE_BUTTON": "Create Post",
+    "EDIT_BUTTON": "Save Changes"
+  },
+  "CHAT": {
+    "PRIVATE_TITLE": "Private Chat",
+    "NEW_ROOM": "New room...",
+    "INVITE": "Invite",
+    "FRIEND_NICK": "Friend's nick...",
+    "LOADING_MSGS": "Loading messages...",
+    "SELECT_ROOM": "Select a room to chat.",
+    "YOUR_MESSAGE": "Your message...",
+    "SEND": "Send"
   },
   "AUTH": {
     "LOGIN_TITLE": "Login to Fotoland",

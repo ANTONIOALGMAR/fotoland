@@ -1,5 +1,5 @@
 <app-nav-header
-  [title]="isEditMode ? 'Editar Post' : 'Criar Post'"
+  [title]="(isEditMode ? 'POSTS.EDIT_TITLE' : 'POSTS.CREATE_TITLE') | translate"
   (navigatePrivate)="irParaPrivado()"
   (navigateGroup)="irParaColetivo()"
   (cancel)="cancelar()"
@@ -14,30 +14,30 @@
 
 <div class="create-post-container">
   <div class="create-post-form">
-    <h2>Create New Post</h2>
+    <h2>{{ (isEditMode ? 'POSTS.EDIT_TITLE' : 'POSTS.CREATE_TITLE') | translate }}</h2>
     <form (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="album">Select Album</label>
+        <label for="album">{{ 'POSTS.SELECT_ALBUM' | translate }}</label>
         <select id="album" name="album" [(ngModel)]="selectedAlbumId" required>
           <option *ngFor="let album of albums" [value]="album.id">{{ album.title }} ({{ album.type }})</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="postType">Post Type</label>
+        <label for="postType">{{ 'POSTS.POST_TYPE' | translate }}</label>
         <select id="postType" name="postType" [(ngModel)]="post.type" required>
           <option *ngFor="let type of postTypes" [value]="type">{{ type }}</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="mediaFile" class="block text-sm font-medium text-gray-700 mb-1">Mídias (Selecione uma ou mais)</label>
+        <label for="mediaFile" class="block text-sm font-medium text-gray-700 mb-1">{{ 'POSTS.MEDIA' | translate }}</label>
         <input type="file" id="mediaFile" (change)="onFilesSelected($event)" hidden #mediaFileInput multiple="multiple" accept="image/*,video/*">
         <button type="button" class="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-600 hover:border-blue-500 hover:text-blue-500 transition-all bg-gray-50" (click)="mediaFileInput.click()">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
-          <span class="font-semibold">Escolher Fotos ou Vídeos</span>
+          <span class="font-semibold">{{ 'POSTS.CHOOSE_MEDIA' | translate }}</span>
         </button>
         
         <div class="previews-grid grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 mt-4" *ngIf="mediaPreviews.length > 0">
@@ -54,11 +54,11 @@
       </div>
 
       <div class="form-group">
-        <label for="caption">Caption</label>
+        <label for="caption">{{ 'POSTS.CAPTION' | translate }}</label>
         <textarea id="caption" name="caption" [(ngModel)]="post.caption"></textarea>
       </div>
 
-      <button type="submit">Create Post</button>
+      <button type="submit">{{ (isEditMode ? 'POSTS.EDIT_BUTTON' : 'POSTS.CREATE_BUTTON') | translate }}</button>
     </form>
   </div>
 </div>

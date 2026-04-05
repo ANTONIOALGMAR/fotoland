@@ -77,7 +77,40 @@
     "SEARCH_TYPE": "Tipo",
     "SEARCH_BUTTON": "Buscar",
     "PHOTO": "Foto",
-    "VIDEO": "Vídeo"
+    "VIDEO": "Vídeo",
+    "YOUR_STORY": "Seu story",
+    "LIKES": "curtidas",
+    "PUBLISH": "Publicar",
+    "ADD_COMMENT": "Adicione um comentário...",
+    "SUGGESTIONS": "Sugestões para você",
+    "SEE_ALL": "Ver tudo",
+    "CHANGE": "Mudar",
+    "LOGGED_IN": "Logado",
+    "NEW_USER": "Novo no Fotoland",
+    "EMPTY_FEED": "O feed está vazio. Comece a seguir pessoas ou crie seu primeiro álbum!",
+    "FOLLOW": "Seguir",
+    "FOLLOWING": "Seguindo"
+  },
+  "POSTS": {
+    "CREATE_TITLE": "Criar Nova Publicação",
+    "EDIT_TITLE": "Editar Publicação",
+    "SELECT_ALBUM": "Selecionar Álbum",
+    "POST_TYPE": "Tipo de Post",
+    "MEDIA": "Mídias (Selecione uma ou mais)",
+    "CHOOSE_MEDIA": "Escolher Fotos ou Vídeos",
+    "CAPTION": "Legenda",
+    "CREATE_BUTTON": "Criar Publicação",
+    "EDIT_BUTTON": "Salvar Alterações"
+  },
+  "CHAT": {
+    "PRIVATE_TITLE": "Chat Privado",
+    "NEW_ROOM": "Nova sala...",
+    "INVITE": "Convidar",
+    "FRIEND_NICK": "Nick do amigo...",
+    "LOADING_MSGS": "Carregando mensagens...",
+    "SELECT_ROOM": "Selecione uma sala para conversar.",
+    "YOUR_MESSAGE": "Sua mensagem...",
+    "SEND": "Enviar"
   },
   "AUTH": {
     "LOGIN_TITLE": "Entrar no Fotoland",
