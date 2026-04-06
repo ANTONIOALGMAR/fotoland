@@ -11,6 +11,11 @@
   display: block;
 }
 
+/* Dark Mode support for labels */
+:host-context(html.dark) .profile-form label {
+  color: #ffffff;
+}
+
 .profile-form input { 
   padding: 10px; 
   border: 1px solid #ccc; 

@@ -187,7 +187,11 @@ export class FeedComponent implements OnInit {
 
     request.subscribe({
       next: () => {
-        this.followingMap[username] = !currentlyFollowing;
+        // Usa spread operator para garantir que o Angular detecte a mudanca no objeto
+        this.followingMap = {
+          ...this.followingMap,
+          [username]: !currentlyFollowing
+        };
       },
       error: (err) => {
         console.error(`Error ${currentlyFollowing ? 'unfollowing' : 'following'}:`, err);
