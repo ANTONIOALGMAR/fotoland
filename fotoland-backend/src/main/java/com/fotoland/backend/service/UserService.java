@@ -57,6 +57,7 @@ public class UserService {
         return userRepository.findAllByOrderByFullNameAsc();
     }
 
+    @Transactional
     public User registerNewUser(User user) {
         if (user.getUsername() == null || user.getUsername().isBlank()) {
             throw new IllegalArgumentException("Username is required");
