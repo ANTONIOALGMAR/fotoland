@@ -46,6 +46,8 @@ public class ChatController {
         String username = principal != null ? principal.getName() : incoming.getSender();
         if (username == null) return;
 
+        System.out.println("📩 Received Global Message from " + username + ": " + incoming.getContent());
+
         ChatMessage message = new ChatMessage();
         message.setSender(username);
         message.setContent(incoming.getContent());

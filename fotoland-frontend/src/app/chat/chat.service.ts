@@ -127,6 +127,7 @@ export class ChatService {
 
   send(content: string): void {
     if (!this.client || !this.client.connected) return;
+    console.log('📤 Sending Global Message:', content);
     const payload: ChatMsg = {
       sender: 'me',
       content,
@@ -141,6 +142,7 @@ export class ChatService {
 
   sendToRoom(roomId: number, content: string): void {
     if (!this.client || !this.client.connected) return;
+    console.log(`📤 Sending Room (${roomId}) Message:`, content);
     const payload: ChatMsg = {
       sender: 'me',
       content,
