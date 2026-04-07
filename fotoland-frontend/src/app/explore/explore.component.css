@@ -1,4 +1,30 @@
-.explore-page { padding: 16px; display: grid; gap: 16px; }
+.card h2 {
+  color: #000000;
+  font-weight: 800;
+}
+
+:host-context(html.dark) .card h2 {
+  color: #ffffff;
+}
+
+/* Título do Catálogo e outros h2 fora do card */
+h2 {
+  color: #000000;
+}
+
+:host-context(html.dark) h2 {
+  color: #ffffff;
+}
+
+/* Mensagem de nenhum resultado */
+.results p.italic {
+  color: #000000;
+  font-weight: 600;
+}
+
+:host-context(html.dark) .results p.italic {
+  color: #cbd5e1;
+}
 .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; background: #fff; }
 .filters { display: flex; gap: 8px; flex-wrap: wrap; }
 .filters input, .filters select { padding: 8px; border: 1px solid #ddd; border-radius: 6px; flex: 1; min-width: 150px; }
