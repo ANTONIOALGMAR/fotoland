@@ -53,6 +53,9 @@
       [(ngModel)]="newMessage"
       (keyup.enter)="send()"
       placeholder="Digite sua mensagem..."
+      spellcheck="false"
+      autocorrect="off"
+      autocapitalize="off"
     />
     <button (click)="send()">Enviar</button>
   </div>
