@@ -79,6 +79,25 @@
   background-color: #e0e7ff;
 }
 
+/* Story Player Modal Mobile Optimization */
+@media (max-width: 768px) {
+  .fixed.inset-0.z-\[2000\] {
+    padding: 0;
+    background-color: #000;
+  }
+  
+  .max-w-md.aspect-\[9\/16\] {
+    max-width: 100% !important;
+    height: 100vh !important;
+    aspect-ratio: auto !important;
+    border-radius: 0 !important;
+  }
+
+  .absolute.top-4.right-0 button {
+    padding: 20px; /* Maior area de toque */
+  }
+}
+
 /* Double Tap Heart Animation */
 .group-media {
   cursor: pointer;
