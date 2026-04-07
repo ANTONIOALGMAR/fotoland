@@ -182,12 +182,39 @@
 .input-container input {
   flex: 1;
   border: 1px solid #ddd;
-  background: #f0f2f5;
+  background: #ffffff;
   border-radius: 20px;
   padding: 10px 20px;
   outline: none;
-  color: #1a1a1a;
-  font-size: 15px;
+  color: #000000 !important;
+  font-size: 16px; /* Evita zoom no iPhone */
+}
+
+@media (max-width: 768px) {
+  .chat-container {
+    height: calc(100vh - 140px); /* Ajuste para não bater na bottom nav */
+    padding: 5px;
+  }
+  .chat-layout {
+    flex-direction: column;
+  }
+  .rooms-sidebar {
+    width: 100%;
+    height: 150px;
+    border-right: none;
+    border-bottom: 1px solid #eee;
+  }
+  .rooms-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 10px;
+  }
+  .room-item {
+    white-space: nowrap;
+    min-width: 120px;
+    text-align: center;
+  }
 }
 
 .input-container input::placeholder {
