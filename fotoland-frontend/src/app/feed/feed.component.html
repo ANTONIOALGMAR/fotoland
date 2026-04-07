@@ -101,7 +101,8 @@
             (click)="toggleFollow(album.author.username)"
             [class.following]="isFollowingUser(album.author.username)"
             class="follow-button text-xs px-3 py-1.5 rounded-lg transition-all duration-200">
-            {{ (isFollowingUser(album.author.username) ? 'FEED.FOLLOWING' : 'FEED.FOLLOW') | translate }}
+            <span *ngIf="!isFollowingUser(album.author.username)">{{ 'FEED.FOLLOW' | translate }}</span>
+            <span *ngIf="isFollowingUser(album.author.username)">{{ 'FEED.FOLLOWING' | translate }}</span>
           </button>
         </div>
 
@@ -187,7 +188,8 @@
           <button (click)="toggleFollow(user.username)" 
             [class.following]="isFollowingUser(user.username)"
             class="follow-button text-xs px-3 py-1.5 rounded-lg transition-all duration-200">
-            {{ (isFollowingUser(user.username) ? 'FEED.FOLLOWING' : 'FEED.FOLLOW') | translate }}
+            <span *ngIf="!isFollowingUser(user.username)">{{ 'FEED.FOLLOW' | translate }}</span>
+            <span *ngIf="isFollowingUser(user.username)">{{ 'FEED.FOLLOWING' | translate }}</span>
           </button>
         </div>
       </div>

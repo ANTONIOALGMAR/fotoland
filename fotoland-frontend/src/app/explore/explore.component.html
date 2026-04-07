@@ -76,7 +76,8 @@
           <button (click)="toggleFollow(u.username)"
             [class.following]="followingMap[u.username]"
             class="follow-btn-custom w-full">
-            {{ (followingMap[u.username] ? 'FEED.FOLLOWING' : 'FEED.FOLLOW') | translate }}
+            <span *ngIf="!followingMap[u.username]">{{ 'FEED.FOLLOW' | translate }}</span>
+            <span *ngIf="followingMap[u.username]">{{ 'FEED.FOLLOWING' | translate }}</span>
           </button>
 
           
