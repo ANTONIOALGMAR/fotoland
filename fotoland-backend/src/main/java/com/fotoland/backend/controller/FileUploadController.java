@@ -21,7 +21,7 @@ import java.util.Set;
 @RequestMapping("/api/upload")
 public class FileUploadController {
 
-    private static final long MAX_BYTES = 10L * 1024L * 1024L; // 10MB
+    private static final long MAX_BYTES = 100L * 1024L * 1024L; // 100MB
     private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
             "image/jpeg",
             "image/png",

@@ -166,9 +166,12 @@ export class CreatePostComponent implements OnInit {
         }
         this.createPost();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Operation failed:', error);
-      alert('Something went wrong. Please try again.');
+      const detail = typeof error?.error === 'string'
+        ? error.error
+        : (error?.error?.message || error.message || 'Erro desconhecido');
+      alert(`❌ Error: ${detail}`);
       this.isSubmitting = false;
     }
   }
