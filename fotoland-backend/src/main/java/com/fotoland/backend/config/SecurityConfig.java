@@ -66,25 +66,16 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             CorsConfiguration configuration = new CorsConfiguration();
-
-            configuration.setAllowedOrigins(List.of(
-                "https://fotoland-frontend.onrender.com",
-                "https://fotoland-frontend-v2.onrender.com", // Adicionando variante
-                "https://fotoland-frontend.vercel.app",
-                "https://fotoland.onrender.com",
-                "http://localhost:4200",
-                "http://localhost:8080"
-            ));
-
+            configuration.setAllowedOriginPatterns(List.of("*"));
             configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-            configuration.setAllowedHeaders(List.of("*")); // Permitir todos os headers para evitar bloqueios
-            configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
+            configuration.setAllowedHeaders(List.of("*"));
+            configuration.setExposedHeaders(List.of("*"));
             configuration.setAllowCredentials(true);
             configuration.setMaxAge(3600L);
-
             return configuration;
         };
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
