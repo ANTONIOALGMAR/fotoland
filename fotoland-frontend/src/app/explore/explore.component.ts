@@ -170,21 +170,25 @@ export class ExploreComponent implements OnInit, OnDestroy {
   toggleFollow(username: string): void {
     if (this.followingMap[username]) {
       this.authService.unfollow(username).subscribe({
-        next: () => this.followingMap[username] = false,
-        error: () => alert('Erro ao deixar de seguir.')
+        next: () => {
+          this.followingMap = { ...this.followingMap, [username]: false };
+        },
+        error: (err) => console.error('Erro ao deixar de seguir:', err)
       });
     } else {
       this.authService.follow(username).subscribe({
-        next: () => this.followingMap[username] = true,
+        next: () => {
+          this.followingMap = { ...this.followingMap, [username]: true };
+        },
         error: (err) => {
-          if (err?.status === 409) {
-            // Already following; update UI so button switches to "Seguindo"
-            this.followingMap[username] = true;
-            return;
+          if (err.status === 400) {
+            this.followingMap = { ...this.followingMap, [username]: true };
           }
-          alert('Erro ao seguir.');
+          console.error('Erro ao seguir:', err);
         }
       });
+    }
+
     }
   }
 }

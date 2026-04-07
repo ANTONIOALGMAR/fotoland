@@ -73,16 +73,12 @@
         </div>
         
         <div class="flex items-center gap-3">
-          <button (click)="toggleFollow(u.username)" 
-            [class.bg-blue-600]="!followingMap[u.username]"
-            [class.text-white]="!followingMap[u.username]"
-            [class.bg-gray-200]="followingMap[u.username]"
-            [class.dark:bg-slate-700]="followingMap[u.username]"
-            [class.text-gray-800]="followingMap[u.username]"
-            [class.dark:text-slate-200]="followingMap[u.username]"
-            class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all hover:scale-105 active:scale-95">
-            {{ followingMap[u.username] ? 'Seguindo' : 'Seguir' }}
+          <button (click)="toggleFollow(u.username)"
+            [class.following]="followingMap[u.username]"
+            class="follow-btn-custom w-full">
+            {{ (followingMap[u.username] ? 'FEED.FOLLOWING' : 'FEED.FOLLOW') | translate }}
           </button>
+
           
           <button *ngIf="isAdmin" (click)="adminDeleteUser(u.id)" class="text-[10px] text-red-500 font-bold hover:underline px-2">
             BANIR
