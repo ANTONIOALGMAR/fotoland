@@ -97,13 +97,22 @@
 
 .form-group input {
   width: 100%;
-  padding: 12px 15px;
+  padding: 14px 15px; /* Aumentado para mobile */
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #ffffff;
   color: #000000;
-  font-size: 1rem;
+  font-size: 16px; /* Evita zoom automatico no iPhone ao focar */
   transition: all 0.3s ease;
+  -webkit-appearance: none; /* Remove sombras internas no iOS */
+}
+
+@media (max-width: 480px) {
+  .register-form {
+    padding: 20px;
+    margin: 10px;
+    width: calc(100% - 20px);
+  }
 }
 
 .form-group input:focus {
